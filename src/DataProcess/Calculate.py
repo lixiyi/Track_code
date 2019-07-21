@@ -98,6 +98,7 @@ def data_character():
 			obj = json.loads(line)
 			contents = obj['contents']
 			skip = False
+			doc = ""
 			for li in contents:
 				if type(li).__name__ == 'dict':
 					if 'type' in li and li['type'] == 'kicker':
@@ -107,10 +108,19 @@ def data_character():
 							break
 						map_cnt(topics, li['content'])
 					if 'subtype' in li and li['subtype'] == 'paragraph':
-						paragraph = li['content']
+						paragraph = li['content'].strip()
 						# Replace <.*?> with ""
 						paragraph = re.sub(r'<.*?>', '', paragraph)
-						map_cnt(paragraph_length, len(paragraph))
+						map_cnt(paragraph_length, len(paragraph.split(' ')))
+						doc += ' ' + paragraph
+			# doc length
+			doc = doc.strip()
+			map_cnt(doc_length, len(doc.split(' ')))
+			# sentence length
+			sentences = doc.split('. ')
+			for sen in sentences:
+				map_cnt(sentence_length, len(sen.split(' ')))
+
 			cnt += 1
 			if skip:
 				# record the filtered line idx
@@ -128,6 +138,14 @@ def data_character():
 		# paragraph length
 		for key in sorted(paragraph_length.keys()):
 			print(key, paragraph_length[key])
+		print('-------------------------------------')
+		# sentence length
+		for key in sorted(sentence_length.keys()):
+			print(key, sentence_length[key])
+		print('-------------------------------------')
+		# doc length
+		for key in sorted(doc_length.keys()):
+			print(key, doc_length[key])
 
 
 data_character()

@@ -54,8 +54,6 @@
     * max length:
     * min length:
 
-
-
 ## Processing
 * Skip 'null' elements in Contents field
 * Skip opinion or editorials file according to the "kicker" field.
