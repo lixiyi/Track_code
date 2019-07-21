@@ -37,9 +37,11 @@ with open(path_mp['DataPath'] + path_mp['WashingtonPost'], 'r', encoding='utf-8'
 	# author
 	for key in authors:
 		print(key, authors[key])
+	print('-------------------------------------')
 	# type
 	for key in types:
 		print(key, types[key])
+	print('-------------------------------------')
 	# source
 	for key in sources:
 		print(key, sources[key])
