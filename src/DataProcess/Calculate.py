@@ -72,3 +72,5 @@ def level2_check():
 			# del obj['contents']
 			# doc = json.dumps(obj)
 
+level2_check()
+
