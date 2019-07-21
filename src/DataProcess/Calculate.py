@@ -120,13 +120,13 @@ def data_character():
 		print('-------------------------------------')
 		# topics
 		topics = sorted(topics.items(), key=lambda d: d[1], reverse=True)
-		for key in topics.keys():
-			print(key, topics[key])
+		for item in topics:
+			print(item[0], item[1])
 		print('-------------------------------------')
 		# paragraph length
 		paragraph_length = sorted(paragraph_length, key=lambda d: d[1], reverse=True)
-		for key in paragraph_length.keys():
-			print(key, paragraph_length[key])
+		for item in paragraph_length:
+			print(item[0], item[1])
 
 
 data_character()
