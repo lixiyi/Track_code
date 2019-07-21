@@ -108,7 +108,7 @@ def data_character():
 						paragraph = li['content']
 						# Replace <.*?> with ""
 						paragraph = re.sub(r'<.*?>', '', paragraph)
-						map_cnt(paragraph_length, str(len(paragraph)))
+						map_cnt(paragraph_length, len(paragraph))
 			cnt += 1
 			if skip:
 				# record the filtered line idx
@@ -124,7 +124,7 @@ def data_character():
 			print(item[0], item[1])
 		print('-------------------------------------')
 		# paragraph length
-		paragraph_length = sorted(paragraph_length, key=lambda d: d[1], reverse=True)
+		paragraph_length = sorted(paragraph_length.items(), key=lambda d: d[1], reverse=True)
 		for item in paragraph_length:
 			print(item[0], item[1])
 
