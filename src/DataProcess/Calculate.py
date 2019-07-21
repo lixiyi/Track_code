@@ -108,7 +108,7 @@ def data_character():
 						paragraph = li['content']
 						# Replace <.*?> with ""
 						paragraph = re.sub(r'<.*?>', '', paragraph)
-						map_cnt(paragraph_length, len(paragraph))
+						map_cnt(paragraph_length, str(len(paragraph)))
 			cnt += 1
 			if skip:
 				# record the filtered line idx
