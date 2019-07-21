@@ -8,7 +8,8 @@
 
 
 ## Calculate
-* level 1:
+#### level 1:
+* fields:
     * id 595037
     * article_url 595037
     * title 595037
@@ -17,6 +18,9 @@
     * contents 595037
     * type 595037
     * source 595037
+* type:
+    * article 236649
+    * blog 358388
 
 
 ## Processing
