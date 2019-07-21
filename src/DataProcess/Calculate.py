@@ -123,7 +123,7 @@ def data_character():
 			print(key, topics[key])
 		print('-------------------------------------')
 		# paragraph length
-		for key in paragraph_length:
+		for key in sorted(paragraph_length):
 			print(key, paragraph_length[key])
 
 

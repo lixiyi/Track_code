@@ -44,10 +44,14 @@
         * paragraph 11094325
         * subhead 180790 (subtitle, section)
 
+#### Data Character
+* There are 181 topics
+
 
 
 ## Processing
 * Skip 'null' elements in Contents field
 * Skip opinion or editorials file according to the "kicker" field.
+    * `this would drop 23074 files`
 * Only extract subtype="paragraph" in Contents
 * Replace <.*?> with ""
