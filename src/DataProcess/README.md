@@ -46,6 +46,13 @@
 
 #### Data Character
 * There are 181 topics
+* Paragraph
+    * max length: 76112
+    * median: 1000+
+    * min length: 0
+* Sentence
+    * max length:
+    * min length:
 
 
 

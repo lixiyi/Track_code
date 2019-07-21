@@ -87,10 +87,12 @@ def level2_check():
 # data character
 def data_character():
 	with open(path_mp['DataPath'] + path_mp['WashingtonPost'], 'r', encoding='utf-8') as f:
-		filter_kicker = {"Opinion":1, "Letters to the Editor":1, "The Post's View":1}
+		filter_kicker = {"Opinion": 1, "Letters to the Editor": 1, "The Post's View": 1}
+		filtered = []
 		topics = {}
 		paragraph_length = {}
-		filtered = []
+		doc_length = {}
+		sentence_length = {}
 		cnt = 0
 		for line in tqdm(f):
 			obj = json.loads(line)
