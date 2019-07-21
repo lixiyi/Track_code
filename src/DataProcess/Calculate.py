@@ -60,9 +60,13 @@ def level2_check():
 				if type(li).__name__ == 'dict':
 					for key in li.keys():
 						map_cnt(lev2, key)
+				# contain null field
 				else:
 					print('NoneType', cnt)
 			cnt += 1
+		# level 2 key
+		for key in lev2:
+			print(key, lev2[key])
 			# text = ""
 			# print(len(contents))
 			# cnt = 0

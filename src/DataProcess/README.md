@@ -1,3 +1,4 @@
+# Data Observation
 ## Three rules:
 * No wire service articles.  (That is, from Associated Press (AP), AFP, etc)
     * judge wire service articles as not relevant​
@@ -8,7 +9,7 @@
 
 
 ## Calculate
-#### level 1:
+#### Level 1:
 * fields:
     * id 595037
     * article_url 595037
@@ -22,6 +23,10 @@
     * article 236649
     * blog 358388
 
+#### Level 2:(Contents)
+* About 414 examples contain 'null' element
+
 
 ## Processing
+* Skip 'null' elements in Contents field
 * Remove opinion or editorials file according to the "kicker" field.
