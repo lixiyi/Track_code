@@ -52,12 +52,17 @@ def level1_check():
 def level2_check():
 	with open(path_mp['DataPath'] + path_mp['WashingtonPost'], 'r', encoding='utf-8') as f:
 		lev2 = {}
+		cnt = 1
 		for line in tqdm(f):
 			obj = json.loads(line)
 			contents = obj['contents']
 			for li in contents:
-				for key in li.keys():
-					map_cnt(lev2, key)
+				if type(li).__name__ == 'dict':
+					for key in li.keys():
+						map_cnt(lev2, key)
+				else:
+					print('NoneType', cnt)
+			cnt += 1
 			# text = ""
 			# print(len(contents))
 			# cnt = 0
