@@ -64,6 +64,7 @@ def level2_check():
 				else:
 					print('NoneType', cnt)
 			cnt += 1
+		print('-------------------------------------')
 		# level 2 key
 		for key in lev2:
 			print(key, lev2[key])
