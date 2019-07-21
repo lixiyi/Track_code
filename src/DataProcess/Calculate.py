@@ -32,19 +32,19 @@ def level1_check():
 				elif key == 'source':
 					map_cnt(sources, obj[key])
 		# level 1 key
-		for key in lev1:
+		for key in lev1.keys():
 			print(key, lev1[key])
 		print('-------------------------------------')
 		# author
-		for key in authors:
+		for key in authors.keys():
 			print(key, authors[key])
 		print('-------------------------------------')
 		# type
-		for key in types:
+		for key in types.keys():
 			print(key, types[key])
 		print('-------------------------------------')
 		# source
-		for key in sources:
+		for key in sources.keys():
 			print(key, sources[key])
 
 
@@ -72,15 +72,15 @@ def level2_check():
 			cnt += 1
 		print('-------------------------------------')
 		# level 2 key
-		for key in lev2:
+		for key in lev2.keys():
 			print(key, lev2[key])
 		print('-------------------------------------')
 		# types
-		for key in types:
+		for key in types.keys():
 			print(key, types[key])
 		print('-------------------------------------')
 		# subtypes
-		for key in subtypes:
+		for key in subtypes.keys():
 			print(key, subtypes[key])
 
 
@@ -119,11 +119,13 @@ def data_character():
 			print(idx)
 		print('-------------------------------------')
 		# topics
-		for key in sorted(topics.items(), key=lambda d: d[1], reverse=True):
+		topics = sorted(topics.items(), key=lambda d: d[1], reverse=True)
+		for key in topics.keys():
 			print(key, topics[key])
 		print('-------------------------------------')
 		# paragraph length
-		for key in sorted(paragraph_length, key=lambda d: d[1], reverse=True):
+		paragraph_length = sorted(paragraph_length, key=lambda d: d[1], reverse=True)
+		for key in paragraph_length.keys():
 			print(key, paragraph_length[key])
 
 
