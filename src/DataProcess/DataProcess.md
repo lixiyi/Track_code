@@ -6,5 +6,18 @@
 * The list of links should be diverse.
     * not sure, waiting...
 
+
+## Calculate
+* level 1:
+    * id 595037
+    * article_url 595037
+    * title 595037
+    * author 595037
+    * published_date 595037
+    * contents 595037
+    * type 595037
+    * source 595037
+
+
 ## Processing
 * Remove opinion or editorials file according to the "kicker" field.

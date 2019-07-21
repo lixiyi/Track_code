@@ -91,8 +91,8 @@ Usage of trec_eval.9.0
 
 * the `iter` is no use, set 0 is all right
 * offical results file
-    * [background linking : bqrels.exp-gains.txt](https://github.com/lixiyi/Track_Report/blob/lxy/src/examples/bqrels.exp-gains.txt)
-    * [entity ranking : eqrels.txt](https://github.com/lixiyi/Track_Report/blob/lxy/src/examples/eqrels.txt)
+    * [background linking : bqrels.exp-gains.txt](https://github.com/lixiyi/Track_code/blob/master/src/examples/bqrels.exp-gains.txt)
+    * [entity ranking : eqrels.txt](https://github.com/lixiyi/Track_code/blob/master/src/examples/eqrels.txt)
 
 
 ## Lines of your results file
@@ -104,8 +104,8 @@ Usage of trec_eval.9.0
 
 * the `iter` and `rank` is no use, set 0 is all right
 * example
-    * [background linking : bresults.test](https://github.com/lixiyi/Track_Report/blob/lxy/src/examples/bresults.test)
-    * [entity ranking : eresults.test](https://github.com/lixiyi/Track_Report/blob/lxy/src/examples/eresults.test)
+    * [background linking : bresults.test](https://github.com/lixiyi/Track_code/blob/master/src/examples/bresults.test)
+    * [entity ranking : eresults.test](https://github.com/lixiyi/Track_code/blob/master/src/examples/eresults.test)
 
 ## Eval command
 
@@ -113,8 +113,8 @@ Usage of trec_eval.9.0
 ./trec_eval [-q] [-m measure] qrel_file results_file
 ```
 * eval results example
-    * [background linking : bscore.txt](https://github.com/lixiyi/Track_Report/blob/lxy/src/examples/bscore.txt)
-    * [entity ranking : escore.txt](https://github.com/lixiyi/Track_Report/blob/lxy/src/examples/escore.txt)
+    * [background linking : bscore.txt](https://github.com/lixiyi/Track_code/blob/master/src/examples/bscore.txt)
+    * [entity ranking : escore.txt](https://github.com/lixiyi/Track_code/blob/master/src/examples/escore.txt)
 
 * Metrics
     * nDCG@5

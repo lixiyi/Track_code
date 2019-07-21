@@ -1,23 +1,48 @@
-import src.DataProcess.getCfg as cfg
+import DataProcess.getCfg as cfg
 import json
 import re
+from tqdm import tqdm
 
 
-path_mp = cfg.get_path_conf('src/path.cfg')
+path_mp = cfg.get_path_conf('../path.cfg')
 
 
-# check data format
+def map_cnt(mp, key):
+	if obj[key] not in mp:
+		mp[key] = 1
+	else:
+		mp[key] += 1
+
+
+# level 1 check
 with open(path_mp['DataPath'] + path_mp['WashingtonPost'], 'r', encoding='utf-8') as f:
 	lev1 = {}
+	authors = {}
+	types = {}
+	sources = {}
 	for line in tqdm(f):
 		obj = json.loads(line)
 		for key in obj.keys():
-			if key not in lev1:
-				lev1[key] = 1
-			else:
-				lev1[key] += 1
+			map_cnt(lev1, key)
+			if key == 'author':
+				map_cnt(authors, obj[key])
+			elif key == 'type':
+				map_cnt(types, obj[key])
+			elif key == 'source':
+				map_cnt(sources, obj[key])
+	# level 1 key
 	for key in lev1:
 		print(key, lev1[key])
+	print('-------------------------------------')
+	# author
+	for key in authors:
+		print(key, authors[key])
+	# type
+	for key in types:
+		print(key, types[key])
+	# source
+	for key in sources:
+		print(key, sources[key])
 		# contents = obj['contents']
 		# text = ""
 		# print(len(contents))

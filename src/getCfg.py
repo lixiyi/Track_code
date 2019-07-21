@@ -1,5 +1,6 @@
 import sys
-sys.path.append('..')
+sys.path.append('.')
+
 
 # get file path conf
 def get_path_conf(filename):
