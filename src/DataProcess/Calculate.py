@@ -2,6 +2,7 @@ import getCfg as cfg
 import json
 import re
 from tqdm import tqdm
+import numpy as np
 
 
 path_mp = cfg.get_path_conf('../path.cfg')
@@ -136,16 +137,37 @@ def data_character():
 			print(item[0], item[1])
 		print('-------------------------------------')
 		# paragraph length
+		para = []
 		for key in sorted(paragraph_length.keys()):
-			print(key, paragraph_length[key])
+			# print(key, paragraph_length[key])
+			para.append(key)
+		para = np.array(para)
+		print('paragraph max:', np.max(para))
+		print('paragraph min:', np.min(para))
+		print('paragraph median:', np.median(para))
+		print('paragraph mean:', np.mean(para))
 		print('-------------------------------------')
 		# sentence length
+		sent = []
 		for key in sorted(sentence_length.keys()):
-			print(key, sentence_length[key])
+			# print(key, sentence_length[key])
+			sent.append(key)
+		sent = np.array(sent)
+		print('sentence max:', np.max(sent))
+		print('sentence min:', np.min(sent))
+		print('sentence median:', np.median(sent))
+		print('sentence mean:', np.mean(sent))
 		print('-------------------------------------')
 		# doc length
+		docs = []
 		for key in sorted(doc_length.keys()):
-			print(key, doc_length[key])
+			# print(key, doc_length[key])
+			docs.append(key)
+		docs = np.array(docs)
+		print('doc max:', np.max(docs))
+		print('doc min:', np.min(docs))
+		print('doc median:', np.median(docs))
+		print('doc mean:', np.mean(docs))
 
 
 data_character()

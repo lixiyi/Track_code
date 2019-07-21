@@ -47,12 +47,17 @@
 #### Data Character
 * There are 181 topics
 * Paragraph
-    * max length: 76112
-    * median: 1000+
+    * max length: 32905
+    * median: 200+
     * min length: 0
 * Sentence
-    * max length:
-    * min length:
+    * max length: 12618
+    * median: 200+
+    * min length: 1
+* Doc
+    * max length: 78664
+    * median: 2000+
+    * min length: 1
 
 ## Processing
 * Skip 'null' elements in Contents field
