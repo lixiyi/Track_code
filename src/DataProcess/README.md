@@ -25,8 +25,11 @@
 
 #### Level 2:(Contents)
 * About 414 examples contain 'null' element
+* main fields:
+    * type
+    * subtype
 
 
 ## Processing
 * Skip 'null' elements in Contents field
-* Remove opinion or editorials file according to the "kicker" field.
+* Skip opinion or editorials file according to the "kicker" field.
