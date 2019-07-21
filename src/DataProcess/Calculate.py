@@ -124,9 +124,8 @@ def data_character():
 			print(item[0], item[1])
 		print('-------------------------------------')
 		# paragraph length
-		paragraph_length = sorted(paragraph_length.items(), key=lambda d: d[1], reverse=True)
-		for item in paragraph_length:
-			print(item[0], item[1])
+		for key in sorted(paragraph_length.keys()):
+			print(key, paragraph_length[key])
 
 
 data_character()
