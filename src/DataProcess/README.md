@@ -41,6 +41,8 @@
         * pull_quote 29
         * inline_story 19
     * subtype
+        * paragraph 11094325
+        * subhead 180790 (subtitle, section)
 
 
 

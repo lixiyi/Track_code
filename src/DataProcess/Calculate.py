@@ -82,8 +82,50 @@ def level2_check():
 		# subtypes
 		for key in subtypes:
 			print(key, subtypes[key])
-			# 		content = re.sub(r'<.*?>', '', content)
-			# doc = json.dumps(obj)
 
-level2_check()
+
+# data character
+def data_character():
+	with open(path_mp['DataPath'] + path_mp['WashingtonPost'], 'r', encoding='utf-8') as f:
+		filter_kicker = {"Opinion":1, "Letters to the Editor":1, "The Post's View":1}
+		topics = {}
+		paragraph_length = {}
+		filtered = []
+		cnt = 0
+		for line in tqdm(f):
+			obj = json.loads(line)
+			contents = obj['contents']
+			skip = False
+			for li in contents:
+				if type(li).__name__ == 'dict':
+					if 'type' in li and li['type'] == 'kicker':
+						# skip filter kickers
+						if li['content'] in filter_kicker.keys():
+							skip = True
+							break
+						map_cnt(topics, li['content'])
+					if 'subtype' in li and li['subtype'] == 'paragraph':
+						paragraph = li['content']
+						# Replace <.*?> with ""
+						paragraph = re.sub(r'<.*?>', '', paragraph)
+						map_cnt(paragraph_length, len(paragraph))
+			cnt += 1
+			if skip:
+				# record the filtered line idx
+				filtered.append(cnt)
+				continue
+		# filtered
+		for idx in filtered:
+			print(idx)
+		print('-------------------------------------')
+		# topics
+		for key in topics:
+			print(key, topics[key])
+		print('-------------------------------------')
+		# paragraph length
+		for key in paragraph_length:
+			print(key, paragraph_length[key])
+
+
+data_character()
 
