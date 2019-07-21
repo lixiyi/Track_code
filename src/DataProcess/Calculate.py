@@ -8,7 +8,7 @@ path_mp = cfg.get_path_conf('../path.cfg')
 
 
 def map_cnt(mp, key):
-	if obj[key] not in mp:
+	if key not in mp:
 		mp[key] = 1
 	else:
 		mp[key] += 1
