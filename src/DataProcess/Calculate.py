@@ -62,10 +62,10 @@ def level2_check():
 				if type(li).__name__ == 'dict':
 					for key in li.keys():
 						map_cnt(lev2, key)
-					if key == 'type':
-						map_cnt(types, li[key])
-					elif key == 'subtype':
-						map_cnt(subtypes, li[key])
+						if key == 'type':
+							map_cnt(types, li[key])
+						elif key == 'subtype':
+							map_cnt(subtypes, li[key])
 				# contain null field
 				else:
 					print('NoneType', cnt)
