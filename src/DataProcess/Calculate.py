@@ -53,6 +53,7 @@ def level2_check():
 	with open(path_mp['DataPath'] + path_mp['WashingtonPost'], 'r', encoding='utf-8') as f:
 		lev2 = {}
 		types = {}
+		subtypes = {}
 		cnt = 1
 		for line in tqdm(f):
 			obj = json.loads(line)
@@ -63,6 +64,8 @@ def level2_check():
 						map_cnt(lev2, key)
 					if key == 'type':
 						map_cnt(types, li[key])
+					elif key == 'subtype':
+						map_cnt(subtypes, li[key])
 				# contain null field
 				else:
 					print('NoneType', cnt)
@@ -75,9 +78,10 @@ def level2_check():
 		# types
 		for key in types:
 			print(key, types[key])
-			# 	if type(li).__name__ == 'dict' and li['type'] == 'sanitized_html':
-			# 		content = li['content']
-			# 		# remove html tags, lowercase
+		print('-------------------------------------')
+		# subtypes
+		for key in subtypes:
+			print(key, subtypes[key])
 			# 		content = re.sub(r'<.*?>', '', content)
 			# doc = json.dumps(obj)
 

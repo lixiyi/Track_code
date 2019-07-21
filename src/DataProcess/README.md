@@ -27,9 +27,25 @@
 * About 414 examples contain 'null' element
 * main fields:
     * type
+        * kicker 566973 (news categories)
+        * title 594527
+        * byline 481012 (author)
+        * date 595028
+        * list 28241
+        * deck 9402
+        * tweet 170960
+        * instagram 9868
+        * video 596
+        * image 1693
+        * sanitized_html 11524  (may contain html tags such as: <a> )
+        * pull_quote 29
+        * inline_story 19
     * subtype
+
 
 
 ## Processing
 * Skip 'null' elements in Contents field
 * Skip opinion or editorials file according to the "kicker" field.
+* Only extract subtype="paragraph" in Contents
+* Replace <.*?> with ""
