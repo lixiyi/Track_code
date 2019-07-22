@@ -2,7 +2,7 @@
 ## TF-IDF
 
 
-## cosine
+## cosine (bert)
 
 
 ## author
@@ -12,3 +12,7 @@
 
 
 ## entity
+
+
+## Automatic summary of text
+
