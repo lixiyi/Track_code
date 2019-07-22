@@ -29,3 +29,6 @@ def topics_index():
 			cnt += 1
 	with open('topics_index.txt', 'w', encoding='utf-8') as f:
 		f.write(json.dumps(topics))
+
+
+topics_index()
