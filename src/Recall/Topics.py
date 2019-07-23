@@ -1,12 +1,12 @@
 import sys
-import getCfg as cfg
+import DataProcess.getCfg as cfg
 import json
 import re
 from tqdm import tqdm
 import numpy as np
 
 
-sys.path('../DataProcess')
+sys.path.append('..')
 path_mp = cfg.get_path_conf('../path.cfg')
 
 
