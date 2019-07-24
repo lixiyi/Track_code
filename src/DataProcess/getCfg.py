@@ -1,5 +1,5 @@
 DOCUMENT_COUNT = 595037 - 23074
-
+OUTPUT = '/home/trec7/lianxiaoying/Track_code/src/outputs/'
 
 # get file path conf
 def get_path_conf(filename):

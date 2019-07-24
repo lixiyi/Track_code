@@ -31,7 +31,7 @@ def topics_index(args = None):
 							topics[key] = []
 							topics[key].append(cnt)
 			cnt += 1
-	with open('topics_index.txt', 'w', encoding='utf-8') as f:
+	with open(cfg.OUTPUT + 'topics_index.txt', 'w', encoding='utf-8') as f:
 		f.write(json.dumps(topics))
 
 
@@ -39,7 +39,7 @@ def topics_index(args = None):
 # args 1: topics
 def recall_by_topics(args = None):
 	key = args[0]
-	with open('topics_index.txt', 'r', encoding='utf-8') as f:
+	with open(cfg.OUTPUT + 'topics_index.txt', 'r', encoding='utf-8') as f:
 		mp = {}
 		for line in f:
 			mp = json.loads(line)
