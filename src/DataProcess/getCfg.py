@@ -1,3 +1,6 @@
+DOCUMENT_COUNT = 595037 - 23074
+
+
 # get file path conf
 def get_path_conf(filename):
 	path_mp = {}
