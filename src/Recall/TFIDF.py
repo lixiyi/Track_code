@@ -63,7 +63,7 @@ def get_tfidf(args = None):
 	num = int(num)
 	# load inverted word list
 	words = {}
-	with open('words_count.txt', '', encoding='utf-8') as f:
+	with open('words_count.txt', 'r', encoding='utf-8') as f:
 		for line in f:
 			words = json.load(line)
 	word_list = jieba.cut_for_search(s)
