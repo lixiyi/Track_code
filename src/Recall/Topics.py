@@ -14,7 +14,7 @@ path_mp = cfg.get_path_conf('../path.cfg')
 
 # create inverted list for topis
 # No args
-def topics_index(None):
+def topics_index(args = None):
 	topics = {}
 	with open(path_mp['DataPath'] + path_mp['WashingtonPost'], 'r', encoding='utf-8') as f:
 		cnt = 1
@@ -37,7 +37,7 @@ def topics_index(None):
 
 # return documents by topics
 # args 1: topics
-def recall_by_topics(args):
+def recall_by_topics(args = None):
 	key = args[0]
 	with open('topics_index.txt', 'r', encoding='utf-8') as f:
 		mp = {}
