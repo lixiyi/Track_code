@@ -1,25 +1,22 @@
-import getCfg as cfg
+import sys
+sys.path.append("..")
+
+
+import DataProcess.getCfg as cfg
 import json
 import re
 from tqdm import tqdm
 import numpy as np
+import jieba
 
 
 path_mp = cfg.get_path_conf('../path.cfg')
 
 
-def map_cnt(mp, key):
-	if key not in mp:
-		mp[key] = 1
-	else:
-		mp[key] += 1
-
-
-# data character
-def data_character():
+def words_index():
+	words = {}
 	with open(path_mp['DataPath'] + path_mp['WashingtonPost'], 'r', encoding='utf-8') as f:
 		filter_kicker = {"Opinion": 1, "Letters to the Editor": 1, "The Post's View": 1}
-		topics = {}
 		cnt = 0
 		for line in tqdm(f):
 			obj = json.loads(line)
@@ -33,10 +30,19 @@ def data_character():
 						if li['content'] in filter_kicker.keys():
 							skip = True
 							break
-						map_cnt(topics, li['content'])
 					if 'subtype' in li and li['subtype'] == 'paragraph':
 						paragraph = li['content'].strip()
 						# Replace <.*?> with ""
 						paragraph = re.sub(r'<.*?>', '', paragraph)
 						doc += ' ' + paragraph
 			doc = doc.strip()
+			word_list = jieba.cut_for_search(doc)
+			for w in word_list:
+				if w in words:
+					words[w] += 1
+				else:
+					words[w] = 1
+	with open('words_count.txt', 'w', encoding='utf-8') as f:
+		f.write(json.dumps(words))
+
+				

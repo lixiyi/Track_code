@@ -35,8 +35,8 @@ def topics_index():
 
 def recall_by_topics(key):
 	with open('topics_index.txt', 'r', encoding='utf-8') as f:
-		topics_index = {}
+		mp = {}
 		for line in f:
-			topics_index = json.loads(line)
-		return topics_index[key]
+			mp = json.loads(line)
+		return mp[key]
 
