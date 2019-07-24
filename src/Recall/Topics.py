@@ -46,7 +46,7 @@ def recall_by_topics(args = None):
 		return mp[key]
 
 
-if __name__ == "__main___":
+if __name__ == "__main__":
 	getattr(__import__('Topics'), sys.argv[1])(sys.argv[2:])
 
 

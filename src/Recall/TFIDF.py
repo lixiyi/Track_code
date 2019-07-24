@@ -88,7 +88,7 @@ def get_tfidf(args = None):
 	return res
 
 
-if __name__ == "__main___":
+if __name__ == "__main__":
 	getattr(__import__('TFIDF'), sys.argv[1])(sys.argv[2:])
 
 

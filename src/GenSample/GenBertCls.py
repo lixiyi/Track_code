@@ -41,11 +41,11 @@ def genSample(args = None):
 				continue
 			# get inverted words for each doc
 			doc = doc.strip()
-			res = tfidf.get_tfidf(doc, 20)
+			res = tfidf.get_tfidf([doc, '20'])
 			print(doc)
 			print(res)
 
-if __name__ == "__main___":
+if __name__ == "__main__":
 	getattr(__import__('GenBertCls'), sys.argv[1])(sys.argv[2:])
 
 
