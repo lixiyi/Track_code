@@ -1,6 +1,7 @@
 # Recall Methods to Generate Candidates
 ## TF-IDF
-
+* Get top 'num' words for each document
+* Recall by words inverted list
 
 ## cosine (bert)
 
@@ -9,7 +10,7 @@
 
 
 ## topics
-
+* Recall by topics inverted list
 
 ## entity
 
