@@ -46,7 +46,7 @@ def words_index():
 					words[w].append(cnt)
 				else:
 					words[w] = []
-					words[w].apppend(cnt)
+					words[w].append(cnt)
 
 	with open('words_count.txt', 'w', encoding='utf-8') as f:
 		f.write(json.dumps(words))
