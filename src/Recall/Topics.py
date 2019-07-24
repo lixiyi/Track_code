@@ -12,7 +12,9 @@ import numpy as np
 path_mp = cfg.get_path_conf('../path.cfg')
 
 
-def topics_index():
+# create inverted list for topis
+# No args
+def topics_index(None):
 	topics = {}
 	with open(path_mp['DataPath'] + path_mp['WashingtonPost'], 'r', encoding='utf-8') as f:
 		cnt = 1
@@ -33,10 +35,19 @@ def topics_index():
 		f.write(json.dumps(topics))
 
 
-def recall_by_topics(key):
+# return documents by topics
+# args 1: topics
+def recall_by_topics(args):
+	key = args[0]
 	with open('topics_index.txt', 'r', encoding='utf-8') as f:
 		mp = {}
 		for line in f:
 			mp = json.loads(line)
 		return mp[key]
+
+
+if __name__ == "__main___":
+	getattr(__import__('Topics'), sys.argv[1])(sys.argv[2:])
+
+
 

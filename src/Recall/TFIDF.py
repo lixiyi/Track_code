@@ -13,7 +13,9 @@ import jieba
 path_mp = cfg.get_path_conf('../path.cfg')
 
 
-def words_index():
+# create words inverted list
+# No args
+def words_index(args = None):
 	words = {}
 	with open(path_mp['DataPath'] + path_mp['WashingtonPost'], 'r', encoding='utf-8') as f:
 		filter_kicker = {"Opinion": 1, "Letters to the Editor": 1, "The Post's View": 1}
@@ -52,13 +54,19 @@ def words_index():
 		f.write(json.dumps(words))
 
 
-def get_tfidf(str):
+# calculate tfidf for a string
+# document args 1: s
+# top words count args 2: num
+# return: top words
+def get_tfidf(args = None):
+	s, num = args
+	num = int(num)
 	# load inverted word list
 	words = {}
 	with open('words_count.txt', '', encoding='utf-8') as f:
 		for line in f:
 			words = json.load(line)
-	word_list = jieba.cut_for_search(str)
+	word_list = jieba.cut_for_search(s)
 	# calculate term frequency for each word in the str
 	tf = {}
 	for w in word_list:
@@ -75,10 +83,12 @@ def get_tfidf(str):
 	# sort by tf-idf
 	tfidf_mp = sorted(tfidf_mp.items(), key=lambda d: d[1], reverse=True)
 	res = []
-	for i in range(20):
+	for i in range(num):
 		res.append(tfidf_mp[i][0])
 	return res
 
 
-words_index()
+if __name__ == "__main___":
+	getattr(__import__('TFIDF'), sys.argv[1])(sys.argv[2:])
+
 
