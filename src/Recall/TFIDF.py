@@ -49,10 +49,19 @@ def words_index(args = None):
 				else:
 					words[w] = []
 					words[w].append(cnt)
-
-	with open(cfg.OUTPUT + 'words_count.txt', 'w', encoding='utf-8') as f:
-		f.write(json.dumps(words))
-
+	# output inverted list, first column is list length
+	words_mp = {}
+	with open(cfg.OUTPUT + 'words_index.txt', 'w', encoding='utf-8') as f:
+		cnt = 1
+		for key in sorted(words.keys()):
+			words_mp[key] = cnt
+			cnt += 1
+			li = words[key]
+			f.write(len(li)+' '+' '.join(li)+'\n')
+	# output word to line map
+	with open(cfg.OUTPUT + 'words_map.txt', 'w', encoding='utf-8') as f:
+		f.write(json.dump(words_mp))
+			
 
 # calculate tfidf for a string
 # document args 1: s
@@ -62,10 +71,10 @@ def get_tfidf(args = None):
 	s, num = args
 	num = int(num)
 	# load inverted word list
-	words = {}
-	with open(cfg.OUTPUT + 'words_count.txt', 'r', encoding='utf-8') as f:
+	words_mp = {}
+	with open(cfg.OUTPUT + 'words_map.txt', 'r', encoding='utf-8') as f:
 		for line in f:
-			words = json.load(line)
+			words_mp = json.load(line)
 	word_list = jieba.cut_for_search(s)
 	# calculate term frequency for each word in the str
 	tf = {}
@@ -74,9 +83,14 @@ def get_tfidf(args = None):
 			tf[w] += 1
 		else:
 			tf[w] = 1
+	# calculate idf for each word
+	with open(cfg.OUTPUT + 'words_index.txt', 'r', encoding='utf-8') as f:
+		for w in sorted(tf.keys()):
+			li = words_mp[w]
+			
 	# calculate tf-idf for each word
 	tfidf_mp = {}
-	for w in word_list:
+	for w in tf.keys():
 		idf = np.log(cfg.DOCUMENT_COUNT * 1.0 / len(words[w]))
 		tfidf = tf[w] * 1.0 * idf
 		tfidf_mp[w] = tfidf
