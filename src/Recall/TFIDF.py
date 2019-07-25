@@ -68,7 +68,7 @@ def words_index(args = None):
 def get_tfidf(args = None):
 	s, num = args
 	num = int(num)
-	# load inverted word list
+	# load inverted word to line map
 	words_mp = {}
 	with open(cfg.OUTPUT + 'words_map.txt', 'r', encoding='utf-8') as f:
 		for line in f:
@@ -81,18 +81,25 @@ def get_tfidf(args = None):
 			tf[w] += 1
 		else:
 			tf[w] = 1
-	# calculate idf for each word
-	idf = {}
-	with open(cfg.OUTPUT + 'words_index.txt', 'r', encoding='utf-8') as f:
-		for w in sorted(tf.keys()):
-			li = words_mp[w]
-			
-	# calculate tf-idf for each word
+	# calculate idf and tf-idf for each word
+	w_list = sorted(tf)
 	tfidf_mp = {}
-	for w in tf.keys():
-		idf = np.log(cfg.DOCUMENT_COUNT * 1.0 / len(words[w]))
-		tfidf = tf[w] * 1.0 * idf
-		tfidf_mp[w] = tfidf
+	with open(cfg.OUTPUT + 'words_index.txt', 'r', encoding='utf-8') as f:
+		cnt = 1			# line number
+		now = 0			# current word index
+		for line in f:
+			# all the words for this document have calculated
+			if now >= len(w_list):
+				break
+			w = w_list[now]
+			# meet the right line
+			if cnt == int(words_mp[w]):
+				idf = np.log(cfg.DOCUMENT_COUNT * 1.0 / int(line.split(' ')[0]))
+				tfidf_mp[w] = tf[w] * 1.0 * idf
+				now += 1
+			else:
+				continue
+			cnt += 1
 	# sort by tf-idf
 	tfidf_mp = sorted(tfidf_mp.items(), key=lambda d: d[1], reverse=True)
 	res = []
@@ -103,5 +110,4 @@ def get_tfidf(args = None):
 
 if __name__ == "__main__":
 	getattr(__import__('TFIDF'), sys.argv[1])(sys.argv[2:])
-
 
