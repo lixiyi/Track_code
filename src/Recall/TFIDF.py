@@ -44,11 +44,9 @@ def words_index(args = None):
 			doc = doc.strip()
 			word_list = jieba.cut_for_search(doc)
 			for w in word_list:
-				if w in words:
-					words[w].append(cnt)
-				else:
+				if w not in words:
 					words[w] = []
-					words[w].append(cnt)
+				words[w].append(str(cnt))
 	# output inverted list, first column is list length
 	words_mp = {}
 	with open(cfg.OUTPUT + 'words_index.txt', 'w', encoding='utf-8') as f:
@@ -57,7 +55,7 @@ def words_index(args = None):
 			words_mp[key] = cnt
 			cnt += 1
 			li = words[key]
-			f.write(str(len(li))+' '+' '.join(li)+'\n')
+			f.write(str(len(li)) + ' ' + ' '.join(li) + '\n')
 	# output word to line map
 	with open(cfg.OUTPUT + 'words_map.txt', 'w', encoding='utf-8') as f:
 		f.write(json.dump(words_mp))
@@ -84,6 +82,7 @@ def get_tfidf(args = None):
 		else:
 			tf[w] = 1
 	# calculate idf for each word
+	idf = {}
 	with open(cfg.OUTPUT + 'words_index.txt', 'r', encoding='utf-8') as f:
 		for w in sorted(tf.keys()):
 			li = words_mp[w]
