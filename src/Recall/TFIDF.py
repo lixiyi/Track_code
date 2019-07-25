@@ -15,6 +15,8 @@ path_mp = cfg.get_path_conf('../path.cfg')
 
 # create words inverted list
 # No args
+# outputs: words_index [length, doc line number]
+# 		 : words_map (word, words_index line number)
 def words_index(args = None):
 	words = {}
 	with open(path_mp['DataPath'] + path_mp['WashingtonPost'], 'r', encoding='utf-8') as f:
@@ -64,8 +66,8 @@ def words_index(args = None):
 # calculate tfidf for a string
 # document args 1: s
 # top words count args 2: num
-# return: top words
-def get_tfidf(args = None):
+# return: top doc line number list
+def recall_by_tfidf(args = None):
 	s, num = args
 	num = int(num)
 	# load inverted word to line map
@@ -84,6 +86,7 @@ def get_tfidf(args = None):
 	# calculate idf and tf-idf for each word
 	w_list = sorted(tf)
 	tfidf_mp = {}
+	inv_list = {}		# words inverted list cache
 	with open(cfg.OUTPUT + 'words_index.txt', 'r', encoding='utf-8') as f:
 		cnt = 1			# line number
 		now = 0			# current word index
@@ -97,14 +100,16 @@ def get_tfidf(args = None):
 				idf = np.log(cfg.DOCUMENT_COUNT * 1.0 / int(line.split(' ')[0]))
 				tfidf_mp[w] = tf[w] * 1.0 * idf
 				now += 1
+				inv_list[w] = line.split(' ')[1:]
 			else:
 				continue
 			cnt += 1
-	# sort by tf-idf
+	# sort by tf-idf, combine top inverted file line number list
 	tfidf_mp = sorted(tfidf_mp.items(), key=lambda d: d[1], reverse=True)
 	res = []
 	for i in range(num):
-		res.append(tfidf_mp[i][0])
+		w = tfidf_mp[i][0]
+		res.append(inv_list[w])
 	return res
 
 

@@ -15,7 +15,7 @@ import jieba
 path_mp = cfg.get_path_conf('../path.cfg')
 
 
-def genSample(args = None):
+def gen_sample(args = None):
 	with open(path_mp['DataPath'] + path_mp['WashingtonPost'], 'r', encoding='utf-8') as f:
 		filter_kicker = {"Opinion": 1, "Letters to the Editor": 1, "The Post's View": 1}
 		cnt = 0
@@ -24,11 +24,13 @@ def genSample(args = None):
 			contents = obj['contents']
 			skip = False
 			doc = ""
+			topic_name = ""
 			for li in contents:
 				if type(li).__name__ == 'dict':
 					if 'type' in li and li['type'] == 'kicker':
 						# skip filter kickers
-						if li['content'] in filter_kicker.keys():
+						topic_name = li['content']
+						if topic in filter_kicker.keys():
 							skip = True
 							break
 					if 'subtype' in li and li['subtype'] == 'paragraph':
@@ -39,11 +41,13 @@ def genSample(args = None):
 			cnt += 1
 			if skip:
 				continue
-			# get inverted words for each doc
+			# Recall By tf_idf
 			doc = doc.strip()
-			res = tfidf.get_tfidf([doc, '20'])
-			print(doc)
-			print(res)
+			res_tfidf = tfidf.recall_by_tfidf([doc, '20'])
+
+			# Recall By topics
+			res_topic = topic.recall_by_topics(topic_name)
+
 
 if __name__ == "__main__":
 	getattr(__import__('GenBertCls'), sys.argv[1])(sys.argv[2:])

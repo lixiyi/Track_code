@@ -11,6 +11,7 @@
 
 ## topics
 * Recall by topics inverted list
+* 183 topics in total
 
 ## entity
 
