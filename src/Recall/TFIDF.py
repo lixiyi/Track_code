@@ -57,7 +57,7 @@ def words_index(args = None):
 			words_mp[key] = cnt
 			cnt += 1
 			li = words[key]
-			f.write(len(li)+' '+' '.join(li)+'\n')
+			f.write(str(len(li))+' '+' '.join(li)+'\n')
 	# output word to line map
 	with open(cfg.OUTPUT + 'words_map.txt', 'w', encoding='utf-8') as f:
 		f.write(json.dump(words_mp))
