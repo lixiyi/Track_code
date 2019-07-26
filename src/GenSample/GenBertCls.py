@@ -37,7 +37,7 @@ def extract_body(args = None):
 # return: string
 def split_body(args=None):
 	body, max_length = args
-	w_list = jieba.cut(body)
+	w_list = list(jieba.cut(body))
 	if len(w_list) <= max_length-2:
 		return body
 	head_len = (max_length - 2) / 2
