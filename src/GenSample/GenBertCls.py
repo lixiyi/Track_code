@@ -49,12 +49,15 @@ def gen_sample(args = None):
 			res_topic = topic.recall_by_topics(topic_name)
 
 			# Combie Recall results
-			res = set()
+			res_mask = {}
 			for li in res_tfidf:
-				res.add(li)
+				res_mask[int(li)] = 2
 			for li in res_topic:
-				res.add(li)
-			res = list(res)
+				if li in res_mask:
+					res_mask[int(li)] = 4
+				else:
+					res_mask[int(li)] = 2
+
 
 
 if __name__ == "__main__":
