@@ -74,7 +74,7 @@ def recall_by_tfidf(args = None):
 	words_mp = {}
 	with open(cfg.OUTPUT + 'words_map.txt', 'r', encoding='utf-8') as f:
 		for line in f:
-			words_mp = json.load(line)
+			words_mp = json.loads(line)
 	word_list = jieba.cut_for_search(s)
 	# calculate term frequency for each word in the str
 	tf = {}
