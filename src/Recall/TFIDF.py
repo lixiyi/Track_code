@@ -101,13 +101,11 @@ def recall_by_tfidf(args = None):
 				tfidf_mp[w] = tf[w] * 1.0 * idf
 				now += 1
 				inv_list[w] = line.split(' ')[1:]
-			else:
-				continue
 			cnt += 1
 	# sort by tf-idf, combine top inverted file line number list
 	tfidf_mp = sorted(tfidf_mp.items(), key=lambda d: d[1], reverse=True)
 	res = []
-	for i in range(num):
+	for i in range(min(num, len(tfidf_mp))):
 		w = tfidf_mp[i][0]
 		res.append(inv_list[w])
 	return res
