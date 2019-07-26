@@ -37,12 +37,12 @@ def extract_body(args = None):
 # return: string
 def split_body(args=None):
 	body, max_length = args
-	w_list = list(jieba.cut(body))
+	w_list = list(jieba.cut_for_search(body))
 	if len(w_list) <= max_length-2:
 		return body
-	head_len = (max_length - 2) / 2
-	tail_len = max_length - 2 - head_len
-	return ' '.join(w_list[:head_len]) + ' ' + ' '.join(w_list[-tail_len:])
+	head_len = int((max_length - 2) / 2)
+	tail_len = int(max_length - 2 - head_len)
+	return ''.join(w_list[:head_len]) + ''.join(w_list[-tail_len:])
 
 
 # generate samples for each document
