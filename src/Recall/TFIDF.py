@@ -100,7 +100,7 @@ def recall_by_tfidf(args = None):
 				idf = np.log(cfg.DOCUMENT_COUNT * 1.0 / int(line.split(' ')[0]))
 				tfidf_mp[w] = tf[w] * 1.0 * idf
 				now += 1
-				inv_list[w] = line.split(' ')[1:]
+				inv_list[w] = line.split(' ')[1:-1]
 			cnt += 1
 	# sort by tf-idf, combine top inverted file line number list
 	tfidf_mp = sorted(tfidf_mp.items(), key=lambda d: d[1], reverse=True)
