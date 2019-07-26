@@ -48,6 +48,14 @@ def gen_sample(args = None):
 			# Recall By topics
 			res_topic = topic.recall_by_topics(topic_name)
 
+			# Combie Recall results
+			res = set()
+			for li in res_tfidf:
+				res.add(li)
+			for li in res_topic:
+				res.add(li)
+			res = list(res)
+
 
 if __name__ == "__main__":
 	getattr(__import__('GenBertCls'), sys.argv[1])(sys.argv[2:])
