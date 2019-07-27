@@ -1,5 +1,6 @@
 import sys
 sys.path.append("..")
+sys.path.append("/home/trec7/lianxiaoying/bert/")
 
 
 import Recall.TFIDF as tfidf
@@ -10,10 +11,11 @@ import re
 from tqdm import tqdm
 import random
 import numpy as np
-import jieba
+import tokenization
 
 
 path_mp = cfg.get_path_conf('../path.cfg')
+tokenizer = tokenization.FullTokenizer(vocab_file=cfg.BERT_MODEL + 'vocab.txt', do_lower_case=False)
 
 
 # extract body from give Washington Post json
@@ -37,7 +39,7 @@ def extract_body(args = None):
 # return: string
 def split_body(args=None):
 	body, max_length = args
-	w_list = list(jieba.cut_for_search(body))
+	w_list = tokenizer.tokenize(body)
 	if len(w_list) <= max_length-2:
 		return body
 	head_len = int((max_length - 2) / 2)
