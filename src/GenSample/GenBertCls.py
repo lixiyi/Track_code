@@ -1,6 +1,5 @@
 import sys
 sys.path.append("..")
-sys.path.append("/home/trec7/lianxiaoying/bert/")
 
 
 import Recall.TFIDF as tfidf
@@ -11,11 +10,10 @@ import re
 from tqdm import tqdm
 import random
 import numpy as np
-import tokenization
+from stanfordcorenlp import StanfordCoreNLP
 
 
 path_mp = cfg.get_path_conf('../path.cfg')
-tokenizer = tokenization.FullTokenizer(vocab_file=cfg.BERT_MODEL + 'vocab.txt', do_lower_case=False)
 
 
 # extract body from give Washington Post json
@@ -38,19 +36,20 @@ def extract_body(args = None):
 # args 0: string
 # return: string
 def split_body(args=None):
-	body, max_length = args
-	w_list = tokenizer.tokenize(body)
+	body, max_length, nlp = args
+	w_list = nlp.word_tokenize(body)
 	if len(w_list) <= max_length-2:
 		return body
 	head_len = int((max_length - 2) / 2)
 	tail_len = int(max_length - 2 - head_len)
-	return ''.join(w_list[:head_len]) + ''.join(w_list[-tail_len:])
+	return ' '.join(w_list[:head_len]) + ' '.join(w_list[-tail_len:])
 
 
 # generate samples for each document
 # args 0: max_length for Bert
 def gen_sample(args=None):
 	max_length = args[0]
+	nlp = StanfordCoreNLP(cfg.STANFORDNLP)
 	with open(path_mp['DataPath'] + path_mp['WashingtonPost'], 'r', encoding='utf-8') as f:
 		filter_kicker = {"Opinion": 1, "Letters to the Editor": 1, "The Post's View": 1}
 		kicker_filterd_mp = {}		# Record line filtered by kicker, line index start from 1
@@ -150,7 +149,7 @@ def gen_sample(args=None):
 					li_cnt += 1
 
 			# split from body
-			sen1 = split_body([body, max_length])
+			sen1 = split_body([body, max_length, nlp])
 			# Sampling and Generate examples
 			with open(cfg.OUTPUT + 'Dataset_BertCls.txt', 'r', encoding='utf-8') as out:
 				# label 0, 2, 4, 8
@@ -158,8 +157,9 @@ def gen_sample(args=None):
 					idx = random.randint(0, len(doc_cache[label])-1)
 					doc = doc_cache[idx]
 					doc_body = extract_body([doc['contents']])
-					sen2 = split_body([doc_body, max_length])
+					sen2 = split_body([doc_body, max_length, nlp])
 					out.write(str(label) + '\t' + sen1 + '\t' + sen2 + '\n')
+	nlp.close()
 
 
 

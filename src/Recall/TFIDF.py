@@ -1,6 +1,5 @@
 import sys
 sys.path.append("..")
-sys.path.append("/home/trec7/lianxiaoying/bert/")
 
 
 import DataProcess.getCfg as cfg
@@ -8,11 +7,9 @@ import json
 import re
 from tqdm import tqdm
 import numpy as np
-import tokenization
 
 
 path_mp = cfg.get_path_conf('../path.cfg')
-tokenizer = tokenization.FullTokenizer(vocab_file=cfg.BERT_MODEL + 'vocab.txt', do_lower_case=False)
 
 
 # create words inverted list
