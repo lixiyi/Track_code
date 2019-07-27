@@ -1,5 +1,6 @@
 import sys
 sys.path.append("..")
+sys.path.append("/home/trec7/lianxiaoying/bert/")
 
 
 import DataProcess.getCfg as cfg
@@ -7,10 +8,11 @@ import json
 import re
 from tqdm import tqdm
 import numpy as np
-import jieba
+import tokenization
 
 
 path_mp = cfg.get_path_conf('../path.cfg')
+tokenizer = tokenization.FullTokenizer(vocab_file=cfg.BERT_MODEL + 'vocab.txt', do_lower_case=False)
 
 
 # create words inverted list
@@ -44,7 +46,7 @@ def words_index(args = None):
 				continue
 			# get inverted words for each doc
 			doc = doc.strip()
-			word_list = jieba.cut_for_search(doc)
+			word_list = tokenizer.tokenize(doc)
 			for w in word_list:
 				if w not in words:
 					words[w] = set()
@@ -75,7 +77,7 @@ def recall_by_tfidf(args = None):
 	with open(cfg.OUTPUT + 'words_map.txt', 'r', encoding='utf-8') as f:
 		for line in f:
 			words_mp = json.loads(line)
-	word_list = jieba.cut_for_search(s)
+	word_list = tokenizer.tokenize(s)
 	# calculate term frequency for each word in the str
 	tf = {}
 	for w in word_list:
