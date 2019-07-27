@@ -7,6 +7,7 @@ import json
 import re
 from tqdm import tqdm
 import numpy as np
+from stanfordcorenlp import StanfordCoreNLP
 
 
 path_mp = cfg.get_path_conf('../path.cfg')
@@ -18,6 +19,7 @@ path_mp = cfg.get_path_conf('../path.cfg')
 # 		 : words_map (word, words_index line number)
 def words_index(args = None):
 	words = {}
+	nlp = StanfordCoreNLP(cfg.STANFORDNLP)
 	with open(path_mp['DataPath'] + path_mp['WashingtonPost'], 'r', encoding='utf-8') as f:
 		filter_kicker = {"Opinion": 1, "Letters to the Editor": 1, "The Post's View": 1}
 		cnt = 0
@@ -43,7 +45,7 @@ def words_index(args = None):
 				continue
 			# get inverted words for each doc
 			doc = doc.strip()
-			word_list = tokenizer.tokenize(doc)
+			word_list = nlp.word_tokenize(doc)
 			for w in word_list:
 				if w not in words:
 					words[w] = set()
@@ -60,6 +62,7 @@ def words_index(args = None):
 	# output word to line map
 	with open(cfg.OUTPUT + 'words_map.txt', 'w', encoding='utf-8') as f:
 		f.write(json.dumps(words_mp))
+	nlp.close()
 			
 
 # calculate tfidf for a string
@@ -67,14 +70,14 @@ def words_index(args = None):
 # top words count args 2: num
 # return: top doc line number list
 def recall_by_tfidf(args = None):
-	s, num = args
+	s, num, nlp = args
 	num = int(num)
 	# load inverted word to line map
 	words_mp = {}
 	with open(cfg.OUTPUT + 'words_map.txt', 'r', encoding='utf-8') as f:
 		for line in f:
 			words_mp = json.loads(line)
-	word_list = tokenizer.tokenize(s)
+	word_list = nlp.word_tokenize(s)
 	# calculate term frequency for each word in the str
 	tf = {}
 	for w in word_list:
