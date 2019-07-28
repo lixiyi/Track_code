@@ -159,7 +159,7 @@ def gen_sample(args=None):
 					if len(doc_cache[label]) <= 0:
 						continue
 					idx = random.randint(0, len(doc_cache[label])-1)
-					doc = doc_cache[idx]
+					doc = doc_cache[label][idx]
 					doc_body = extract_body([doc['contents']])
 					sen2 = split_body([doc_body, max_length, nlp])
 					out.write(str(label) + '\t' + sen1 + '\t' + sen2 + '\n')
