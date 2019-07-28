@@ -37,6 +37,7 @@ def extract_body(args = None):
 # return: string
 def split_body(args=None):
 	body, max_length, nlp = args
+	max_length = int(max_length)
 	w_list = nlp.word_tokenize(body)
 	if len(w_list) <= max_length-2:
 		return body
@@ -49,6 +50,7 @@ def split_body(args=None):
 # args 0: max_length for Bert
 def gen_sample(args=None):
 	max_length = args[0]
+	max_length = int(max_length)
 	nlp = StanfordCoreNLP(cfg.STANFORDNLP)
 	with open(path_mp['DataPath'] + path_mp['WashingtonPost'], 'r', encoding='utf-8') as f:
 		filter_kicker = {"Opinion": 1, "Letters to the Editor": 1, "The Post's View": 1}

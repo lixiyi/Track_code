@@ -97,6 +97,9 @@ def recall_by_tfidf(args = None):
 			if now >= len(w_list):
 				break
 			w = w_list[now]
+			# word not in vocabulary
+			if w not in words_mp:
+				continue
 			# meet the right line
 			if cnt == int(words_mp[w]):
 				idf = np.log(cfg.DOCUMENT_COUNT * 1.0 / int(line.split(' ')[0]))
