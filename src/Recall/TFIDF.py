@@ -134,7 +134,7 @@ def tfidf_index(args = None):
 	print('TF-IDF idx loaded.')
 
 	with open(path_mp['DataPath'] + path_mp['WashingtonPost'], 'r', encoding='utf-8') as f:
-		with open(path_mp['DataPath'] + path_mp['WashingtonPost'], 'r', encoding='utf-8') as out:
+		with open(cfg.OUTPUT + 'tfidf_index.txt', 'w', encoding='utf-8') as out:
 			for line in tqdm(f):
 				obj = json.loads(line)
 				contents = obj['contents']
