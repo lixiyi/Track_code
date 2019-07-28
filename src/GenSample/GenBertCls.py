@@ -159,6 +159,12 @@ def gen_sample(args=None):
 					doc_body = extract_body([doc['contents']])
 					sen2 = split_body([doc_body, max_length, nlp])
 					out.write(str(label) + '\t' + sen1 + '\t' + sen2 + '\n')
+				# label 16 middle from the body
+				w_list = nlp.word_tokenize(body)
+				st = (len(w_list) - max_length + 2) //2
+				ed = st + max_length - 2
+				sen2 = ' '.join(w_list[st:ed])
+				out.write(str(label) + '\t' + sen1 + '\t' + sen2 + '\n')
 	nlp.close()
 
 
