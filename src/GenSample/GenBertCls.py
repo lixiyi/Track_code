@@ -124,7 +124,7 @@ def gen_sample(args=None):
 						doc_contents = doc['contents']
 						now += 1
 						# Filter by date
-						if doc_date != '' and date != '' and int(doc_date) > int(date):
+						if doc_date is not None and date is not None and int(doc_date) > int(date):
 							continue
 						# Filter by date + title + author
 						rep_key = doc_title + '#' + doc_author + '#' + str(doc_date)
@@ -145,7 +145,7 @@ def gen_sample(args=None):
 						if li_cnt in kicker_filterd_mp:
 							continue
 						# Filter by date
-						if doc_date != '' and date != '' and int(doc_date) > int(date):
+						if doc_date is not None and date is not None and int(doc_date) > int(date):
 							continue
 						doc_cache[0].append(json.loads(li))
 					li_cnt += 1
