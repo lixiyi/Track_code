@@ -153,7 +153,7 @@ def gen_sample(args=None):
 			# split from body
 			sen1 = split_body([body, max_length, nlp])
 			# Sampling and Generate examples
-			with open(cfg.OUTPUT + 'Dataset_BertCls.txt', 'r', encoding='utf-8') as out:
+			with open(cfg.OUTPUT + 'Dataset_BertCls.txt', 'w', encoding='utf-8') as out:
 				# label 0, 2, 4, 8
 				for label in sorted(doc_cache):
 					idx = random.randint(0, len(doc_cache[label])-1)
