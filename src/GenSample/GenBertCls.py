@@ -140,7 +140,7 @@ def gen_sample(args=None):
 					# random add 100 label 0 document
 					elif len(doc_cache[0]) < 100 and random.random() > 0.9:
 						doc = json.loads(li)
-						doc_date = doc['date']
+						doc_date = doc['published_date']
 						# Filter by kicker
 						if li_cnt in kicker_filterd_mp:
 							continue
