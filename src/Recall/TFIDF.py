@@ -117,6 +117,42 @@ def recall_by_tfidf(args = None):
 	return res
 
 
+# read words_mp and words_idx into memory first(idx start from 1)
+def recall_by_tfidf_fast(args = None):
+	s, num, nlp, words_mp, words_idx = args
+	num = int(num)
+	word_list = nlp.word_tokenize(s)
+	# calculate term frequency for each word in the str
+	tf = {}
+	for w in word_list:
+		if w in tf:
+			tf[w] += 1
+		else:
+			tf[w] = 1
+	# calculate idf and tf-idf for each word
+	w_list = sorted(tf)
+	tfidf_mp = {}
+	inv_list = {}		# words inverted list cache
+	for w in w_list:
+		# word not in vocabulary
+		if w not in words_mp:
+			continue
+		# meet the right line
+		cnt = int(words_mp[w])
+		line = words_idx[cnt]
+		idf = np.log(cfg.DOCUMENT_COUNT * 1.0 / int(line.split(' ')[0]))
+		tfidf_mp[w] = tf[w] * 1.0 * idf
+		inv_list[w] = line.split(' ')[1:-1]
+	# sort by tf-idf, combine top inverted file line number list
+	tfidf_mp = sorted(tfidf_mp.items(), key=lambda d: d[1], reverse=True)
+	res = set()
+	for i in range(min(num, len(tfidf_mp))):
+		w = tfidf_mp[i][0]
+		res = res | set(inv_list[w])
+	res = list(res)
+	return res
+
+
 if __name__ == "__main__":
 	getattr(__import__('TFIDF'), sys.argv[1])(sys.argv[2:])
 

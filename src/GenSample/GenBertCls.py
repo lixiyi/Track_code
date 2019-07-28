@@ -172,7 +172,6 @@ def gen_sample(args=None):
 	nlp.close()
 
 
-
 if __name__ == "__main__":
 	getattr(__import__('GenBertCls'), sys.argv[1])(sys.argv[2:])
 
