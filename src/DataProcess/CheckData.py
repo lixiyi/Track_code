@@ -16,7 +16,7 @@ with open(path_mp['DataPath'] + path_mp['WashingtonPost'], 'r', encoding='utf-8'
 		date = obj['published_date']
 		cnt += 1
 		try:
-			data = int(data)
+			date = int(date)
 		except:
-			print(cnt, data)
+			print(cnt, date)
 
