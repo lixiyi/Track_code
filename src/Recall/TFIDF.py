@@ -117,8 +117,42 @@ def recall_by_tfidf(args = None):
 	return res
 
 
+# tf-idf result for each document
+def tfidf_index(args = None):
+	nlp = StanfordCoreNLP(cfg.STANFORDNLP)
+
+	# read tfidf words_mp and words_idx
+	words_mp = {}
+	with open(cfg.OUTPUT + 'words_map.txt', 'r', encoding='utf-8') as f:
+		for line in f:
+			words_mp = json.loads(line)
+	words_idx = []
+	words_idx.append(' ')
+	with open(cfg.OUTPUT + 'words_index.txt', 'r', encoding='utf-8') as f:
+		for line in tqdm(f):
+			words_idx.append(line)
+	print('TF-IDF idx loaded.')
+
+	with open(path_mp['DataPath'] + path_mp['WashingtonPost'], 'r', encoding='utf-8') as f:
+		with open(path_mp['DataPath'] + path_mp['WashingtonPost'], 'r', encoding='utf-8') as out:
+			for line in tqdm(f):
+				obj = json.loads(line)
+				contents = obj['contents']
+				body = ""
+				for li in contents:
+					if type(li).__name__ == 'dict':
+						if 'subtype' in li and li['subtype'] == 'paragraph':
+							paragraph = li['content'].strip()
+							# Replace <.*?> with ""
+							paragraph = re.sub(r'<.*?>', '', paragraph)
+							body += ' ' + paragraph
+				res_tfidf = cal_tfidf_fast([body, '20', nlp, words_mp, words_idx])
+				out.write(' '.join(res_tfidf) + '\n')
+	nlp.close()
+
+
 # read words_mp and words_idx into memory first(idx start from 1)
-def recall_by_tfidf_fast(args = None):
+def cal_tfidf_fast(args = None):
 	s, num, nlp, words_mp, words_idx = args
 	num = int(num)
 	word_list = nlp.word_tokenize(s)
@@ -151,6 +185,13 @@ def recall_by_tfidf_fast(args = None):
 		res = res | set(inv_list[w])
 	res = list(res)
 	return res
+
+
+# input: line number, words count, tf-idf index map
+# return: list
+def recall_by_tfidf_fast(args = None):
+	li_cnt, num, tfidf_idx = args
+	return tfidf_idx[li_cnt]
 
 
 if __name__ == "__main__":
