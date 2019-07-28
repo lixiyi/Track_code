@@ -49,7 +49,7 @@ def recall_by_topics(args = None):
 
 # read topics idx into memory first
 def recall_by_topics_fast(args = None):
-	key, mp = args[0]
+	key, mp = args
 	return mp[key]
 
 
