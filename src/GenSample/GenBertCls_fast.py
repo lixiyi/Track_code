@@ -112,7 +112,7 @@ def gen_sample(args=None):
 			res_tfidf = tfidf.recall_by_tfidf_fast([body, '20', nlp, words_mp, words_idx])
 
 			# Recall By topics
-			res_topic = topic.recall_by_topics([topic_name, topics_idx])
+			res_topic = topic.recall_by_topics_fast([topic_name, topics_idx])
 
 			# Combie Recall results
 			res_mask = {}
@@ -189,12 +189,13 @@ def gen_sample(args=None):
 				doc_body = extract_body([doc['contents']])
 				sen2 = split_body([doc_body, max_length, nlp])
 				out.write(str(label) + '\t' + sen1 + '\t' + sen2 + '\n')
+
 			# label 16 middle from the body
 			w_list = nlp.word_tokenize(body)
 			st = (len(w_list) - max_length + 2) //2
 			ed = st + max_length - 2
 			sen2 = ' '.join(w_list[st:ed])
-			out.write(str(label) + '\t' + sen1 + '\t' + sen2 + '\n')
+			out.write(str(16) + '\t' + sen1 + '\t' + sen2 + '\n')
 	nlp.close()
 
 
