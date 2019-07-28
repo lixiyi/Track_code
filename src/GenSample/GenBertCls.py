@@ -87,7 +87,7 @@ def gen_sample(args=None):
 			res_tfidf = tfidf.recall_by_tfidf([body, '20', nlp])
 
 			# Recall By topics
-			res_topic = topic.recall_by_topics(topic_name)
+			res_topic = topic.recall_by_topics([topic_name])
 
 			# Combie Recall results
 			res_mask = {}
