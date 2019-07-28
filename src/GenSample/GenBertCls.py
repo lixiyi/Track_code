@@ -156,6 +156,8 @@ def gen_sample(args=None):
 			with open(cfg.OUTPUT + 'Dataset_BertCls.txt', 'w', encoding='utf-8') as out:
 				# label 0, 2, 4, 8
 				for label in sorted(doc_cache):
+					if len(doc_cache[label]) <= 0:
+						continue
 					idx = random.randint(0, len(doc_cache[label])-1)
 					doc = doc_cache[idx]
 					doc_body = extract_body([doc['contents']])
