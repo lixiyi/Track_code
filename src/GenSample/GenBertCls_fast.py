@@ -198,6 +198,6 @@ def gen_sample(args=None):
 
 
 if __name__ == "__main__":
-	getattr(__import__('GenBertCls'), sys.argv[1])(sys.argv[2:])
+	getattr(__import__('GenBertCls_fast'), sys.argv[1])(sys.argv[2:])
 
 
