@@ -108,7 +108,7 @@ def gen_sample(args=None):
 			# Filter
 			key_list = sorted(res_mask)
 			similar_doc = {}
-			similar_doc[title + '#' + author + '#' + date] = 1
+			similar_doc[title + '#' + author + '#' + str(date)] = 1
 			doc_cache = {}		# cache document, classify by 0, 2, 4, 8
 			doc_cache[0] = []
 			with open(path_mp['DataPath'] + path_mp['WashingtonPost'], 'r', encoding='utf-8') as f1:
@@ -127,7 +127,7 @@ def gen_sample(args=None):
 						if int(doc_date) > int(date):
 							continue
 						# Filter by date + title + author
-						rep_key = doc_title + '#' + doc_author + '#' + doc_date
+						rep_key = doc_title + '#' + doc_author + '#' + str(doc_date)
 						if rep_key in similar_doc:
 							continue
 						else:
