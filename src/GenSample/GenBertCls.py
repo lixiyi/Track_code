@@ -147,7 +147,7 @@ def gen_sample(args=None):
 						# Filter by date
 						if doc_date is not None and date is not None and int(doc_date) > int(date):
 							continue
-						doc_cache[0].append(json.loads(li))
+						doc_cache[0].append(doc)
 					li_cnt += 1
 
 			# split from body
