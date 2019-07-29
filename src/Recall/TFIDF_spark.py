@@ -67,7 +67,6 @@ def tfidf_index(args = None):
 	# read tfidf words_mp and words_idx
 	words_mp = sc.textFile(cfg.OUTPUT + 'words_index.txt') \
 		.filter(lambda line: line != '') \
-		.repartition(1000) \
 		.map(lambda line: (line.split(' ')[0], line.split(' ')[1:])) \
 		.collectAsMap()
 	words_mp = sc.boardcast(words_mp)
@@ -75,7 +74,6 @@ def tfidf_index(args = None):
 	WashingtonPost = sc.textFile(path_mp['DataPath'] + path_mp['WashingtonPost'])
 	WashingtonPost.map(lambda line: tfidf_index_single(line, filter_kicker, words_mp, 20)) \
 		.filter(lambda w: w != ()) \
-		.repartition(1000) \
 		.saveAsTextFile(cfg.OUTPUT + 'tfidf_index')
 	sc.stop()
 
