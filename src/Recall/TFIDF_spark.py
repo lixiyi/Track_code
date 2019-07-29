@@ -64,15 +64,18 @@ def tfidf_index(args = None):
 	SparkContext.getOrCreate().stop()
 	conf = SparkConf().setMaster("local[*]").setAppName("tfidf_index")\
 		.set("spark.executor.memory", "10g")\
-		.set("spark.driver.maxResultSize", "10g")
+		.set("spark.driver.maxResultSize", "10g")\
+		.set("spark.cores.max", 10)\
+		.set("spark.executor.cores", 10)\
+		.set("spark.default.parallelism", 20)
 	sc = SparkContext(conf=conf)
 	# read tfidf words_mp and words_idx
-	# words_mp = sc.textFile(cfg.OUTPUT + 'words_index.txt') \
-	# 	.filter(lambda line: line != '') \
-	# 	.repartition(4000) \
-	# 	.map(lambda line: (line.split(' ')[0], line.split(' ')[1:])) \
-	# 	.collectAsMap()
-	# words_mp = sc.broadcast(words_mp)
+	words_mp = sc.textFile(cfg.OUTPUT + 'words_index.txt') \
+		.filter(lambda line: line != '') \
+		.repartition(4000) \
+		.map(lambda line: (line.split(' ')[0], line.split(' ')[1:])) \
+		.collectAsMap()
+	words_mp = sc.broadcast(words_mp)
 	filter_kicker = {"Opinion": 1, "Letters to the Editor": 1, "The Post's View": 1}
 	WashingtonPost = sc.textFile(path_mp['DataPath'] + path_mp['WashingtonPost'])
 	WashingtonPost.map(lambda line: tfidf_index_single(line, filter_kicker, 20)) \
@@ -84,11 +87,6 @@ def tfidf_index(args = None):
 
 # read words_mp and words_idx into memory first(idx start from 1)
 def tfidf_index_single(line, filter_kicker, num):
-	words_mp = {}
-	with open(cfg.OUTPUT + 'words_index.txt', 'r', encoding='utf-8') as f:
-		for line in tqdm(f):
-			li = line.split(' ')
-			words_mp[li[0]] = li[1:]
 	obj = json.loads(line)
 	doc_id = obj['id']
 	contents = obj['contents']
@@ -118,16 +116,16 @@ def tfidf_index_single(line, filter_kicker, num):
 	tfidf_val = {}
 	for w in w_list:
 		# word not in vocabulary
-		if w not in words_mp:
+		if w in words_mp.value:
 			continue
-		idf = np.log(cfg.DOCUMENT_COUNT * 1.0 / len(words_mp[w]))
+		idf = np.log(cfg.DOCUMENT_COUNT * 1.0 / len(words_mp.value[w]))
 		tfidf_val[w] = tf[w] * 1.0 * idf
 	# sort by tf-idf, combine top inverted file line number list
 	tfidf_val = sorted(tfidf_val.items(), key=lambda d: d[1], reverse=True)
 	res = set()
 	for i in range(min(num, len(tfidf_val))):
 		w = tfidf_val[i][0]
-		res = res | set(words_mp[w])
+		res = res | set(words_mp.value[w])
 	return doc_id + ' ' + ' '.join(res)
 
 
