@@ -70,6 +70,7 @@ def tfidf_index(args = None):
 	SparkContext.getOrCreate().stop()
 	conf = SparkConf().setMaster("local[*]").setAppName("tfidf_index")
 	sc = SparkContext(conf=conf)
+	words_mp = sc.broadcast(words_mp)
 	filter_kicker = {"Opinion": 1, "Letters to the Editor": 1, "The Post's View": 1}
 	WashingtonPost = sc.textFile(path_mp['DataPath'] + path_mp['WashingtonPost'])
 	WashingtonPost.map(lambda line: tfidf_index_single(line, filter_kicker, words_mp, 20)) \
