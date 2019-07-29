@@ -25,7 +25,7 @@ def words_index_single(sc, nlp, line, filter_kicker):
 			if 'type' in li and li['type'] == 'kicker':
 				# skip filter kickers
 				if li['content'] in filter_kicker.keys():
-					return ()
+					return ('###', '###')
 			if 'subtype' in li and li['subtype'] == 'paragraph':
 				paragraph = li['content'].strip()
 				# Replace <.*?> with ""
@@ -48,7 +48,7 @@ def words_index(args = None):
 	sc = SparkContext('local[*]', 'tfidf')
 	WashingtonPost = sc.textFile(path_mp['DataPath'] + path_mp['WashingtonPost'])
 	WashingtonPost.flatMap(lambda line: words_index_single(sc, nlp, line, filter_kicker)) \
-		.filter(lambda x: x != ()) \
+		.filter(lambda a, b: a != '###') \
 		.reduceByKey(lambda a, b: a + b) \
 		.map(lambda a, b: str(a) + ' ' + ' '.join(b)) \
 		.saveAsTextFile(cfg.OUTPUT + 'words_index')
