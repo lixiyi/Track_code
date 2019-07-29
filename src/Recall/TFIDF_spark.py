@@ -8,14 +8,10 @@ import re
 from tqdm import tqdm
 import numpy as np
 from pyspark import SparkContext
-try:
-	sc.stop()
-except:
-	pass
-
 
 
 path_mp = cfg.get_path_conf('../path.cfg')
+SparkContext.getOrCreate().stop()
 sc = SparkContext('local[*]', 'tfidf')
 
 
