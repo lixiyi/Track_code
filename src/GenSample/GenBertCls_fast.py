@@ -49,28 +49,28 @@ def split_body(args=None):
 def gen_sample(args=None):
 	max_length = args[0]
 	max_length = int(max_length)
-	nlp = StanfordCoreNLP(cfg.STANFORDNLP)
 
 	# read all the doc, load as json, line count start from 1
 	WashingtonPost = {}
 	with open(path_mp['DataPath'] + path_mp['WashingtonPost'], 'r', encoding='utf-8') as f:
-		cnt = 1
 		for line in tqdm(f):
-			WashingtonPost[cnt] = json.loads(line)
+			obj = json.loads(line)
+			doc_id = obj['id']
+			WashingtonPost[doc_id] = json.loads(line)
 	print('WashingtonPost dataset loaded.')
 	# read topics idx
 	topics_mp = {}
 	with open(cfg.OUTPUT + 'topics_index.txt', 'r', encoding='utf-8') as f:
 		for line in f:
-			topics_mp = json.loads(line)
+			li = line.split(' ')
+			topics_mp[li[0]] = li[1:]
 	print('Topics idx loaded.')
 	# read tfidf words_mp and words_idx
 	tfidf_mp = {}
 	with open(cfg.OUTPUT + 'tfidf_index.txt', 'r', encoding='utf-8') as f:
-		cnt = 1
 		for line in tqdm(f):
-			tfidf_mp[cnt] = line[:-1].split(' ')
-			cnt += 1
+			li = line.split(' ')
+			tfidf_mp[li[0]] = li[1:]
 	print('Topics idx loaded.')
 
 	filter_kicker = {"Opinion": 1, "Letters to the Editor": 1, "The Post's View": 1}

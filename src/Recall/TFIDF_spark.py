@@ -61,7 +61,7 @@ def words_index(args = None):
 
 # tf-idf result for each document
 def tfidf_index(args = None):
-	# read tfidf words_mp and words_idx
+	# read tfidf words_mp and words_idx (22 sec)
 	words_mp = {}
 	with open(cfg.OUTPUT + 'words_index.txt', 'r', encoding='utf-8') as f:
 		for line in tqdm(f):
