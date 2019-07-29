@@ -50,8 +50,8 @@ def words_index(args = None):
 	WashingtonPost = sc.textFile(path_mp['DataPath'] + path_mp['WashingtonPost'])
 	WashingtonPost.flatMap(lambda line: words_index_single(line, filter_kicker)) \
 		.filter(lambda w: w != ()) \
-		.reduceByKey(lambda a, b: a.add(b)) \
-		.map(lambda a, b: str(a) + ' ' + ' '.join(b)) \
+		.reduceByKey(lambda a, b: (a[0], a[1].add(b[1]))) \
+		.map(lambda w: str(w[0]) + ' ' + ' '.join(w[1])) \
 		.saveAsTextFile(cfg.OUTPUT + 'words_index')
 	sc.stop()
 
