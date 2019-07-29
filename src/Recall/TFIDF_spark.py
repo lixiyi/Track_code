@@ -11,7 +11,7 @@ from pyspark import SparkContext
 
 
 path_mp = cfg.get_path_conf('../path.cfg')
-sc = SparkContext('local[*]', 'tfidf')
+sc = SparkContext.getOrCreate('local[*]', 'tfidf')
 
 
 # return (word, id)
