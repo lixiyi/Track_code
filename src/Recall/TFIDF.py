@@ -63,7 +63,7 @@ def words_index(args = None):
 	with open(cfg.OUTPUT + 'words_map.txt', 'w', encoding='utf-8') as f:
 		f.write(json.dumps(words_mp))
 	nlp.close()
-			
+
 
 # calculate tfidf for a string
 # document args 1: s
@@ -185,13 +185,6 @@ def cal_tfidf_fast(args = None):
 		res = res | set(inv_list[w])
 	res = list(res)
 	return res
-
-
-# input: line number, words count, tf-idf index map
-# return: list
-def recall_by_tfidf_fast(args = None):
-	li_cnt, num, tfidf_idx = args
-	return tfidf_idx[li_cnt]
 
 
 if __name__ == "__main__":

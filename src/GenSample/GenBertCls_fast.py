@@ -2,8 +2,6 @@ import sys
 sys.path.append("..")
 
 
-import Recall.TFIDF as tfidf
-import Recall.Topics as topic
 import DataProcess.getCfg as cfg
 import json
 import re
@@ -53,30 +51,28 @@ def gen_sample(args=None):
 	max_length = int(max_length)
 	nlp = StanfordCoreNLP(cfg.STANFORDNLP)
 
-	# read all the doc
-	WashingtonPost = []
-	WashingtonPost.append(' ')
+	# read all the doc, load as json, line count start from 1
+	WashingtonPost = {}
 	with open(path_mp['DataPath'] + path_mp['WashingtonPost'], 'r', encoding='utf-8') as f:
+		cnt = 1
 		for line in tqdm(f):
-			WashingtonPost.append(line)
+			WashingtonPost[cnt] = json.loads(line)
+
 	print('WashingtonPost dataset loaded.')
 	# read topics idx
-	topics_idx = {}
+	topics_mp = {}
 	with open(cfg.OUTPUT + 'topics_index.txt', 'r', encoding='utf-8') as f:
 		for line in f:
-			topics_idx = json.loads(line)
+			topics_mp = json.loads(line)
 	print('Topics idx loaded.')
 	# read tfidf words_mp and words_idx
-	words_mp = {}
-	with open(cfg.OUTPUT + 'words_map.txt', 'r', encoding='utf-8') as f:
-		for line in f:
-			words_mp = json.loads(line)
-	words_idx = []
-	words_idx.append(' ')
-	with open(cfg.OUTPUT + 'words_index.txt', 'r', encoding='utf-8') as f:
+	tfidf_mp = {}
+	with open(cfg.OUTPUT + 'tfidf_index.txt', 'r', encoding='utf-8') as f:
+		cnt = 1
 		for line in tqdm(f):
-			words_idx.append(line)
-	print('TF-IDF idx loaded.')
+			tfidf_mp[cnt] = line[:-1].split(' ')
+			cnt += 1
+	print('Topics idx loaded.')
 
 	filter_kicker = {"Opinion": 1, "Letters to the Editor": 1, "The Post's View": 1}
 	with open(cfg.OUTPUT + 'Dataset_BertCls.txt', 'w', encoding='utf-8') as out:
@@ -109,10 +105,10 @@ def gen_sample(args=None):
 				continue
 			# Recall By tf_idf
 			body = body.strip()
-			res_tfidf = tfidf.recall_by_tfidf_fast([body, '20', nlp, words_mp, words_idx])
+			res_tfidf = tfidf_mp[cnt]
 
 			# Recall By topics
-			res_topic = topic.recall_by_topics_fast([topic_name, topics_idx])
+			res_topic = topics_mp[topic_name]
 
 			# Combie Recall results
 			res_mask = {}
