@@ -67,14 +67,15 @@ def tfidf_index(args = None):
 		.set("spark.driver.maxResultSize", "10g")
 	sc = SparkContext(conf=conf)
 	# read tfidf words_mp and words_idx
-	words_mp = sc.textFile(cfg.OUTPUT + 'words_index.txt') \
-		.filter(lambda line: line != '') \
-		.repartition(4000) \
-		.map(lambda line: (line.split(' ')[0], line.split(' ')[1:])) \
-		.collectAsMap()
+	# words_mp = sc.textFile(cfg.OUTPUT + 'words_index.txt') \
+	# 	.filter(lambda line: line != '') \
+	# 	.repartition(4000) \
+	# 	.map(lambda line: (line.split(' ')[0], line.split(' ')[1:])) \
+	# 	.collectAsMap()
+	# words_mp = sc.broadcast(words_mp)
 	filter_kicker = {"Opinion": 1, "Letters to the Editor": 1, "The Post's View": 1}
 	WashingtonPost = sc.textFile(path_mp['DataPath'] + path_mp['WashingtonPost'])
-	WashingtonPost.map(lambda line: tfidf_index_single(line, filter_kicker, words_mp, 20)) \
+	WashingtonPost.map(lambda line: tfidf_index_single(line, filter_kicker, 20)) \
 		.filter(lambda w: w != ()) \
 		.repartition(4000) \
 		.saveAsTextFile(cfg.OUTPUT + 'tfidf_index')
@@ -82,7 +83,12 @@ def tfidf_index(args = None):
 
 
 # read words_mp and words_idx into memory first(idx start from 1)
-def tfidf_index_single(line, filter_kicker, words_mp, num):
+def tfidf_index_single(line, filter_kicker, num):
+	words_mp = {}
+	with open(cfg.OUTPUT + 'words_index.txt', 'r', encoding='utf-8') as f:
+		for line in tqdm(f):
+			li = line.split(' ')
+			words_mp[li[0]] = li[1:]
 	obj = json.loads(line)
 	doc_id = obj['id']
 	contents = obj['contents']
