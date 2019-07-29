@@ -73,6 +73,7 @@ def tfidf_index(args = None):
 	filter_kicker = {"Opinion": 1, "Letters to the Editor": 1, "The Post's View": 1}
 	WashingtonPost = sc.textFile(path_mp['DataPath'] + path_mp['WashingtonPost'])
 	WashingtonPost.map(lambda line: tfidf_index_single(line, filter_kicker, words_mp, 20)) \
+		.filter(lambda w: w != ()) \
 		.saveAsTextFile(cfg.OUTPUT + 'tfidf_index')
 	sc.stop()
 
