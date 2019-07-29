@@ -35,7 +35,9 @@ def words_index_single(line, filter_kicker):
 	w_list = set(w_list)
 	res = []
 	for w in w_list:
-		res.append((w, set(doc_id)))
+		ds = set()
+		ds.add(doc_id)
+		res.append((w, ds))
 	return res
 
 
