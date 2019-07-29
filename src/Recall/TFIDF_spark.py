@@ -72,7 +72,7 @@ def tfidf_index(args = None):
 		.repartition(4000) \
 		.map(lambda line: (line.split(' ')[0], line.split(' ')[1:])) \
 		.collectAsMap()
-	words_mp = sc.boardcast(words_mp)
+	words_mp = sc.broadcast(words_mp)
 	filter_kicker = {"Opinion": 1, "Letters to the Editor": 1, "The Post's View": 1}
 	WashingtonPost = sc.textFile(path_mp['DataPath'] + path_mp['WashingtonPost'])
 	WashingtonPost.map(lambda line: tfidf_index_single(line, filter_kicker, words_mp, 20)) \
