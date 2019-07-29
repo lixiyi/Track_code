@@ -67,7 +67,7 @@ def tfidf_index(args = None):
 	# read tfidf words_mp and words_idx
 	words_mp = {}
 	with open(cfg.OUTPUT + 'words_index.txt', 'r', encoding='utf-8') as f:
-		for line in f:
+		for line in tqdm(f):
 			li = line.split(' ')
 			words_mp[li[0]] = li[1:]
 	filter_kicker = {"Opinion": 1, "Letters to the Editor": 1, "The Post's View": 1}

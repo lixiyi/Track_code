@@ -57,7 +57,6 @@ def gen_sample(args=None):
 		cnt = 1
 		for line in tqdm(f):
 			WashingtonPost[cnt] = json.loads(line)
-
 	print('WashingtonPost dataset loaded.')
 	# read topics idx
 	topics_mp = {}
