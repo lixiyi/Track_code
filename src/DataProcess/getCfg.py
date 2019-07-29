@@ -19,5 +19,5 @@ def get_path_conf(filename):
 
 # word split
 def word_cut(s):
-	s = re.sub("[\s+\.\!\/_,$%^*(+\"\']+|[+——！，。？、~@#￥%……&*（）]+", " ", list)
+	s = re.sub("[\s+\.\!\/_,$%^*(+\"\']+|[+——！，。？、~@#￥%……&*（）]+", " ", s)
 	return s.split(' ')
