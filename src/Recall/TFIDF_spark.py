@@ -12,7 +12,7 @@ from pyspark import SparkConf, SparkContext
 
 path_mp = cfg.get_path_conf('../path.cfg')
 conf = SparkConf().setMaster("local[*]").setAppName("TFIDF")
-sc = SparkContext(conf)
+sc = SparkContext(conf=conf)
 
 
 # return (word, id)
