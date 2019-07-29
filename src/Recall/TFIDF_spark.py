@@ -7,11 +7,12 @@ import json
 import re
 from tqdm import tqdm
 import numpy as np
-from pyspark import SparkContext
+from pyspark import SparkConf, SparkContext
 
 
 path_mp = cfg.get_path_conf('../path.cfg')
-sc = SparkContext('local[*]', 'tfidf')
+conf = SparkConf().setMaster("local[*]").setAppName("TFIDF")
+sc = SparkContext(conf)
 
 
 # return (word, id)
