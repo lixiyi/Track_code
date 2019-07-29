@@ -11,9 +11,6 @@ from pyspark import SparkContext, SparkConf
 
 
 path_mp = cfg.get_path_conf('../path.cfg')
-SparkContext.getOrCreate().stop()
-conf = SparkConf().setMaster("local[*]").setAppName("tfidf")
-sc = SparkContext(conf=conf)
 
 
 # return (word, id)
@@ -47,7 +44,9 @@ def words_index_single(line, filter_kicker):
 # outputs: words_index [length, doc line number]
 # 		 : words_map (word, words_index line number)
 def words_index(args = None):
-	words = {}
+	SparkContext.getOrCreate().stop()
+	conf = SparkConf().setMaster("local[*]").setAppName("tfidf")
+	sc = SparkContext(conf=conf)
 	filter_kicker = {"Opinion": 1, "Letters to the Editor": 1, "The Post's View": 1}
 	WashingtonPost = sc.textFile(path_mp['DataPath'] + path_mp['WashingtonPost'])
 	WashingtonPost.flatMap(lambda line: words_index_single(line, filter_kicker)) \
@@ -55,6 +54,7 @@ def words_index(args = None):
 		.reduceByKey(lambda a, b: (a[0], a[1] | b[1])) \
 		.map(lambda w: str(w[0]) + ' ' + ' '.join(w[1])) \
 		.saveAsTextFile(cfg.OUTPUT + 'words_index')
+	sc.stop()
 
 
 # tf-idf result for each document
@@ -129,5 +129,4 @@ def cal_tfidf(args = None):
 
 if __name__ == "__main__":
 	getattr(__import__('TFIDF_spark'), sys.argv[1])(sys.argv[2:])
-	sc.stop()
 
