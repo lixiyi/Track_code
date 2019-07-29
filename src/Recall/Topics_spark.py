@@ -26,7 +26,8 @@ def topics_index_single(line):
 	st.add(doc_id)
 	if topic_name == '':
 		return ''
-	return (topic_name, st)
+	else:
+		return (topic_name, st)
 
 
 # create inverted list for topis
@@ -37,7 +38,7 @@ def topics_index(args = None):
 	conf = SparkConf().setMaster("local[*]").setAppName("topics_index")
 	sc = SparkContext(conf=conf)
 	WashingtonPost = sc.textFile(path_mp['DataPath'] + path_mp['WashingtonPost'])
-	WashingtonPost.flatMap(lambda line: topics_index_single(line)) \
+	WashingtonPost.map(lambda line: topics_index_single(line)) \
 		.filter(lambda x: x != '') \
 		.reduceByKey(lambda a, b: a | b) \
 		.map(lambda t: str(t[0]) + ' ' + ' '.join(t[1])) \
