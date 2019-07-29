@@ -8,10 +8,15 @@ import re
 from tqdm import tqdm
 import numpy as np
 from pyspark import SparkContext
+try:
+	sc.stop()
+except:
+	pass
+
 
 
 path_mp = cfg.get_path_conf('../path.cfg')
-sc = SparkContext('local[*]', 'tfidf').getOrCreate()
+sc = SparkContext('local[*]', 'tfidf')
 
 
 # return (word, id)
