@@ -7,12 +7,11 @@ import json
 import re
 from tqdm import tqdm
 import numpy as np
-from pyspark import SparkConf, SparkContext
+from pyspark import SparkContext
 
 
 path_mp = cfg.get_path_conf('../path.cfg')
-conf = SparkConf().setMaster("local[*]").setAppName("TFIDF")
-sc = SparkContext.getOrCreate(conf=conf)
+sc = SparkContext('local[*]', 'tfidf')
 
 
 # return (word, id)
@@ -53,7 +52,6 @@ def words_index(args = None):
 		.reduceByKey(lambda a, b: (a[0], a[1].add(b[1]))) \
 		.map(lambda w: str(w[0]) + ' ' + ' '.join(w[1])) \
 		.saveAsTextFile(cfg.OUTPUT + 'words_index')
-	sc.stop()
 
 
 # tf-idf result for each document
@@ -128,4 +126,5 @@ def cal_tfidf(args = None):
 
 if __name__ == "__main__":
 	getattr(__import__('TFIDF_spark'), sys.argv[1])(sys.argv[2:])
+	sc.stop()
 
