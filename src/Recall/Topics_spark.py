@@ -15,13 +15,13 @@ path_mp = cfg.get_path_conf('../path.cfg')
 
 def topics_index_single(line):
 	obj = json.loads(line)
-	contents = obj['contents']
 	doc_id = obj['id']
+	contents = obj['contents']
 	topic_name = ''
 	for li in contents:
 		if type(li).__name__ == 'dict':
 			if 'type' in li and li['type'] == 'kicker':
-				contents = li['content']
+				topic_name = li['content']
 	st = set()
 	st.add(doc_id)
 	if topic_name == '':
@@ -34,11 +34,11 @@ def topics_index_single(line):
 # output: (topic, [doc line numbers])
 def topics_index(args = None):
 	SparkContext.getOrCreate().stop()
-	conf = SparkConf().setMaster("local[*]").setAppName("tfidf_index")
+	conf = SparkConf().setMaster("local[*]").setAppName("topics_index")
 	sc = SparkContext(conf=conf)
 	WashingtonPost = sc.textFile(path_mp['DataPath'] + path_mp['WashingtonPost'])
 	WashingtonPost.flatMap(lambda line: topics_index_single(line)) \
-		.filter(lambda x:x != '') \
+		.filter(lambda x: x != '') \
 		.reduceByKey(lambda a, b: a | b) \
 		.map(lambda t: str(t[0]) + ' ' + ' '.join(t[1])) \
 		.saveAsTextFile(cfg.OUTPUT + 'topics_index')
