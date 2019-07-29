@@ -59,10 +59,10 @@ def words_index(args = None):
 	sc.stop()
 
 
+words_mp = {}
 # tf-idf result for each document
 def tfidf_index(args = None):
 	# read tfidf words_mp and words_idx (22 sec)
-	words_mp = {}
 	with open(cfg.OUTPUT + 'words_index.txt', 'r', encoding='utf-8') as f:
 		for line in tqdm(f):
 			li = line.split(' ')
@@ -70,7 +70,6 @@ def tfidf_index(args = None):
 	SparkContext.getOrCreate().stop()
 	conf = SparkConf().setMaster("local[*]").setAppName("tfidf_index")
 	sc = SparkContext(conf=conf)
-	words_mp = sc.broadcast(words_mp)
 	filter_kicker = {"Opinion": 1, "Letters to the Editor": 1, "The Post's View": 1}
 	WashingtonPost = sc.textFile(path_mp['DataPath'] + path_mp['WashingtonPost'])
 	WashingtonPost.map(lambda line: tfidf_index_single(line, filter_kicker, words_mp, 20)) \
