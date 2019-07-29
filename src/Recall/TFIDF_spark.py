@@ -12,7 +12,6 @@ from pyspark import SparkContext
 
 
 path_mp = cfg.get_path_conf('../path.cfg')
-sc = SparkContext('local[*]', 'test')
 
 
 # return (word, id)
@@ -46,6 +45,7 @@ def words_index(args = None):
 	words = {}
 	nlp = StanfordCoreNLP(cfg.STANFORDNLP)
 	filter_kicker = {"Opinion": 1, "Letters to the Editor": 1, "The Post's View": 1}
+	sc = SparkContext('local[*]', 'tfidf')
 	WashingtonPost = sc.textFile(path_mp['DataPath'] + path_mp['WashingtonPost'])
 	WashingtonPost.flatMap(lambda line: words_index_single(sc, nlp, line, filter_kicker)) \
 		.filter(lambda x: x != ()) \
@@ -53,6 +53,7 @@ def words_index(args = None):
 		.map(lambda a, b: str(a) + ' ' + ' '.join(b)) \
 		.saveAsTextFile(cfg.OUTPUT + 'words_index')
 	nlp.close()
+	sc.stop()
 
 
 # tf-idf result for each document
