@@ -66,7 +66,8 @@ def tfidf_index(args = None):
 	sc = SparkContext(conf=conf)
 	# read tfidf words_mp and words_idx
 	words_mp = sc.textFile(cfg.OUTPUT + 'words_index.txt') \
-		.map(lambda line: (line.split(' ')[0], line.split(' ')[1:])).cache()
+		.map(lambda line: (line.split(' ')[0], line.split(' ')[1:])) \
+		.collectAsMap()
 	filter_kicker = {"Opinion": 1, "Letters to the Editor": 1, "The Post's View": 1}
 	WashingtonPost = sc.textFile(path_mp['DataPath'] + path_mp['WashingtonPost'])
 	WashingtonPost.map(lambda line: tfidf_index_single(line, filter_kicker, words_mp, 20)) \
@@ -106,18 +107,16 @@ def tfidf_index_single(line, filter_kicker, words_mp, num):
 	tfidf_val = {}
 	for w in w_list:
 		# word not in vocabulary
-		filt = words_mp.filter(lambda key, val: key != w).collectAsMap()
-		if filt is None or len(filt) <= 0:
+		if w not in words_mp:
 			continue
-		idf = np.log(cfg.DOCUMENT_COUNT * 1.0 / len(filt[w]))
+		idf = np.log(cfg.DOCUMENT_COUNT * 1.0 / len(words_mp[w]))
 		tfidf_val[w] = tf[w] * 1.0 * idf
 	# sort by tf-idf, combine top inverted file line number list
 	tfidf_val = sorted(tfidf_val.items(), key=lambda d: d[1], reverse=True)
 	res = set()
 	for i in range(min(num, len(tfidf_val))):
 		w = tfidf_val[i][0]
-		filt = words_mp.filter(lambda key, val: key != w).collectAsMap()
-		res = res | set(filt[w])
+		res = res | set(words_mp[w])
 	return doc_id + ' ' + ' '.join(res)
 
 
