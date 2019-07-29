@@ -7,15 +7,15 @@ import json
 import re
 from tqdm import tqdm
 import numpy as np
-from stanfordcorenlp import StanfordCoreNLP
 from pyspark import SparkContext
 
 
 path_mp = cfg.get_path_conf('../path.cfg')
+sc = SparkContext('local[*]', 'tfidf')
 
 
 # return (word, id)
-def words_index_single(sc, nlp, line, filter_kicker):
+def words_index_single(line, filter_kicker):
 	obj = json.loads(line)
 	doc_id = obj['id']
 	contents = obj['contents']
@@ -25,16 +25,18 @@ def words_index_single(sc, nlp, line, filter_kicker):
 			if 'type' in li and li['type'] == 'kicker':
 				# skip filter kickers
 				if li['content'] in filter_kicker.keys():
-					return ('###', '###')
+					return ()
 			if 'subtype' in li and li['subtype'] == 'paragraph':
 				paragraph = li['content'].strip()
 				# Replace <.*?> with ""
 				paragraph = re.sub(r'<.*?>', '', paragraph)
 				doc += ' ' + paragraph
 	doc = doc.strip()
-	w_list = nlp.word_tokenize(doc)
-	w_list = sc.parallelize(w_list)
-	return w_list.map(lambda w: (w, doc_id))
+	w_list = cfg.word_cut(doc)
+	res = set()
+	for w in w_list:
+		res.add((w, doc_id))
+	return res
 
 
 # create words inverted list
@@ -43,16 +45,13 @@ def words_index_single(sc, nlp, line, filter_kicker):
 # 		 : words_map (word, words_index line number)
 def words_index(args = None):
 	words = {}
-	nlp = StanfordCoreNLP(cfg.STANFORDNLP)
 	filter_kicker = {"Opinion": 1, "Letters to the Editor": 1, "The Post's View": 1}
-	sc = SparkContext('local[*]', 'tfidf')
 	WashingtonPost = sc.textFile(path_mp['DataPath'] + path_mp['WashingtonPost'])
-	WashingtonPost.flatMap(lambda line: words_index_single(sc, nlp, line, filter_kicker)) \
-		.filter(lambda a, b: a != '###') \
-		.reduceByKey(lambda a, b: a + b) \
+	WashingtonPost.flatMap(lambda line: words_index_single(line, filter_kicker)) \
+		.filter(lambda w: w != ()) \
+		.reduceByKey(lambda a, b: a | b) \
 		.map(lambda a, b: str(a) + ' ' + ' '.join(b)) \
 		.saveAsTextFile(cfg.OUTPUT + 'words_index')
-	nlp.close()
 	sc.stop()
 
 
