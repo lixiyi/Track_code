@@ -47,7 +47,7 @@ def words_index_single(line, filter_kicker):
 # 		 : words_map (word, words_index line number)
 def words_index(args = None):
 	SparkContext.getOrCreate().stop()
-	conf = SparkConf().setMaster("local[*]").setAppName("tfidf")
+	conf = SparkConf().setMaster("local[*]").setAppName("words_index")
 	sc = SparkContext(conf=conf)
 	filter_kicker = {"Opinion": 1, "Letters to the Editor": 1, "The Post's View": 1}
 	WashingtonPost = sc.textFile(path_mp['DataPath'] + path_mp['WashingtonPost'])
@@ -61,72 +61,64 @@ def words_index(args = None):
 
 # tf-idf result for each document
 def tfidf_index(args = None):
-	nlp = StanfordCoreNLP(cfg.STANFORDNLP)
-
+	SparkContext.getOrCreate().stop()
+	conf = SparkConf().setMaster("local[*]").setAppName("tfidf_index")
+	sc = SparkContext(conf=conf)
 	# read tfidf words_mp and words_idx
 	words_mp = {}
-	with open(cfg.OUTPUT + 'words_map.txt', 'r', encoding='utf-8') as f:
-		for line in f:
-			words_mp = json.loads(line)
-	words_idx = []
-	words_idx.append(' ')
 	with open(cfg.OUTPUT + 'words_index.txt', 'r', encoding='utf-8') as f:
-		for line in tqdm(f):
-			words_idx.append(line)
-	print('TF-IDF idx loaded.')
-
-	with open(path_mp['DataPath'] + path_mp['WashingtonPost'], 'r', encoding='utf-8') as f:
-		with open(cfg.OUTPUT + 'tfidf_index.txt', 'w', encoding='utf-8') as out:
-			for line in tqdm(f):
-				obj = json.loads(line)
-				contents = obj['contents']
-				body = ""
-				for li in contents:
-					if type(li).__name__ == 'dict':
-						if 'subtype' in li and li['subtype'] == 'paragraph':
-							paragraph = li['content'].strip()
-							# Replace <.*?> with ""
-							paragraph = re.sub(r'<.*?>', '', paragraph)
-							body += ' ' + paragraph
-				res_tfidf = cal_tfidf([body, '20', nlp, words_mp, words_idx])
-				out.write(' '.join(res_tfidf) + '\n')
-	nlp.close()
+		for line in f:
+			li = line.split(' ')
+			words_mp[li[0]] = li[1:]
+	filter_kicker = {"Opinion": 1, "Letters to the Editor": 1, "The Post's View": 1}
+	WashingtonPost = sc.textFile(path_mp['DataPath'] + path_mp['WashingtonPost'])
+	WashingtonPost.map(lambda line: tfidf_index_single(line, filter_kicker, words_mp, 20)) \
+		.saveAsTextFile(cfg.OUTPUT + 'tfidf_index')
+	sc.stop()
 
 
 # read words_mp and words_idx into memory first(idx start from 1)
-def cal_tfidf(args = None):
-	s, num, nlp, words_mp, words_idx = args
+def tfidf_index_single(line, filter_kicker, words_mp, num):
+	obj = json.loads(line)
+	doc_id = obj['id']
+	contents = obj['contents']
+	doc = ""
+	for li in contents:
+		if type(li).__name__ == 'dict':
+			if 'type' in li and li['type'] == 'kicker':
+				# skip filter kickers
+				if li['content'] in filter_kicker.keys():
+					return ()
+			if 'subtype' in li and li['subtype'] == 'paragraph':
+				paragraph = li['content'].strip()
+				# Replace <.*?> with ""
+				paragraph = re.sub(r'<.*?>', '', paragraph)
+				doc += ' ' + paragraph
+	doc = doc.strip()
+	w_list = cfg.word_cut(doc)
 	num = int(num)
-	word_list = nlp.word_tokenize(s)
 	# calculate term frequency for each word in the str
 	tf = {}
-	for w in word_list:
+	for w in w_list:
 		if w in tf:
 			tf[w] += 1
 		else:
 			tf[w] = 1
 	# calculate idf and tf-idf for each word
-	w_list = sorted(tf)
-	tfidf_mp = {}
-	inv_list = {}		# words inverted list cache
+	tfidf_val = {}
 	for w in w_list:
 		# word not in vocabulary
 		if w not in words_mp:
 			continue
-		# meet the right line
-		cnt = int(words_mp[w])
-		line = words_idx[cnt]
-		idf = np.log(cfg.DOCUMENT_COUNT * 1.0 / int(line.split(' ')[0]))
-		tfidf_mp[w] = tf[w] * 1.0 * idf
-		inv_list[w] = line.split(' ')[1:-1]
+		idf = np.log(cfg.DOCUMENT_COUNT * 1.0 / len(words_mp[w]))
+		tfidf_val[w] = tf[w] * 1.0 * idf
 	# sort by tf-idf, combine top inverted file line number list
-	tfidf_mp = sorted(tfidf_mp.items(), key=lambda d: d[1], reverse=True)
+	tfidf_val = sorted(tfidf_val.items(), key=lambda d: d[1], reverse=True)
 	res = set()
-	for i in range(min(num, len(tfidf_mp))):
-		w = tfidf_mp[i][0]
-		res = res | set(inv_list[w])
-	res = list(res)
-	return res
+	for i in range(min(num, len(tfidf_val))):
+		w = tfidf_val[i][0]
+		res = res | set(words_mp[w])
+	return doc_id + ' ' + ' '.join(res)
 
 
 if __name__ == "__main__":
