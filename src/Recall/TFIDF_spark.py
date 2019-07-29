@@ -7,12 +7,14 @@ import json
 import re
 from tqdm import tqdm
 import numpy as np
-from pyspark import SparkContext
+from pyspark import SparkContext, SparkConf
 
 
 path_mp = cfg.get_path_conf('../path.cfg')
 SparkContext.getOrCreate().stop()
-sc = SparkContext('local[*]', 'tfidf')
+conf = SparkConf().setMaster("local[*]").setAppName("tfidf")
+conf.set("spark.port.maxRetries", "100")
+sc = SparkContext(conf=conf)
 
 
 # return (word, id)
