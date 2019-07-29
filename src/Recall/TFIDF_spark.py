@@ -62,7 +62,7 @@ def words_index(args = None):
 # tf-idf result for each document
 def tfidf_index(args = None):
 	SparkContext.getOrCreate().stop()
-	conf = SparkConf().setMaster("local[*]").setAppName("tfidf_index")
+	conf = SparkConf().setMaster("local[*]").setAppName("tfidf_index").set("spark.executor.memory", "10g")
 	sc = SparkContext(conf=conf)
 	# read tfidf words_mp and words_idx
 	words_mp = sc.textFile(cfg.OUTPUT + 'words_index.txt') \
