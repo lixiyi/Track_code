@@ -13,7 +13,6 @@ from pyspark import SparkContext, SparkConf
 path_mp = cfg.get_path_conf('../path.cfg')
 SparkContext.getOrCreate().stop()
 conf = SparkConf().setMaster("local[*]").setAppName("tfidf")
-conf.set("spark.port.maxRetries", "100")
 sc = SparkContext(conf=conf)
 
 
@@ -36,9 +35,10 @@ def words_index_single(line, filter_kicker):
 				doc += ' ' + paragraph
 	doc = doc.strip()
 	w_list = cfg.word_cut(doc)
-	res = set()
+	w_list = set(w_list)
+	res = []
 	for w in w_list:
-		res.add((w, doc_id))
+		res.append((w, set(doc_id)))
 	return res
 
 
@@ -52,7 +52,7 @@ def words_index(args = None):
 	WashingtonPost = sc.textFile(path_mp['DataPath'] + path_mp['WashingtonPost'])
 	WashingtonPost.flatMap(lambda line: words_index_single(line, filter_kicker)) \
 		.filter(lambda w: w != ()) \
-		.reduceByKey(lambda a, b: (a[0], a[1].add(b[1]))) \
+		.reduceByKey(lambda a, b: (a[0], a[1] | b[1])) \
 		.map(lambda w: str(w[0]) + ' ' + ' '.join(w[1])) \
 		.saveAsTextFile(cfg.OUTPUT + 'words_index')
 
