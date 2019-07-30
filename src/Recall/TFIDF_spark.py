@@ -89,7 +89,7 @@ def test(line, filter_kicker, words_mp, num):
 	tfidf_val = {}
 	for w in w_list:
 		# word not in vocabulary
-		if w in words_mp.value:
+		if w not in words_mp.value:
 			continue
 		idf = np.log(cfg.DOCUMENT_COUNT * 1.0 / len(words_mp.value[w]))
 		tfidf_val[w] = tf[w] * 1.0 * idf
@@ -155,7 +155,7 @@ def tfidf_index_single(line, filter_kicker, words_mp, num):
 	tfidf_val = {}
 	for w in w_list:
 		# word not in vocabulary
-		if w in words_mp.value:
+		if w not in words_mp.value:
 			continue
 		idf = np.log(cfg.DOCUMENT_COUNT * 1.0 / len(words_mp.value[w]))
 		tfidf_val[w] = tf[w] * 1.0 * idf

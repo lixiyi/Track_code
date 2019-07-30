@@ -8,7 +8,7 @@ import re
 from tqdm import tqdm
 import random
 import numpy as np
-from stanfordcorenlp import StanfordCoreNLP
+from pyspark import SparkContext, SparkConf
 
 
 path_mp = cfg.get_path_conf('../path.cfg')
@@ -44,35 +44,43 @@ def split_body(args=None):
 	return ' '.join(w_list[:head_len]) + ' '.join(w_list[-tail_len:])
 
 
+def load_washingtonpost(line):
+	obj = json.loads(line)
+	doc_id = obj['id']
+	return (doc_id, obj)
+
+
+def load_topics(line):
+	li = line.split(' ')
+	return (li[0], li[1:])
+
 # generate samples for each document
 # args 0: max_length for Bert
 def gen_sample(args=None):
 	max_length = args[0]
 	max_length = int(max_length)
 
+	SparkContext.getOrCreate().stop()
+	conf = SparkConf().setMaster("local[*]").setAppName("GenBertCls") \
+		.set("spark.executor.memory", "10g") \
+		.set("spark.driver.maxResultSize", "10g") \
+		.set("spark.cores.max", 10) \
+		.set("spark.executor.cores", 10) \
+		.set("spark.default.parallelism", 20)
+	sc = SparkContext(conf=conf)
 	# read all the doc, load as json, line count start from 1
-	WashingtonPost = {}
-	with open(path_mp['DataPath'] + path_mp['WashingtonPost'], 'r', encoding='utf-8') as f:
-		for line in tqdm(f):
-			obj = json.loads(line)
-			doc_id = obj['id']
-			WashingtonPost[doc_id] = json.loads(line)
+	WashingtonPost = sc.textFile(path_mp['DataPath'] + path_mp['WashingtonPost'])\
+		.map(lambda line: load_washingtonpost(line)).collectAsMap()
 	print('WashingtonPost dataset loaded.')
 	# read topics idx
-	topics_mp = {}
-	with open(cfg.OUTPUT + 'topics_index.txt', 'r', encoding='utf-8') as f:
-		for line in f:
-			li = line.split(' ')
-			topics_mp[li[0]] = li[1:]
+	topics_mp = sc.textFile(cfg.OUTPUT + 'topics_index.txt').map(lambda line: load_topics(line))
 	print('Topics idx loaded.')
 	# read tfidf words_mp and words_idx
-	tfidf_mp = {}
-	with open(cfg.OUTPUT + 'tfidf_index.txt', 'r', encoding='utf-8') as f:
-		for line in tqdm(f):
-			li = line.split(' ')
-			tfidf_mp[li[0]] = li[1:]
+	tfidf_mp = sc.textFile(cfg.OUTPUT + 'tfidf_index.txt').map(lambda line: load_topics(line))
 	print('Topics idx loaded.')
-
+	WashingtonPost = sc.broadcast(WashingtonPost)
+	topics_mp = sc.broadcast(topics_mp)
+	tfidf_mp = sc.broadcast(tfidf_mp)
 	filter_kicker = {"Opinion": 1, "Letters to the Editor": 1, "The Post's View": 1}
 	with open(cfg.OUTPUT + 'Dataset_BertCls.txt', 'w', encoding='utf-8') as out:
 		for cnt in tqdm(range(1, len(WashingtonPost))):
@@ -191,7 +199,6 @@ def gen_sample(args=None):
 			ed = st + max_length - 2
 			sen2 = ' '.join(w_list[st:ed])
 			out.write(str(16) + '\t' + sen1 + '\t' + sen2 + '\n')
-	nlp.close()
 
 
 if __name__ == "__main__":
