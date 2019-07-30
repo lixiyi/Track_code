@@ -91,7 +91,7 @@ def test(line, filter_kicker, words_mp, num):
 		# word not in vocabulary
 		if w not in words_mp.value:
 			continue
-		idf = np.log(cfg.DOCUMENT_COUNT * 1.0 / len(words_mp.value[w]))
+		idf = np.log(571963 * 1.0 / len(words_mp.value[w]))
 		tfidf_val[w] = tf[w] * 1.0 * idf
 	# sort by tf-idf, combine top inverted file line number list
 	tfidf_val = sorted(tfidf_val.items(), key=lambda d: d[1], reverse=True)
@@ -157,7 +157,7 @@ def tfidf_index_single(line, filter_kicker, words_mp, num):
 		# word not in vocabulary
 		if w not in words_mp.value:
 			continue
-		idf = np.log(cfg.DOCUMENT_COUNT * 1.0 / len(words_mp.value[w]))
+		idf = np.log(571963 * 1.0 / len(words_mp.value[w]))
 		tfidf_val[w] = tf[w] * 1.0 * idf
 	# sort by tf-idf, combine top inverted file line number list
 	tfidf_val = sorted(tfidf_val.items(), key=lambda d: d[1], reverse=True)
