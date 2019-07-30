@@ -383,10 +383,11 @@ class BertClsProcessor(DataProcessor):
 				for index, line in enumerate(reader):
 						guid = 'train-%d'%index
 						split_line = line[:-1].strip().split('\t')
-						text_a = tokenization.convert_to_unicode(split_line[1])
-						text_b = tokenization.convert_to_unicode(split_line[2])
-						label = split_line[0]
-						examples.append(InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
+						if len(split_line) == 3:
+							text_a = tokenization.convert_to_unicode(split_line[1])
+							text_b = tokenization.convert_to_unicode(split_line[2])
+							label = split_line[0]
+							examples.append(InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
 				return examples
 
 
@@ -398,10 +399,11 @@ class BertClsProcessor(DataProcessor):
 				for index, line in enumerate(reader):
 						guid = 'dev-%d'%index
 						split_line = line[:-1].strip().split('\t')
-						text_a = tokenization.convert_to_unicode(split_line[1])
-						text_b = tokenization.convert_to_unicode(split_line[2])
-						label = split_line[0]
-						examples.append(InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
+						if len(split_line) == 3:
+							text_a = tokenization.convert_to_unicode(split_line[1])
+							text_b = tokenization.convert_to_unicode(split_line[2])
+							label = split_line[0]
+							examples.append(InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
 				return examples
 
 
@@ -413,10 +415,11 @@ class BertClsProcessor(DataProcessor):
 				for index, line in enumerate(reader):
 						guid = 'test-%d'%index
 						split_line = line[:-1].strip().split('\t')
-						text_a = tokenization.convert_to_unicode(split_line[1])
-						text_b = tokenization.convert_to_unicode(split_line[2])
-						label = split_line[0]
-						examples.append(InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
+						if len(split_line) == 3:
+							text_a = tokenization.convert_to_unicode(split_line[1])
+							text_b = tokenization.convert_to_unicode(split_line[2])
+							label = split_line[0]
+							examples.append(InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
 				return examples
 
 
