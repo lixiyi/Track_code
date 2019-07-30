@@ -2,8 +2,8 @@
 
 cp /home/trec7/lianxiaoying/Track_code/src/Ranking/run_classifier.py /home/trec7/lianxiaoying/bert
 
-export BERT_BASE_DIR=/home/trec7/lianxiaoying/model/uncased_L-12_H-768_A-12
-export DATA_DIR=/home/trec7/lianxiaoying/Track_code/src/outputs
+BERT_BASE_DIR=/home/trec7/lianxiaoying/model/uncased_L-12_H-768_A-12
+DATA_DIR=/home/trec7/lianxiaoying/Track_code/src/outputs
 
 python /home/trec7/lianxiaoying/bert/run_classifier.py \
   --task_name=bertcls \
