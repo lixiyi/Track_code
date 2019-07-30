@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cp /home/trec7/lianxiaoying/Track_code/src/GenSample/run_classifier.py /home/trec7/lianxiaoying/bert
+cp /home/trec7/lianxiaoying/Track_code/src/Ranking/run_classifier.py /home/trec7/lianxiaoying/bert
 
 export BERT_BASE_DIR=/home/trec7/lianxiaoying/model/uncased_L-12_H-768_A-12
 export DATA_DIR=/home/trec7/lianxiaoying/Track_code/src/outputs
