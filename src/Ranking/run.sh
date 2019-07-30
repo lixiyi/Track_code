@@ -15,8 +15,8 @@ python /home/trec7/lianxiaoying/bert/run_classifier.py \
   --vocab_file=$BERT_BASE_DIR/vocab.txt \
   --bert_config_file=$BERT_BASE_DIR/bert_config.json \
   --init_checkpoint=$BERT_BASE_DIR/bert_model.ckpt \
-  --max_seq_length=512 \
-  --train_batch_size=32 \
+  --max_seq_length=128 \
+  --train_batch_size=16 \
   --learning_rate=2e-5 \
-  --num_train_epochs=3.0 \
-  --output_dir=home/trec7/lianxiaoying/trained_model
+  --num_train_epochs=1.0 \
+  --output_dir=/home/trec7/lianxiaoying/trained_model
