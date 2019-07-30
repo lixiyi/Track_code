@@ -373,6 +373,7 @@ class ColaProcessor(DataProcessor):
           InputExample(guid=guid, text_a=text_a, text_b=None, label=label))
     return examples
 
+
 class BertClsProcessor(DataProcessor):
     def get_train_examples(self, data_dir):
         file_path = os.path.join(data_dir, 'train.txt')
@@ -836,7 +837,7 @@ def main(_):
       "mnli": MnliProcessor,
       "mrpc": MrpcProcessor,
       "xnli": XnliProcessor,
-      "BertCls": BertClsProcessor,
+      "bertcls": BertClsProcessor,
   }
 
   tokenization.validate_case_matches_checkpoint(FLAGS.do_lower_case,
