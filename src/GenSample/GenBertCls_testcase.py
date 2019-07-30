@@ -164,7 +164,7 @@ def gen_sample(args=None):
 			for doc_id in res_combine:
 				doc_body = extract_body([WashingtonPost[doc_id]['contents']])
 				sen2 = split_body([doc_body, max_length])
-				out.write(str(0) + '\t' + sen1 + '\t' + sen2 + '\n')
+				out.write(str(0) + '\t' + sen1 + '\t' + sen2 + '\t' + cur_id + '\t' + doc_id + '\n')
 
 
 if __name__ == "__main__":
