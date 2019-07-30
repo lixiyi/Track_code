@@ -51,7 +51,9 @@ def filter_doc(doc, date, similar_doc):
 	if doc_date is not None and date is not None and int(doc_date) > int(date):
 		return False
 	# Filter by date + title + author
-	rep_key = doc_title + '#' + doc_author + '#' + str(doc_date)
+	rep_key = doc_title + '#' + doc_author
+	if doc_date is not None:
+		rep_key += str(doc_date)
 	if rep_key in similar_doc:
 		return False
 	else:
@@ -124,7 +126,10 @@ def gen_sample(args=None):
 
 			# Combie Recall results
 			similar_doc = {} # Filter
-			similar_doc[title + '#' + author + '#' + str(date)] = 1
+			if date is None:
+				similar_doc[title + '#' + author] = 1
+			else:
+				similar_doc[title + '#' + author + '#' + str(date)] = 1
 			res_mask = {}
 			res_mask[0] = set()
 			res_mask[2] = set()
