@@ -29,7 +29,7 @@ with open(path_mp['DataPath'] + path_mp['topics'], 'r', encoding='utf-8') as f:
 label = ['0', '2', '4', '8', '16']
 
 predict = []
-with open('/home/trec7/lianxiaoying/predict/test_result.tsv', 'r', encoding='utf-8') as f:
+with open('/home/trec7/lianxiaoying/predict/test_results.tsv', 'r', encoding='utf-8') as f:
 	for line in f:
 		li = line[:-1].split(' ')
 		max_num = 0
