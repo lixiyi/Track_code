@@ -45,7 +45,7 @@ with open('/home/trec7/lianxiaoying/Track_code/src/outputs/test_case.txt', 'r', 
 	reader = f.readlines()
 
 cnt = 0
-with open('/home/trec7/lianxiaoying/trec_eval.9.0/test/bresult.test', 'r', encoding='utf-8') as f:
+with open('/home/trec7/lianxiaoying/trec_eval.9.0/test/bresult.test', 'w', encoding='utf-8') as f:
 	for index, line in enumerate(reader):
 		split_line = line[:-1].strip().split('\t')
 		if split_line[0] == '0' and len(split_line) == 5:
