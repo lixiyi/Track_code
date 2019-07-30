@@ -76,21 +76,21 @@ def gen_sample(args=None):
 	topics_mp = {}
 	with open(cfg.OUTPUT + 'topics_index.txt', 'r', encoding='utf-8') as f:
 		for line in tqdm(f):
-			li = line.split(' ')
+			li = line[:-1].split(' ')
 			topics_mp[li[0]] = set(li[1:])
 	print('Topics idx loaded.')
 	# read tfidf_mp
 	tfidf_mp = {}
 	with open(cfg.OUTPUT + 'tfidf_index.txt', 'r', encoding='utf-8') as f:
 		for line in tqdm(f):
-			li = line.split(' ')
+			li = line[:-1].split(' ')
 			tfidf_mp[li[0]] = li[1:]
 	print('TFIDF idx loaded.')
 	# read words_mp
 	words_index = {}
 	with open(cfg.OUTPUT + 'words_index.txt', 'r', encoding='utf-8') as f:
 		for line in tqdm(f):
-			li = line.split(' ')
+			li = line[:-1].split(' ')
 			words_index[li[0]] = set(li[1:])
 	print('words idx loaded.')
 
