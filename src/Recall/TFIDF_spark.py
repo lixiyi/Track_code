@@ -120,14 +120,12 @@ def tfidf_index_single(line, filter_kicker, words_mp, num):
 			continue
 		idf = np.log(571963 * 1.0 / words_mp.value[w])
 		tfidf_val[w] = tf[w] * 1.0 * idf
-	# sort by tf-idf, combine top inverted file line number list
+	# sort by tf-idf, return top words
 	tfidf_val = sorted(tfidf_val.items(), key=lambda d: d[1], reverse=True)
-	# res = set()
 	res = doc_id
 	for i in range(min(num, len(tfidf_val))):
 		w = tfidf_val[i][0]
 		res += ' ' + w
-	# 	res = res | set(words_mp.value[w])
 	return res
 
 

@@ -8,7 +8,6 @@ import re
 from tqdm import tqdm
 import random
 import numpy as np
-from pyspark import SparkContext, SparkConf
 
 
 path_mp = cfg.get_path_conf('../path.cfg')
@@ -34,9 +33,9 @@ def extract_body(args = None):
 # args 0: string
 # return: string
 def split_body(args=None):
-	body, max_length, nlp = args
+	body, max_length = args
 	max_length = int(max_length)
-	w_list = nlp.word_tokenize(body)
+	w_list = cfg.word_cut(body)
 	if len(w_list) <= max_length-2:
 		return body
 	head_len = int((max_length - 2) / 2)
@@ -44,43 +43,34 @@ def split_body(args=None):
 	return ' '.join(w_list[:head_len]) + ' '.join(w_list[-tail_len:])
 
 
-def load_washingtonpost(line):
-	obj = json.loads(line)
-	doc_id = obj['id']
-	return (doc_id, obj)
-
-
-def load_topics(line):
-	li = line.split(' ')
-	return (li[0], li[1:])
-
 # generate samples for each document
 # args 0: max_length for Bert
 def gen_sample(args=None):
 	max_length = args[0]
 	max_length = int(max_length)
-
-	SparkContext.getOrCreate().stop()
-	conf = SparkConf().setMaster("local[*]").setAppName("GenBertCls") \
-		.set("spark.executor.memory", "10g") \
-		.set("spark.driver.maxResultSize", "10g") \
-		.set("spark.cores.max", 10) \
-		.set("spark.executor.cores", 10) \
-		.set("spark.default.parallelism", 20)
-	sc = SparkContext(conf=conf)
 	# read all the doc, load as json, line count start from 1
-	WashingtonPost = sc.textFile(path_mp['DataPath'] + path_mp['WashingtonPost'])\
-		.map(lambda line: load_washingtonpost(line)).collectAsMap()
+	WashingtonPost = {}
+	with open(path_mp['DataPath'] + path_mp['WashingtonPost'], 'r', encoding='utf-8') as f:
+		for line in f:
+			obj = json.loads(line)
+			doc_id = obj['id']
+			WashingtonPost[doc_id] = obj
 	print('WashingtonPost dataset loaded.')
 	# read topics idx
-	topics_mp = sc.textFile(cfg.OUTPUT + 'topics_index.txt').map(lambda line: load_topics(line))
+	topics_mp = {}
+	with open(cfg.OUTPUT + 'topics_index.txt', 'r', encoding='utf-8') as f:
+		for line in f:
+			li = line.split(' ')
+			topics_mp[li[0]] = li[1:]
 	print('Topics idx loaded.')
 	# read tfidf words_mp and words_idx
-	tfidf_mp = sc.textFile(cfg.OUTPUT + 'tfidf_index.txt').map(lambda line: load_topics(line))
-	print('Topics idx loaded.')
-	WashingtonPost = sc.broadcast(WashingtonPost)
-	topics_mp = sc.broadcast(topics_mp)
-	tfidf_mp = sc.broadcast(tfidf_mp)
+	tfidf_mp = {}
+	with open(cfg.OUTPUT + 'tfidf_index.txt', 'r', encoding='utf-8') as f:
+		for line in f:
+			li = line.split(' ')
+			tfidf_mp[li[0]] = li[1:]
+	print('TFIDF idx loaded.')
+
 	filter_kicker = {"Opinion": 1, "Letters to the Editor": 1, "The Post's View": 1}
 	with open(cfg.OUTPUT + 'Dataset_BertCls.txt', 'w', encoding='utf-8') as out:
 		for cnt in tqdm(range(1, len(WashingtonPost))):
@@ -180,7 +170,7 @@ def gen_sample(args=None):
 				doc_cache[0].append(doc)
 
 			# split from body
-			sen1 = split_body([body, max_length, nlp])
+			sen1 = split_body([body, max_length])
 
 			# Sampling and Generate examples
 			# label 0, 2, 4, 8
@@ -190,11 +180,11 @@ def gen_sample(args=None):
 				idx = random.randint(0, len(doc_cache[label])-1)
 				doc = doc_cache[label][idx]
 				doc_body = extract_body([doc['contents']])
-				sen2 = split_body([doc_body, max_length, nlp])
+				sen2 = split_body([doc_body, max_length])
 				out.write(str(label) + '\t' + sen1 + '\t' + sen2 + '\n')
 
 			# label 16 middle from the body
-			w_list = nlp.word_tokenize(body)
+			w_list = cfg.word_cut(body)
 			st = (len(w_list) - max_length + 2) //2
 			ed = st + max_length - 2
 			sen2 = ' '.join(w_list[st:ed])
