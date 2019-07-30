@@ -140,22 +140,22 @@ def gen_sample(args=None):
 			similar_doc[cur_key] = 1
 			res_mask = {}
 			res_mask[0] = set()
+			res_mask[1] = set()
 			res_mask[2] = set()
-			res_mask[4] = set()
-			res_mask[8] = set()
+			res_mask[3] = set()
 			res_tfidf_mp = {} 	# help decide which is 8
 			for li in res_tfidf:
 				# Filter by kicker
 				if li in tfidf_mp and filter_doc(WashingtonPost[li], date, similar_doc):
-					res_mask[4].add(li)
+					res_mask[2].add(li)
 					res_tfidf_mp[li] = 1
 			for li in res_topic:
 				# Filter by kicker
 				if li in tfidf_mp and filter_doc(WashingtonPost[li], date, similar_doc):
 					if li in res_tfidf_mp:
-						res_mask[8].add(li)
+						res_mask[3].add(li)
 					else:
-						res_mask[2].add(li)
+						res_mask[1].add(li)
 
 			# random add 100 label 0 document
 			zero = np.random.randint(0, len(tfidf_mp), size=[100])
@@ -175,7 +175,7 @@ def gen_sample(args=None):
 					continue
 				idx = random.randint(0, len(res_mask[label])-1)
 				doc_id = res_mask[label][idx]
-				doc_body = extract_body([WashingtonPost['contents']])
+				doc_body = extract_body([WashingtonPost[doc_id]['contents']])
 				sen2 = split_body([doc_body, max_length])
 				out.write(str(label) + '\t' + sen1 + '\t' + sen2 + '\n')
 
@@ -184,7 +184,7 @@ def gen_sample(args=None):
 			st = (len(w_list) - max_length + 2) //2
 			ed = st + max_length - 2
 			sen2 = ' '.join(w_list[st:ed])
-			out.write(str(16) + '\t' + sen1 + '\t' + sen2 + '\n')
+			out.write(str(4) + '\t' + sen1 + '\t' + sen2 + '\n')
 
 
 if __name__ == "__main__":
