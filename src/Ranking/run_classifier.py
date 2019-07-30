@@ -21,6 +21,7 @@ from __future__ import print_function
 import collections
 import csv
 import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "3"
 import modeling
 import optimization
 import tokenization
