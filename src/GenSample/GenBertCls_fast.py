@@ -90,6 +90,7 @@ def gen_sample(args=None):
 		for line in tqdm(f):
 			li = line[:-1].split(' ')
 			tfidf_mp[li[0]] = li[1:]
+	tfidf_list = list(tfidf_mp.keys())
 	print('TFIDF idx loaded.')
 	# read words_mp
 	words_index = {}
@@ -100,7 +101,7 @@ def gen_sample(args=None):
 	print('words idx loaded.')
 
 	with open(cfg.OUTPUT + 'Dataset_BertCls.txt', 'w', encoding='utf-8') as out:
-		for cur_id in tqdm(tfidf_mp.keys()):
+		for cur_id in tqdm(tfidf_list):
 			obj = WashingtonPost[cur_id]
 			contents = obj['contents']
 			title = obj['title']
@@ -159,7 +160,7 @@ def gen_sample(args=None):
 			# random add 100 label 0 document
 			zero = np.random.randint(0, len(tfidf_mp), size=[100])
 			for li in zero:
-				doc_id = tfidf_mp.keys()[li]
+				doc_id = tfidf_list[li]
 				if filter_doc(WashingtonPost[doc_id], date, similar_doc):
 					res_mask[0].add(li)
 

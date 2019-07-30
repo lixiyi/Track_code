@@ -6,7 +6,7 @@ class BertClsProcessor(DataProcessor):
 		examples = []
 		for index, line in enumerate(reader):
 			guid = 'train-%d'%index
-			split_line = line.strip().split(',')
+			split_line = line.strip().split('\t')
 			text_a = tokenization.convert_to_unicode(split_line[1])
 			text_b = tokenization.convert_to_unicode(split_line[2])
 			label = split_line[0]
