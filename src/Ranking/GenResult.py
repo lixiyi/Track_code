@@ -1,4 +1,4 @@
-import getCfg as cfg
+import DataProcess.getCfg as cfg
 import json
 import re
 from tqdm import tqdm
