@@ -43,6 +43,22 @@ def split_body(args=None):
 	return ' '.join(w_list[:head_len]) + ' '.join(w_list[-tail_len:])
 
 
+def filter_doc(doc, date, similar_doc):
+	doc_title = doc['title']
+	doc_author = doc['author']
+	doc_date = doc['published_date']
+	# Filter by date
+	if doc_date is not None and date is not None and int(doc_date) > int(date):
+		return False
+	# Filter by date + title + author
+	rep_key = doc_title + '#' + doc_author + '#' + str(doc_date)
+	if rep_key in similar_doc:
+		return False
+	else:
+		similar_doc[rep_key] = 1
+	return True
+
+
 # generate samples for each document
 # args 0: max_length for Bert
 def gen_sample(args=None):
@@ -61,125 +77,92 @@ def gen_sample(args=None):
 	with open(cfg.OUTPUT + 'topics_index.txt', 'r', encoding='utf-8') as f:
 		for line in f:
 			li = line.split(' ')
-			topics_mp[li[0]] = li[1:]
+			topics_mp[li[0]] = set(li[1:])
 	print('Topics idx loaded.')
-	# read tfidf words_mp and words_idx
+	# read tfidf_mp
 	tfidf_mp = {}
 	with open(cfg.OUTPUT + 'tfidf_index.txt', 'r', encoding='utf-8') as f:
 		for line in f:
 			li = line.split(' ')
 			tfidf_mp[li[0]] = li[1:]
 	print('TFIDF idx loaded.')
+	# read words_mp
+	words_index = {}
+	with open(cfg.OUTPUT + 'words_index.txt', 'r', encoding='utf-8') as f:
+		for line in f:
+			li = line.split(' ')
+			words_index[li[0]] = set(li[1:])
+	print('words idx loaded.')
 
-	filter_kicker = {"Opinion": 1, "Letters to the Editor": 1, "The Post's View": 1}
 	with open(cfg.OUTPUT + 'Dataset_BertCls.txt', 'w', encoding='utf-8') as out:
-		for cnt in tqdm(range(1, len(WashingtonPost))):
-			kicker_filterd_mp = {}		# Record line filtered by kicker, line index start from 1
-			line = WashingtonPost[cnt]
-			obj = json.loads(line)
+		for cur_id in tqdm(tfidf_mp.keys()):
+			obj = WashingtonPost[cur_id]
 			contents = obj['contents']
 			title = obj['title']
 			author = obj['author']
 			date = obj['published_date']
-			skip = False
 			body = ""
 			topic_name = ""
 			for li in contents:
 				if type(li).__name__ == 'dict':
 					if 'type' in li and li['type'] == 'kicker':
-						# skip filter kickers
 						topic_name = li['content']
-						if topic_name in filter_kicker.keys():
-							skip = True
-							break
 					if 'subtype' in li and li['subtype'] == 'paragraph':
 						paragraph = li['content'].strip()
 						# Replace <.*?> with ""
 						paragraph = re.sub(r'<.*?>', '', paragraph)
 						body += ' ' + paragraph
-			if skip:
-				kicker_filterd_mp[cnt] = 1
-				continue
 			# Recall By tf_idf
 			body = body.strip()
-			res_tfidf = tfidf_mp[cnt]
+			res_tfidf = set()
+			for w in tfidf_mp[cur_id]:
+				res_tfidf = res_tfidf | words_index[w]
+			res_tfidf = list(res_tfidf)
 
 			# Recall By topics
-			res_topic = topics_mp[topic_name]
+			res_topic = list(topics_mp[topic_name])
 
 			# Combie Recall results
+			similar_doc = {} # Filter
+			similar_doc[title + '#' + author + '#' + str(date)] = 1
 			res_mask = {}
+			res_mask[0] = set()
+			res_mask[2] = set()
+			res_mask[4] = set()
+			res_mask[8] = set()
+			res_tfidf_mp = {} 	# help decide which is 8
 			for li in res_tfidf:
 				# Filter by kicker
-				if int(li) in kicker_filterd_mp:
-					continue
-				res_mask[int(li)] = 4
+				if li in tfidf_mp and filter_doc(WashingtonPost[li], date, similar_doc):
+					res_mask[4] = res_mask[4] | li
+					res_tfidf_mp[li] = 1
 			for li in res_topic:
 				# Filter by kicker
-				if int(li) in kicker_filterd_mp:
-					continue
-				if li in res_mask:
-					res_mask[int(li)] = 8
-				else:
-					res_mask[int(li)] = 2
-
-			# Filter
-			key_list = sorted(res_mask)
-			similar_doc = {}
-			similar_doc[title + '#' + author + '#' + str(date)] = 1
-			doc_cache = {}		# cache document, classify by 0, 2, 4, 8
-			doc_cache[0] = []
-			for li_cnt in key_list:
-				li = WashingtonPost[li_cnt]
-				doc = json.loads(li)
-				doc_title = doc['title']
-				doc_author = doc['author']
-				doc_date = doc['published_date']
-				doc_contents = doc['contents']
-				# Filter by date
-				if doc_date is not None and date is not None and int(doc_date) > int(date):
-					continue
-				# Filter by date + title + author
-				rep_key = doc_title + '#' + doc_author + '#' + str(doc_date)
-				if rep_key in similar_doc:
-					continue
-				else:
-					similar_doc[rep_key] = 1
-				# cache document
-				if res_mask[li_cnt] not in doc_cache:
-					doc_cache[res_mask[li_cnt]] = []
-				doc_cache[res_mask[li_cnt]].append(doc)
+				if li in tfidf_mp and filter_doc(WashingtonPost[li], date, similar_doc):
+					if li in res_tfidf_mp:
+						res_mask[8] = res_mask[8] | li
+					else:
+						res_mask[2] = res_mask[2] | li
 
 			# random add 100 label 0 document
-			zero = np.random.randint(1, len(WashingtonPost), size=[100])
-			for li_cnt in zero:
-				doc = json.loads(WashingtonPost[li_cnt])
-				doc_date = doc['published_date']
-				# Filter by kicker
-				if li_cnt in kicker_filterd_mp:
-					continue
-				# Filter by date
-				if doc_date is not None and date is not None and int(doc_date) > int(date):
-					continue
-				# Filter by date + title + author
-				rep_key = doc_title + '#' + doc_author + '#' + str(doc_date)
-				if rep_key in similar_doc:
-					continue
-				else:
-					similar_doc[rep_key] = 1
-				doc_cache[0].append(doc)
+			zero = np.random.randint(0, len(tfidf_mp), size=[100])
+			for li in zero:
+				doc_id = tfidf_mp.keys()[li]
+				if filter_doc(WashingtonPost[doc_id], date, similar_doc):
+					res_mask[0] = res_mask[0] | doc_id
 
 			# split from body
 			sen1 = split_body([body, max_length])
 
 			# Sampling and Generate examples
 			# label 0, 2, 4, 8
-			for label in sorted(doc_cache):
-				if len(doc_cache[label]) <= 0:
+			for label in res_mask.keys():
+				res_mask[label] = list(res_mask[label])
+				if len(res_mask[label]) <= 0:
 					continue
-				idx = random.randint(0, len(doc_cache[label])-1)
-				doc = doc_cache[label][idx]
-				doc_body = extract_body([doc['contents']])
+				idx = random.randint(0, len(res_mask[label])-1)
+				doc_id = res_mask[label][idx]
+				doc_body = extract_body([WashingtonPost['contents']])
 				sen2 = split_body([doc_body, max_length])
 				out.write(str(label) + '\t' + sen1 + '\t' + sen2 + '\n')
 
