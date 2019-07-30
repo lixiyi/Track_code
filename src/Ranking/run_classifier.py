@@ -425,7 +425,7 @@ class BertClsProcessor(DataProcessor):
 
 
 		def get_labels(self):
-				return ['0', '2', '4', '8', '16']
+				return ['0', '1', '2', '3', '4']
 
 def convert_single_example(ex_index, example, label_list, max_seq_length,
 													 tokenizer):
