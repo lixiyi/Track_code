@@ -134,22 +134,22 @@ def gen_sample(args=None):
 			for li in res_tfidf:
 				# Filter by kicker
 				if li in tfidf_mp and filter_doc(WashingtonPost[li], date, similar_doc):
-					res_mask[4] = res_mask[4] | li
+					res_mask[4].add(li)
 					res_tfidf_mp[li] = 1
 			for li in res_topic:
 				# Filter by kicker
 				if li in tfidf_mp and filter_doc(WashingtonPost[li], date, similar_doc):
 					if li in res_tfidf_mp:
-						res_mask[8] = res_mask[8] | li
+						res_mask[8].add(li)
 					else:
-						res_mask[2] = res_mask[2] | li
+						res_mask[2].add(li)
 
 			# random add 100 label 0 document
 			zero = np.random.randint(0, len(tfidf_mp), size=[100])
 			for li in zero:
 				doc_id = tfidf_mp.keys()[li]
 				if filter_doc(WashingtonPost[doc_id], date, similar_doc):
-					res_mask[0] = res_mask[0] | doc_id
+					res_mask[0].add(li)
 
 			# split from body
 			sen1 = split_body([body, max_length])
