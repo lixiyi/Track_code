@@ -950,8 +950,8 @@ def main(_):
 
 		tf.logging.info("***** Running evaluation *****")
 		tf.logging.info("	Num examples = %d (%d actual, %d padding)",
-										len(eval_examples), num_actual_eval_examples,
-										len(eval_examples) - num_actual_eval_examples)
+						len(eval_examples), num_actual_eval_examples,
+						len(eval_examples) - num_actual_eval_examples)
 		tf.logging.info("	Batch size = %d", FLAGS.eval_batch_size)
 
 		# This tells the estimator to run through the entire set.
@@ -991,8 +991,8 @@ def main(_):
 
 		predict_file = os.path.join(FLAGS.output_dir, "predict.tf_record")
 		file_based_convert_examples_to_features(predict_examples, label_list,
-																						FLAGS.max_seq_length, tokenizer,
-																						predict_file)
+												FLAGS.max_seq_length, tokenizer,
+												predict_file)
 
 		tf.logging.info("***** Running prediction*****")
 		tf.logging.info("	Num examples = %d (%d actual, %d padding)",
