@@ -21,7 +21,8 @@ def topics_index_single(line):
 	for li in contents:
 		if type(li).__name__ == 'dict':
 			if 'type' in li and li['type'] == 'kicker':
-				topic_name = li['content']
+				topic_name = li['content'].strip()
+				break
 	st = set()
 	st.add(doc_id)
 	if topic_name == '':

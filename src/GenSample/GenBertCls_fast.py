@@ -111,8 +111,8 @@ def gen_sample(args=None):
 			topic_name = ""
 			for li in contents:
 				if type(li).__name__ == 'dict':
-					if 'type' in li and li['type'] == 'kicker':
-						topic_name = li['content']
+					if 'type' in li and li['type'] == 'kicker' and topic_name != "":
+						topic_name = li['content'].strip()
 					if 'subtype' in li and li['subtype'] == 'paragraph':
 						paragraph = li['content'].strip()
 						# Replace <.*?> with ""
