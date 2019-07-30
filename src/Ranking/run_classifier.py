@@ -377,6 +377,7 @@ class ColaProcessor(DataProcessor):
 class BertClsProcessor(DataProcessor):
     def get_train_examples(self, data_dir):
         file_path = os.path.join(data_dir, 'train.txt')
+        print(file_path)
         with open(file_path, 'r') as f:
             reader = f.readlines()
         examples = []
