@@ -126,7 +126,9 @@ def gen_sample(args=None):
 			res_tfidf = list(res_tfidf)
 
 			# Recall By topics
-			res_topic = list(topics_mp[topic_name])
+			res_topic = []
+			if topic_name in res_topic:
+				res_topic = list(topics_mp[topic_name])
 
 			# Combie Recall results
 			similar_doc = {} # Filter
