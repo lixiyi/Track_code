@@ -416,7 +416,7 @@ class BertClsProcessor(DataProcessor):
 		for index, line in enumerate(reader):
 			guid = 'test-%d'%index
 			split_line = line[:-1].strip().split('\t')
-			if len(split_line) >= 3:
+			if split_line[0] == '0' and len(split_line) == 5:
 				text_a = tokenization.convert_to_unicode(split_line[1])
 				text_b = tokenization.convert_to_unicode(split_line[2])
 				label = split_line[0]
