@@ -1,3 +1,6 @@
+import sys
+sys.path.append("..")
+
 import DataProcess.getCfg as cfg
 import json
 import re
