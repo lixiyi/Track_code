@@ -162,7 +162,7 @@ def gen_sample(args=None):
 			for li in zero:
 				doc_id = tfidf_list[li]
 				if filter_doc(WashingtonPost[doc_id], date, similar_doc):
-					res_mask[0].add(li)
+					res_mask[0].add(doc_id)
 
 			# split from body
 			sen1 = split_body([body, max_length])
