@@ -376,56 +376,57 @@ class ColaProcessor(DataProcessor):
 
 
 class BertClsProcessor(DataProcessor):
-		def get_train_examples(self, data_dir):
-				file_path = os.path.join(data_dir, 'train.txt')
-				with open(file_path, 'r') as f:
-						reader = f.readlines()
-				examples = []
-				for index, line in enumerate(reader):
-						guid = 'train-%d'%index
-						split_line = line[:-1].strip().split('\t')
-						if len(split_line) == 3:
-							text_a = tokenization.convert_to_unicode(split_line[1])
-							text_b = tokenization.convert_to_unicode(split_line[2])
-							label = split_line[0]
-							examples.append(InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
-				return examples
+	def get_train_examples(self, data_dir):
+		file_path = os.path.join(data_dir, 'train.txt')
+		with open(file_path, 'r') as f:
+			reader = f.readlines()
+		examples = []
+		for index, line in enumerate(reader):
+			guid = 'train-%d'%index
+			split_line = line[:-1].strip().split('\t')
+			if len(split_line) == 3:
+				text_a = tokenization.convert_to_unicode(split_line[1])
+				text_b = tokenization.convert_to_unicode(split_line[2])
+				label = split_line[0]
+				examples.append(InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
+		return examples
 
 
-		def get_dev_examples(self, data_dir):
-				file_path = os.path.join(data_dir, 'dev.txt')
-				with open(file_path, 'r') as f:
-						reader = f.readlines()
-				examples = []
-				for index, line in enumerate(reader):
-						guid = 'dev-%d'%index
-						split_line = line[:-1].strip().split('\t')
-						if len(split_line) == 3:
-							text_a = tokenization.convert_to_unicode(split_line[1])
-							text_b = tokenization.convert_to_unicode(split_line[2])
-							label = split_line[0]
-							examples.append(InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
-				return examples
+	def get_dev_examples(self, data_dir):
+		file_path = os.path.join(data_dir, 'dev.txt')
+		with open(file_path, 'r') as f:
+			reader = f.readlines()
+		examples = []
+		for index, line in enumerate(reader):
+			guid = 'dev-%d'%index
+			split_line = line[:-1].strip().split('\t')
+			if len(split_line) == 3:
+				text_a = tokenization.convert_to_unicode(split_line[1])
+				text_b = tokenization.convert_to_unicode(split_line[2])
+				label = split_line[0]
+				examples.append(InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
+		return examples
 
 
-		def get_test_examples(self, data_dir):
-				file_path = os.path.join(data_dir, 'test.txt')
-				with open(file_path, 'r') as f:
-						reader = f.readlines()
-				examples = []
-				for index, line in enumerate(reader):
-						guid = 'test-%d'%index
-						split_line = line[:-1].strip().split('\t')
-						if len(split_line) >= 3:
-							text_a = tokenization.convert_to_unicode(split_line[1])
-							text_b = tokenization.convert_to_unicode(split_line[2])
-							label = split_line[0]
-							examples.append(InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
-				return examples
+	def get_test_examples(self, data_dir):
+		file_path = os.path.join(data_dir, 'test_case.txt')
+		with open(file_path, 'r') as f:
+			reader = f.readlines()
+		examples = []
+		for index, line in enumerate(reader):
+			guid = 'test-%d'%index
+			split_line = line[:-1].strip().split('\t')
+			if len(split_line) >= 3:
+				text_a = tokenization.convert_to_unicode(split_line[1])
+				text_b = tokenization.convert_to_unicode(split_line[2])
+				label = split_line[0]
+				examples.append(InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
+		return examples
 
 
-		def get_labels(self):
-				return ['0', '1', '2', '3', '4']
+	def get_labels(self):
+		return ['0', '1', '2', '3', '4']
+
 
 def convert_single_example(ex_index, example, label_list, max_seq_length,
 													 tokenizer):
@@ -951,8 +952,8 @@ def main(_):
 
 		tf.logging.info("***** Running evaluation *****")
 		tf.logging.info("	Num examples = %d (%d actual, %d padding)",
-						len(eval_examples), num_actual_eval_examples,
-						len(eval_examples) - num_actual_eval_examples)
+										len(eval_examples), num_actual_eval_examples,
+										len(eval_examples) - num_actual_eval_examples)
 		tf.logging.info("	Batch size = %d", FLAGS.eval_batch_size)
 
 		# This tells the estimator to run through the entire set.
@@ -992,8 +993,8 @@ def main(_):
 
 		predict_file = os.path.join(FLAGS.output_dir, "predict.tf_record")
 		file_based_convert_examples_to_features(predict_examples, label_list,
-												FLAGS.max_seq_length, tokenizer,
-												predict_file)
+																						FLAGS.max_seq_length, tokenizer,
+																						predict_file)
 
 		tf.logging.info("***** Running prediction*****")
 		tf.logging.info("	Num examples = %d (%d actual, %d padding)",
