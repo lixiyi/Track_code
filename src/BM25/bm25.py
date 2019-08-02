@@ -66,7 +66,7 @@ def calc_doc_length(line):
 
 def return_doc(line):
 	obj = json.loads(line)
-	doc_id = obj['contents']
+	doc_id = obj['id']
 	return (doc_id, obj)
 
 
