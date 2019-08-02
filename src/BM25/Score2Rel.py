@@ -15,7 +15,7 @@ import bm25
 path_mp = cfg.get_path_conf('../path.cfg')
 
 
-def get_mapping():
+def get_mapping(args=None):
 	SparkContext.getOrCreate().stop()
 	conf = SparkConf().setMaster("local[*]").setAppName("bm25") \
 		.set("spark.executor.memory", "10g") \
@@ -83,7 +83,7 @@ def get_mapping():
 
 
 # modify bm25 score in col4 to rel
-def transform():
+def transform(args=None):
 	score2rel = {}
 	with open(cfg.OUTPUT + 'score2rel.txt', 'r', encoding='utf-8') as f:
 		for line in f:
@@ -95,4 +95,8 @@ def transform():
 				topic_id = li[0]
 				li[4] = score2rel[topic_id][li[4]]
 				out.write(' '.join(li))
+
+
+if __name__ == "__main__":
+	getattr(__import__('Score2Rel'), sys.argv[1])(sys.argv[2:])
 
