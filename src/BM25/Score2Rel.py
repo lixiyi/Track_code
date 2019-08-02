@@ -91,7 +91,7 @@ def transform(args=None):
 	with open('/home/trec7/lianxiaoying/trec_eval.9.0/test/bresult.test', 'r', encoding='utf-8') as f:
 		with open('/home/trec7/lianxiaoying/trec_eval.9.0/test/bresult.test1', 'w', encoding='utf-8') as out:
 			for line in f:
-				li = line[:].split(' ')
+				li = line[:].split('\t')
 				topic_id = li[0]
 				score = float(li[4])
 				rel = 16
@@ -104,7 +104,7 @@ def transform(args=None):
 				elif score < 20:
 					rel = 8
 				li[4] = str(rel)
-				out.write(' '.join(li))
+				out.write('\t'.join(li))
 
 
 if __name__ == "__main__":
