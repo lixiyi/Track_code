@@ -174,8 +174,12 @@ def clip_rel(args=None):
 		with open('/home/trec7/lianxiaoying/trec_eval.9.0/test/bresult.test1', 'w', encoding='utf-8') as out:
 			cnt = 0
 			now = 0
+			topic_id = ''
 			for line in f:
 				li = line[:].split('\t')
+				if li[0] != topic_id:
+					now = 0
+					cnt = 0
 				topic_id = li[0]
 				rel = relevance[now]
 				tot = topic_num[topic_id] * up[now]/dw
@@ -183,9 +187,6 @@ def clip_rel(args=None):
 					cnt += 1
 				else:
 					now = now + 1
-					if now == 5:
-						now = 0
-						cnt = 0
 				li[4] = str(rel)
 				out.write('\t'.join(li))
 
