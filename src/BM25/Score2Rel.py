@@ -72,6 +72,7 @@ def get_mapping():
 	for cur_id in case_mp.keys():
 		obj = WashingtonPost[cur_id]
 		topic_id = case_mp[cur_id]
+		# query (modify)
 		query = cfg.word_cut(obj['title'])
 		rel_mp[topic_id] = []
 		for doc_id, rel in ans_mp[topic_id]:
