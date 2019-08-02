@@ -86,7 +86,8 @@ def calc_score(line, words_df, query, avgdl):
 
 # words_df: document frequency for each word
 # WashingtonPost: corpus
-def bm25(query):
+def bm25(args = None):
+	query = args
 	SparkContext.getOrCreate().stop()
 	conf = SparkConf().setMaster("local[*]").setAppName("bm25") \
 		.set("spark.executor.memory", "10g") \
@@ -103,18 +104,13 @@ def bm25(query):
 	words_df = sc.broadcast(words_df)
 	# avgdl
 	avgdl = sc.textFile(path_mp['DataPath'] + path_mp['WashingtonPost']) \
-		.map(lambda line: calc_doc_length(line))
-	up = avgdl.sum()
-	dw = avgdl.count()
-	avgdl = up * 1.0 / dw
-	print(up, dw)
-	print(type(avgdl), avgdl)
-	# res = sc.textFile(path_mp['DataPath'] + path_mp['WashingtonPost']) \
-	# 	.repartition(4000) \
-	# 	.map(lambda line: calc_score(line, words_df, query, avgdl))\
-	# 	.sortByKey().collect()
-	# for item in res[:1000]:
-	# 	print(item[0], item[1])
+		.map(lambda line: calc_doc_length(line)).sum()
+	avgdl = avgdl * 1.0 / 595037
+	res = sc.textFile(path_mp['DataPath'] + path_mp['WashingtonPost']) \
+		.map(lambda line: calc_score(line, words_df, query, avgdl))\
+		.sortByKey().collect()
+	for item in res[:1000]:
+		print(item[0], item[1])
 
 
 if __name__ == "__main__":
