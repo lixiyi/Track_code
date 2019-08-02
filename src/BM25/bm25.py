@@ -104,8 +104,8 @@ def bm25(query):
 	# avgdl
 	avgdl = sc.textFile(path_mp['DataPath'] + path_mp['WashingtonPost']) \
 		.map(lambda line: calc_doc_length(line))
-	up = avgdl.sum().collect()
-	dw = avgdl.count().collect()
+	up = avgdl.sum()
+	dw = avgdl.count()
 	avgdl = up * 1.0 / dw
 	print(type(avgdl), avgdl)
 	# res = sc.textFile(path_mp['DataPath'] + path_mp['WashingtonPost']) \
