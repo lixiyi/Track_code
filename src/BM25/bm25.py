@@ -28,10 +28,19 @@ def extract_body(args = None):
 
 
 def filter_doc(doc, date, similar_doc):
+	# Filter by kicker
+	filter_kicker = {"Opinion": 1, "Letters to the Editor": 1, "The Post's View": 1}
+	for li in doc['contents']:
+		if type(li).__name__ == 'dict':
+			if 'type' in li and li['type'] == 'kicker':
+				# skip filter kickers
+				topic_name = li['content']
+				if topic_name in filter_kicker.keys():
+					return False
+	# Filter by date
 	doc_title = doc['title']
 	doc_author = doc['author']
 	doc_date = doc['published_date']
-	# Filter by date
 	if doc_date is not None and date is not None and int(doc_date) > int(date):
 		return False
 	# Filter by date + title + author
@@ -53,6 +62,12 @@ def calc_doc_length(line):
 	body = extract_body([obj['contents']])
 	w_list = cfg.word_cut(body)
 	return len(w_list)
+
+
+def return_doc(line):
+	obj = json.loads(line)
+	doc_id = obj['contents']
+	return (doc_id, obj)
 
 
 def calc_score(line, words_df, query, avgdl):
@@ -86,8 +101,14 @@ def calc_score(line, words_df, query, avgdl):
 
 # words_df: document frequency for each word
 # WashingtonPost: corpus
-def bm25(args = None):
-	query = args
+def bm25(sc, query, words_df, avgdl):
+	res = sc.textFile(path_mp['DataPath'] + path_mp['WashingtonPost']) \
+		.map(lambda line: calc_score(line, words_df, query, avgdl))\
+		.sortByKey(False).collect()
+	return res[:1500]
+
+
+def gen_res(args = None):
 	SparkContext.getOrCreate().stop()
 	conf = SparkConf().setMaster("local[*]").setAppName("bm25") \
 		.set("spark.executor.memory", "10g") \
@@ -106,11 +127,56 @@ def bm25(args = None):
 	avgdl = sc.textFile(path_mp['DataPath'] + path_mp['WashingtonPost']) \
 		.map(lambda line: calc_doc_length(line)).sum()
 	avgdl = avgdl * 1.0 / 595037
-	res = sc.textFile(path_mp['DataPath'] + path_mp['WashingtonPost']) \
-		.map(lambda line: calc_score(line, words_df, query, avgdl))\
-		.sortByKey(False).collect()
-	for item in res[:1000]:
-		print(item[0], item[1])
+	# WashingtonPost
+	WashingtonPost = sc.textFile(path_mp['DataPath'] + path_mp['WashingtonPost']) \
+		.map(lambda line: return_doc(line)).collectAsMap()
+	# test case
+	case_mp = {}
+	with open(path_mp['DataPath'] + path_mp['topics'], 'r', encoding='utf-8') as f:
+		li = []
+		for line in f:
+			topic_id = re.search(r'<num>.*?</num>', line)
+			if topic_id is not None:
+				topic_id = topic_id.group(0)[5+9:-7]
+				li.append(topic_id)
+			doc_id = re.search(r'<docid>.*?</docid>', line)
+			if doc_id is not None:
+				doc_id = doc_id.group(0)[7:-8]
+				li.append(doc_id)
+			if len(li) == 2:
+				case_mp[li[1]] = li[0]
+				li = []
+	# filter and generate result
+	with open('/home/trec7/lianxiaoying/trec_eval.9.0/test/bresult.test', 'w', encoding='utf-8') as f:
+		for cur_id in case_mp.keys():
+			topic_id = case_mp[cur_id]
+			obj = WashingtonPost[cur_id]
+			query = cfg.word_cut(obj['title'])
+			res = bm25(sc, query, words_df, avgdl)
+			# filter
+			title = obj['title']
+			author = obj['author']
+			date = obj['published_date']
+			similar_doc = {}
+			cur_key = ''
+			if title is not None:
+				cur_key += title
+			if author is not None:
+				cur_key += '#' + author
+			if date is None:
+				cur_key += '#' + str(date)
+			similar_doc[cur_key] = 1
+			for score, doc_id in res:
+				doc = WashingtonPost[doc_id]
+				if filter_doc(doc, date, similar_doc):
+					out = []
+					out.append(topic_id)
+					out.append('Q0')
+					out.append(doc_id)
+					out.append(str(0))
+					out.append(score)
+					out.append('ICTNET')
+					f.write("\t".join(out) + "\n")
 
 
 if __name__ == "__main__":
