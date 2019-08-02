@@ -123,13 +123,16 @@ def gen_res(args = None):
 		.map(lambda line: (line.split(' ')[0], len(line.split(' ')[1:]))) \
 		.collectAsMap()
 	words_df = sc.broadcast(words_df)
+	print('words_df loaded.')
 	# avgdl
 	avgdl = sc.textFile(path_mp['DataPath'] + path_mp['WashingtonPost']) \
 		.map(lambda line: calc_doc_length(line)).sum()
 	avgdl = avgdl * 1.0 / 595037
+	print('avgdl loaded.')
 	# WashingtonPost
 	WashingtonPost = sc.textFile(path_mp['DataPath'] + path_mp['WashingtonPost']) \
 		.map(lambda line: return_doc(line)).collectAsMap()
+	print('WashingtonPost loaded.')
 	# test case
 	case_mp = {}
 	with open(path_mp['DataPath'] + path_mp['topics'], 'r', encoding='utf-8') as f:
@@ -146,6 +149,7 @@ def gen_res(args = None):
 			if len(li) == 2:
 				case_mp[li[1]] = li[0]
 				li = []
+	print('test case loaded.')
 	# filter and generate result
 	with open('/home/trec7/lianxiaoying/trec_eval.9.0/test/bresult.test', 'w', encoding='utf-8') as f:
 		for cur_id in case_mp.keys():
