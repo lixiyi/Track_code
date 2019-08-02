@@ -154,6 +154,7 @@ def gen_res(args = None):
 	with open('/home/trec7/lianxiaoying/trec_eval.9.0/test/bresult.test', 'w', encoding='utf-8') as f:
 		for cur_id in case_mp.keys():
 			topic_id = case_mp[cur_id]
+			print('now is processing:', topic_id)
 			obj = WashingtonPost[cur_id]
 			query = cfg.word_cut(obj['title'])
 			res = bm25(sc, query, words_df, avgdl)
@@ -178,7 +179,7 @@ def gen_res(args = None):
 					out.append('Q0')
 					out.append(doc_id)
 					out.append(str(0))
-					out.append(score)
+					out.append(str(score))
 					out.append('ICTNET')
 					f.write("\t".join(out) + "\n")
 
