@@ -72,8 +72,9 @@ def get_mapping(args=None):
 	for cur_id in case_mp.keys():
 		obj = WashingtonPost[cur_id]
 		topic_id = case_mp[cur_id]
+		body = bm25.extract_body([obj['contents']])
 		# query (modify)
-		query = cfg.word_cut(obj['title'])
+		query = cfg.word_cut(obj['title'] + ' ' + body)
 		rel_mp[topic_id] = []
 		for doc_id, rel in ans_mp[topic_id]:
 			score = bm25.calc_score(WashingtonPost[doc_id], words_df, query, avgdl, True)

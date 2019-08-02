@@ -107,7 +107,7 @@ def bm25(sc, query, words_df, avgdl):
 	res = sc.textFile(path_mp['DataPath'] + path_mp['WashingtonPost']) \
 		.map(lambda line: calc_score(line, words_df, query, avgdl))\
 		.sortByKey(False).collect()
-	return res[:1500]
+	return res[:500]
 
 
 def gen_res(args = None):
