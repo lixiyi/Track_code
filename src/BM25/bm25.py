@@ -104,7 +104,7 @@ def bm25(query):
 	# avgdl
 	avgdl = sc.textFile(path_mp['DataPath'] + path_mp['WashingtonPost']) \
 		.map(lambda line: calc_doc_length(line))\
-		.reduceByKey(lambda a, b: ('1', a[1] + b[1]))\
+		.reduceByKey(lambda a, b: a + b)\
 		.collect()
 	# avgdl = avgdl * 1.0 / 595037
 	print(type(avgdl), avgdl)
