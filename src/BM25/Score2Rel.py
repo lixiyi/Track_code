@@ -156,7 +156,7 @@ def transform(args=None):
 				out.write('\t'.join(li))
 
 
-def clip_rel():
+def clip_rel(args=None):
 	# 0:2:4:8:16 = 16:8:4:2:1
 	up = [1, 3, 7, 15, 31]
 	dw = 31
