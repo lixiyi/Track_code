@@ -70,10 +70,12 @@ def return_doc(line):
 	return (doc_id, obj)
 
 
-def calc_score(line, words_df, query, avgdl):
+def calc_score(line, words_df, query, avgdl, flag=False):
 	k1 = 1.5
 	b = 0.75
-	obj = json.loads(line)
+	obj = line
+	if not flag:
+		obj = json.loads(line)
 	body = extract_body([obj['contents']])
 	doc_id = obj['id']
 	w_list = cfg.word_cut(body)
