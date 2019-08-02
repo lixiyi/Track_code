@@ -52,7 +52,7 @@ def calc_doc_length(line):
 	obj = json.loads(line)
 	body = extract_body(obj['contents'])
 	w_list = cfg.word_cut(body)
-	return (1, len(w_list))
+	return ('1', len(w_list))
 
 
 def calc_score(line, words_df, query, avgdl):
@@ -104,7 +104,8 @@ def bm25(query):
 	# avgdl
 	avgdl = sc.textFile(path_mp['DataPath'] + path_mp['WashingtonPost']) \
 		.map(lambda line: calc_doc_length(line))\
-		.reduceByKey(lambda a, b: a[1] + b[1]).collect()
+		.reduceByKey(lambda a, b: ('1', a[1] + b[1]))\
+		.collect()
 	# avgdl = avgdl * 1.0 / 595037
 	print(type(avgdl), avgdl)
 	# res = sc.textFile(path_mp['DataPath'] + path_mp['WashingtonPost']) \
