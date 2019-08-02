@@ -107,6 +107,7 @@ def bm25(query):
 	up = avgdl.sum()
 	dw = avgdl.count()
 	avgdl = up * 1.0 / dw
+	print(up, dw)
 	print(type(avgdl), avgdl)
 	# res = sc.textFile(path_mp['DataPath'] + path_mp['WashingtonPost']) \
 	# 	.repartition(4000) \
