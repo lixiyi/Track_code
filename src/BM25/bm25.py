@@ -59,7 +59,7 @@ def calc_score(line, words_df, query, avgdl):
 	k1 = 1.5
 	b = 0.75
 	obj = json.loads(line)
-	body = extract_body(obj['contents'])
+	body = extract_body([obj['contents']])
 	doc_id = obj['id']
 	w_list = cfg.word_cut(body)
 	# calc tf for the doc
