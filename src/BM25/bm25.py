@@ -50,7 +50,7 @@ def filter_doc(doc, date, similar_doc):
 
 def calc_doc_length(line):
 	obj = json.loads(line)
-	body = extract_body(obj['contents'])
+	body = extract_body([obj['contents']])
 	w_list = cfg.word_cut(body)
 	return len(w_list)
 
