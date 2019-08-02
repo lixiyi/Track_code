@@ -98,13 +98,11 @@ def bm25(query):
 	# words df
 	words_df = sc.textFile(cfg.OUTPUT + 'words_index.txt') \
 		.filter(lambda line: line != '') \
-		.repartition(4000) \
 		.map(lambda line: (line.split(' ')[0], len(line.split(' ')[1:]))) \
 		.collectAsMap()
 	words_df = sc.broadcast(words_df)
 	# avgdl
 	avgdl = sc.textFile(path_mp['DataPath'] + path_mp['WashingtonPost']) \
-		.repartition(4000) \
 		.map(lambda line: calc_doc_length(line))\
 		.reduceByKey(lambda a, b: a + b).collect()
 	# avgdl = avgdl * 1.0 / 595037
