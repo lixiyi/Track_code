@@ -80,3 +80,15 @@ def get_mapping():
 	with open(cfg.OUTPUT + 'rel_mp.txt', 'w', encoding='utf-8') as f:
 		f.write(json.dumps(rel_mp))
 
+
+# modify bm25 score in col4 to rel
+def transform():
+	score2rel = {}
+	with open('/home/trec7/lianxiaoying/trec_eval.9.0/test/bresult.test', 'r', encoding='utf-8') as f:
+		with open('/home/trec7/lianxiaoying/trec_eval.9.0/test/bresult.test1', 'w', encoding='utf-8') as out:
+			for line in f:
+				li = line[:].split(' ')
+				topic_id = li[0]
+				li[4] = score2rel[topic_id][li[4]]
+				out.write(' '.join(li))
+
