@@ -107,8 +107,8 @@ def bm25(query):
 		.repartition(4000) \
 		.map(lambda line: calc_doc_length(line))\
 		.reduceByKey(lambda a, b: a + b).collect()
-	avgdl = avgdl * 1.0 / 595037
-	print(avgdl)
+	# avgdl = avgdl * 1.0 / 595037
+	print(type(avgdl), avgdl)
 	# res = sc.textFile(path_mp['DataPath'] + path_mp['WashingtonPost']) \
 	# 	.repartition(4000) \
 	# 	.map(lambda line: calc_score(line, words_df, query, avgdl))\
