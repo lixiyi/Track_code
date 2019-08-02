@@ -108,7 +108,7 @@ def bm25(args = None):
 	avgdl = avgdl * 1.0 / 595037
 	res = sc.textFile(path_mp['DataPath'] + path_mp['WashingtonPost']) \
 		.map(lambda line: calc_score(line, words_df, query, avgdl))\
-		.sortByKey().collect()
+		.sortByKey(False).collect()
 	for item in res[:1000]:
 		print(item[0], item[1])
 
