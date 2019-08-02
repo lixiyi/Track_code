@@ -10,9 +10,11 @@ import random
 import numpy as np
 from pyspark import SparkContext, SparkConf
 import bm25
+from stanfordcorenlp import StanfordCoreNLP
 
 
 path_mp = cfg.get_path_conf('../path.cfg')
+nlp = StanfordCoreNLP(cfg.STANFORDNLP)
 
 
 def get_mapping(args=None):
@@ -74,7 +76,11 @@ def get_mapping(args=None):
 		topic_id = case_mp[cur_id]
 		body = bm25.extract_body([obj['contents']])
 		# query (modify)
-		query = cfg.word_cut(obj['title'] + ' ' + body)
+		tmp = nlp.ner(obj['title'] + ' ' + body)
+		query = []
+		for w, nn in tmp:
+			if nn != 'O':
+				query.append(w)
 		rel_mp[topic_id] = []
 		for doc_id, rel in ans_mp[topic_id]:
 			score = bm25.calc_score(WashingtonPost[doc_id], words_df, query, avgdl, True)

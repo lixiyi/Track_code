@@ -9,9 +9,11 @@ from tqdm import tqdm
 import random
 import numpy as np
 from pyspark import SparkContext, SparkConf
+from stanfordcorenlp import StanfordCoreNLP
 
 
 path_mp = cfg.get_path_conf('../path.cfg')
+nlp = StanfordCoreNLP(cfg.STANFORDNLP)
 
 
 def extract_body(args = None):
@@ -160,7 +162,11 @@ def gen_res(args = None):
 			obj = WashingtonPost[cur_id]
 			body = extract_body([obj['contents']])
 			# query (modify)
-			query = cfg.word_cut(obj['title'] + ' ' + body)
+			tmp = nlp.ner(obj['title'] + ' ' + body)
+			query = []
+			for w, nn in tmp:
+				if nn != 'O':
+					query.append(w)
 			res = bm25(sc, query, words_df, avgdl)
 			# filter
 			title = obj['title']
