@@ -108,10 +108,15 @@ def bm25(query):
 		.map(lambda line: calc_doc_length(line))\
 		.reduceByKey(lambda a, b: a + b).collect()
 	avgdl = avgdl * 1.0 / 595037
-	res = sc.textFile(path_mp['DataPath'] + path_mp['WashingtonPost']) \
-		.repartition(4000) \
-		.map(lambda line: calc_score(line, words_df, query, avgdl))\
-		.sortByKey().collect()
-	for item in res[:1000]:
-		print(item[0], item[1])
+	print(avgdl)
+	# res = sc.textFile(path_mp['DataPath'] + path_mp['WashingtonPost']) \
+	# 	.repartition(4000) \
+	# 	.map(lambda line: calc_score(line, words_df, query, avgdl))\
+	# 	.sortByKey().collect()
+	# for item in res[:1000]:
+	# 	print(item[0], item[1])
+
+
+if __name__ == "__main__":
+	getattr(__import__('bm25'), sys.argv[1])(sys.argv[2:])
 
