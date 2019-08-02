@@ -156,6 +156,40 @@ def transform(args=None):
 				out.write('\t'.join(li))
 
 
+def clip_rel():
+	# 0:2:4:8:16 = 16:8:4:2:1
+	up = [1, 3, 7, 15, 31]
+	dw = 31
+	relevance = [16, 8, 4, 2, 0]
+	topic_num = {}
+	with open('/home/trec7/lianxiaoying/trec_eval.9.0/test/bresult.test', 'r', encoding='utf-8') as f:
+		for line in f:
+			li = line[:].split('\t')
+			topic_id = li[0]
+			if topic_id in topic_num:
+				topic_num[topic_id] += 1
+			else:
+				topic_num[topic_id] = 1
+	with open('/home/trec7/lianxiaoying/trec_eval.9.0/test/bresult.test', 'r', encoding='utf-8') as f:
+		with open('/home/trec7/lianxiaoying/trec_eval.9.0/test/bresult.test1', 'w', encoding='utf-8') as out:
+			cnt = 0
+			now = 0
+			for line in f:
+				li = line[:].split('\t')
+				topic_id = li[0]
+				rel = relevance[now]
+				tot = topic_num[topic_id] * up[now]/dw
+				if cnt < tot:
+					cnt += 1
+				else:
+					now = now + 1
+					if now == 5:
+						now = 0
+						cnt = 0
+				li[4] = str(rel)
+				out.write('\t'.join(li))
+
+
 if __name__ == "__main__":
 	getattr(__import__('Score2Rel'), sys.argv[1])(sys.argv[2:])
 
