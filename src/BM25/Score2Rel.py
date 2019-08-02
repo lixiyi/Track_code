@@ -14,7 +14,7 @@ from stanfordcorenlp import StanfordCoreNLP
 
 
 path_mp = cfg.get_path_conf('../path.cfg')
-nlp = StanfordCoreNLP(cfg.STANFORDNLP)
+nlp = StanfordCoreNLP('http://localhost', port=7000)
 
 
 def get_mapping(args=None):
