@@ -103,8 +103,7 @@ def bm25(query):
 	words_df = sc.broadcast(words_df)
 	# avgdl
 	avgdl = sc.textFile(path_mp['DataPath'] + path_mp['WashingtonPost']) \
-		.map(lambda line: calc_doc_length(line))\
-		.sum()
+		.map(lambda line: calc_doc_length(line))
 	up = avgdl.sum().collect()
 	dw = avgdl.count().collect()
 	avgdl = up * 1.0 / dw
