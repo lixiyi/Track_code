@@ -85,6 +85,9 @@ def get_mapping():
 # modify bm25 score in col4 to rel
 def transform():
 	score2rel = {}
+	with open(cfg.OUTPUT + 'score2rel.txt', 'r', encoding='utf-8') as f:
+		for line in f:
+			score2rel = json.loads(line)
 	with open('/home/trec7/lianxiaoying/trec_eval.9.0/test/bresult.test', 'r', encoding='utf-8') as f:
 		with open('/home/trec7/lianxiaoying/trec_eval.9.0/test/bresult.test1', 'w', encoding='utf-8') as out:
 			for line in f:
