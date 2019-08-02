@@ -158,7 +158,9 @@ def gen_res(args = None):
 			topic_id = case_mp[cur_id]
 			print('now is processing:', topic_id)
 			obj = WashingtonPost[cur_id]
-			query = cfg.word_cut(obj['title'])
+			body = extract_body([obj['contents']])
+			# query (modify)
+			query = cfg.word_cut(obj['title'] + ' ' + body)
 			res = bm25(sc, query, words_df, avgdl)
 			# filter
 			title = obj['title']
