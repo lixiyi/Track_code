@@ -84,16 +84,26 @@ def get_mapping(args=None):
 
 # modify bm25 score in col4 to rel
 def transform(args=None):
-	score2rel = {}
-	with open(cfg.OUTPUT + 'score2rel.txt', 'r', encoding='utf-8') as f:
-		for line in f:
-			score2rel = json.loads(line)
+	# score2rel = {}
+	# with open(cfg.OUTPUT + 'score2rel.txt', 'r', encoding='utf-8') as f:
+	# 	for line in f:
+	# 		score2rel = json.loads(line)
 	with open('/home/trec7/lianxiaoying/trec_eval.9.0/test/bresult.test', 'r', encoding='utf-8') as f:
 		with open('/home/trec7/lianxiaoying/trec_eval.9.0/test/bresult.test1', 'w', encoding='utf-8') as out:
 			for line in f:
 				li = line[:].split(' ')
 				topic_id = li[0]
-				li[4] = score2rel[topic_id][li[4]]
+				score = float(li[4])
+				rel = 16
+				if score < 5:
+					rel = 0
+				elif score < 10:
+					rel = 2
+				elif score < 15:
+					rel = 4
+				elif score < 20:
+					rel = 8
+				li[4] = str(rel)
 				out.write(' '.join(li))
 
 
