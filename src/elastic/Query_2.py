@@ -95,14 +95,6 @@ def test_backgound_linking():
 									}
 								}
 							},
-							{
-								'match': {
-									'kicker': {
-										'query': doc['kicker'],
-										'boost': 4
-									}
-								}
-							}
 						],
 						"must_not": {"match": {"title_author_date": doc['title_author_date']}},
 						'filter': {
