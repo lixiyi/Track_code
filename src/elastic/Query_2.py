@@ -92,6 +92,8 @@ def test_backgound_linking():
 									'query': doc['title'],
 									"boost": 3
 								},
+							},
+							'match_all': {
 								'kicker': {
 									'query': doc['kicker'],
 									'boost': 2
