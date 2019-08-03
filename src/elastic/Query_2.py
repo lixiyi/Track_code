@@ -83,7 +83,12 @@ def test_backgound_linking():
 							'match': {'title_body': qr}
 						},
 						'should': {
-							'match': {'title_body': doc['title'], "boost": 2}
+							'match': {
+								'title_body': {
+									'query': doc['title'],
+									"boost": 2
+								}
+							}
 						},
 						"must_not": {"match": {"title_author_date": doc['title_author_date']}},
 						'filter': {
