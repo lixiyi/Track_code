@@ -15,27 +15,6 @@ path_mp = cfg.get_path_conf('../path.cfg')
 es = Elasticsearch()
 
 
-def filter_doc(doc, date, similar_doc):
-	# Filter by date
-	doc_title = doc['title']
-	doc_author = doc['author']
-	doc_date = doc['published_date']
-	if doc_date is not None and date is not None and int(doc_date) > int(date):
-		return False
-	# Filter by date + title + author
-	rep_key = ''
-	if doc_title is not None:
-		rep_key += doc_title
-	if doc_author is not None:
-		rep_key += '#' + doc_author
-	if doc_date is not None:
-		rep_key += '#' + str(doc_date)
-	if rep_key in similar_doc:
-		return False
-	similar_doc[rep_key] = 1
-	return True
-
-
 def test_backgound_linking():
 	# test case: doc_id, topic_id
 	case_mp = {}
@@ -75,9 +54,9 @@ def test_backgound_linking():
 						'must': {
 							'match': {'title_body': doc['title_body']}
 						},
-						"must_not": {"match": {"id": doc_id}},
+						"must_not": {"match": {"title_author_date": doc['title_author_date']}},
 						'filter': {
-							"range": {"published_date": {"lt": dt}}
+							"range": {"published_date": {"lte": dt}}
 						}
 					},
 				}
@@ -89,7 +68,7 @@ def test_backgound_linking():
 			cnt = 1
 			for ri in res:
 				out = []
-				out.append(mp['num'].split(':')[1].strip())
+				out.append(case_mp[doc_id])
 				out.append('Q0')
 				out.append(ri['_source']['id'])
 				out.append(str(cnt))
