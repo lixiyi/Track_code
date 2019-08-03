@@ -27,17 +27,17 @@ def get_mapping(args=None):
 		.set("spark.default.parallelism", 20)
 	sc = SparkContext(conf=conf)
 	# words df
-	# words_df = sc.textFile(cfg.OUTPUT + 'words_index.txt') \
-	# 	.filter(lambda line: line != '') \
-	# 	.map(lambda line: (line.split(' ')[0], len(line.split(' ')[1:]))) \
-	# 	.collectAsMap()
-	# words_df = sc.broadcast(words_df)
-	# print('words_df loaded.')
-	# # avgdl
-	# avgdl = sc.textFile(path_mp['DataPath'] + path_mp['WashingtonPost']) \
-	# 	.map(lambda line: bm25.calc_doc_length(line)).sum()
-	# avgdl = avgdl * 1.0 / 595037
-	# print('avgdl loaded.')
+	words_df = sc.textFile(cfg.OUTPUT + 'words_index.txt') \
+		.filter(lambda line: line != '') \
+		.map(lambda line: (line.split(' ')[0], len(line.split(' ')[1:]))) \
+		.collectAsMap()
+	words_df = sc.broadcast(words_df)
+	print('words_df loaded.')
+	# avgdl
+	avgdl = sc.textFile(path_mp['DataPath'] + path_mp['WashingtonPost']) \
+		.map(lambda line: bm25.calc_doc_length(line)).sum()
+	avgdl = avgdl * 1.0 / 595037
+	print('avgdl loaded.')
 	# WashingtonPost
 	WashingtonPost = sc.textFile(path_mp['DataPath'] + path_mp['WashingtonPost']) \
 		.map(lambda line: bm25.return_doc(line)).collectAsMap()
@@ -60,16 +60,16 @@ def get_mapping(args=None):
 				li = []
 	print('test case loaded.')
 	# answer: topic_id, (doc_id, rel)
-	# ans_mp = {}
-	# with open(path_mp['DataPath'] + path_mp['bqrels'], 'r', encoding='utf-8') as f:
-	# 	for line in f:
-	# 		li = line[:-1].split(' ')
-	# 		topic_id = li[0]
-	# 		doc_id = li[2]
-	# 		if topic_id not in ans_mp:
-	# 			ans_mp[topic_id] = []
-	# 		ans_mp[topic_id].append([doc_id, li[3]])
-	# print('bqrel loaded.')
+	ans_mp = {}
+	with open(path_mp['DataPath'] + path_mp['bqrels'], 'r', encoding='utf-8') as f:
+		for line in f:
+			li = line[:-1].split(' ')
+			topic_id = li[0]
+			doc_id = li[2]
+			if topic_id not in ans_mp:
+				ans_mp[topic_id] = []
+			ans_mp[topic_id].append([doc_id, li[3]])
+	print('bqrel loaded.')
 	# generate relevance map
 	rel_mp = {}
 	for cur_id in case_mp.keys():
@@ -77,19 +77,17 @@ def get_mapping(args=None):
 		topic_id = case_mp[cur_id]
 		body = bm25.extract_body([obj['contents']])
 		# query (modify)
-		print(topic_id, len(obj['title'] + ' ' + body))
 		tmp = nlp.ner(obj['title'] + ' ' + body)
-		print(topic_id, len(tmp))
-	# 	query = []
-	# 	for w, nn in tmp:
-	# 		if nn != 'O':
-	# 			query.append(w)
-	# 	rel_mp[topic_id] = []
-	# 	for doc_id, rel in ans_mp[topic_id]:
-	# 		score = bm25.calc_score(WashingtonPost[doc_id], words_df, query, avgdl, True)
-	# 		rel_mp[topic_id].append([score, rel])
-	# with open(cfg.OUTPUT + 'rel_mp.txt', 'w', encoding='utf-8') as f:
-	# 	f.write(json.dumps(rel_mp))
+		query = []
+		for w, nn in tmp:
+			if nn != 'O':
+				query.append(w)
+		rel_mp[topic_id] = []
+		for doc_id, rel in ans_mp[topic_id]:
+			score = bm25.calc_score(WashingtonPost[doc_id], words_df, query, avgdl, True)
+			rel_mp[topic_id].append([score, rel])
+	with open(cfg.OUTPUT + 'rel_mp.txt', 'w', encoding='utf-8') as f:
+		f.write(json.dumps(rel_mp))
 
 
 # modify bm25 score in col4 to rel
