@@ -79,7 +79,13 @@ def test_backgound_linking():
 			# output result.test file
 			print(doc_id, len(res))
 			cnt = 1
+			rep_mp = {}
 			for ri in res:
+				rep_key = ri['_source']['title_author_date']
+				if rep_key in rep_mp:
+					continue
+				else:
+					rep_mp[rep_key] = 1
 				out = []
 				out.append(case_mp[doc_id])
 				out.append('Q0')
