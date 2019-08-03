@@ -75,7 +75,7 @@ def test_backgound_linking():
 			else:
 				qr = ' '.join(tmp) #+ ' ' + ' '.join(tmp[-256:])
 			dsl = {
-				"size": 1000,
+				"size": 100,
 				"timeout": "1m",
 				"query": {
 					'bool': {
