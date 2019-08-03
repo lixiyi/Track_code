@@ -99,7 +99,7 @@ def test_backgound_linking():
 								'match': {
 									'kicker': {
 										'query': doc['kicker'],
-										'boost': 2
+										'boost': 4
 									}
 								}
 							}
