@@ -116,22 +116,26 @@ def test_backgound_linking():
 					},
 				}
 			}
-			# add words weight
+			# add words weight by tfidf
 			tfidf = {}
 			for w in tmp:
+				if w not in idf:
+					idf[w] = 1
 				tfidf[w] = tf[w] * np.log(cfg.DOCUMENT_COUNT * 1.0 / idf[w])
 			tfidf = sorted(tfidf.items(), key=lambda d: d[1], reverse=True)
-			for w, sc in tfidf[:20]:
+			ed = min(20, len(tfidf))
+			maxsc = tfidf[0][1]
+			minsc = tfidf[ed][1]
+			for w, sc in tfidf[:ed]:
 				mpi = {
 					'match': {
 						'title_body': {
 							'query': w,
-							"boost": sc
+							"boost": 1 + (sc - minsc)*1.0/(maxsc - minsc)
 						}
 					}
 				}
 				dsl['query']['bool']['should'].append(mpi)
-			print(tfidf[:20])
 			# search
 			res = es.search(index='news', body=dsl)
 			res = res['hits']['hits']
