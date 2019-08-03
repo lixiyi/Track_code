@@ -69,6 +69,7 @@ def get_mapping(args=None):
 			if topic_id not in ans_mp:
 				ans_mp[topic_id] = []
 			ans_mp[topic_id].append([doc_id, li[3]])
+	print('bqrel loaded.')
 	# generate relevance map
 	rel_mp = {}
 	for cur_id in case_mp.keys():
@@ -76,6 +77,7 @@ def get_mapping(args=None):
 		topic_id = case_mp[cur_id]
 		body = bm25.extract_body([obj['contents']])
 		# query (modify)
+		print(obj['title'] + ' ' + body)
 		tmp = nlp.ner(obj['title'] + ' ' + body)
 		query = []
 		for w, nn in tmp:
