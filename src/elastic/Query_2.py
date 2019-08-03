@@ -48,6 +48,7 @@ def test_backgound_linking():
 			dt = doc['published_date']
 			# query the doc
 			dsl = {
+				"size": 1000,
 				"query": {
 					'bool': {
 						'must': {
