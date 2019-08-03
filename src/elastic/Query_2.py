@@ -51,7 +51,7 @@ def test_backgound_linking():
 				"query": {
 					'bool': {
 						'must': {
-							'match': {'title_body': doc['title_body']}
+							'match': {'title_body': doc['title']}
 						},
 						"must_not": {"match": {"title_author_date": doc['title_author_date']}},
 						'filter': {
@@ -63,7 +63,7 @@ def test_backgound_linking():
 			res = es.search(index='news', body=dsl)
 			res = res['hits']['hits']
 			# output result.test file
-			print('result:', len(res))
+			print(doc_id, len(res))
 			cnt = 1
 			for ri in res:
 				out = []
@@ -76,7 +76,6 @@ def test_backgound_linking():
 				ans = "\t".join(out) + "\n"
 				f1.write(ans)
 				cnt += 1
-	return
 
 
 test_backgound_linking()
