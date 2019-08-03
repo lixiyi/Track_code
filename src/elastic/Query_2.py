@@ -8,7 +8,6 @@ import jieba
 import re
 import numpy as np
 from elasticsearch import Elasticsearch
-import src.elastic.xmlhandler as xh
 
 # get file path conf
 path_mp = cfg.get_path_conf('../path.cfg')
