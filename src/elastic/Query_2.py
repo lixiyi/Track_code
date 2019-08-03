@@ -68,12 +68,12 @@ def test_backgound_linking():
 			# 		key_word.append(w)
 			# key_word = ' '.join(key_word)
 			# query the doc
-			tmp1 = cfg.word_cut(doc['body'])
+			tmp1 = cfg.word_cut(doc['title_body'])
 			tmp = []
 			for w in tmp1:
 				if w not in stop_words:
 					tmp.append(w)
-			qr = doc['title'] + ' '
+			qr = ' '
 			if len(tmp) > 768:
 				qr += ' '.join(tmp[:512]) + ' ' + ' '.join(tmp[-256:])
 			else:
