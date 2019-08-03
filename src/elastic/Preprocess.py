@@ -70,7 +70,7 @@ def process_washington_post(filename):
                 continue
             obj['body'] = extract_body([obj['contents']])
             del obj['contents']
-            obj['title_body'] = obj['body'] + ' ' + obj['title']
+            obj['title_body'] = str(obj['title']) + ' ' + str(obj['body'])
             doc = json.dumps(obj)
             # insert data
             res = es.index(index='news', id=obj['id'], body=doc)
