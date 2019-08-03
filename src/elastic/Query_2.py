@@ -120,8 +120,18 @@ def test_backgound_linking():
 			tfidf = {}
 			for w in tmp:
 				tfidf[w] = tf[w] * np.log(cfg.DOCUMENT_COUNT * 1.0 / idf[w])
-			tfidf_mp = sorted(tfidf_mp.items(), key=lambda d: d[1], reverse=True)
-			print(tfidf_mp[:20])
+			tfidf = sorted(tfidf.items(), key=lambda d: d[1], reverse=True)
+			for w, sc in tfidf[:20]:
+				mpi = {
+					'match': {
+						'title_body': {
+							'query': w,
+							"boost": sc
+						}
+					}
+				}
+				dsl['query']['bool']['should'].append(mpi)
+			print(tfidf[:20])
 			# search
 			res = es.search(index='news', body=dsl)
 			res = res['hits']['hits']
