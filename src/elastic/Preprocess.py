@@ -64,7 +64,7 @@ def process_washington_post(filename):
     with open(filename, 'r', encoding='utf-8') as f:
         for line in f:
             obj = json.loads(line)
-            obj['kicker'] = filter_kicker(doc)
+            obj['kicker'] = filter_kicker(obj)
             if obj['kicker'] is False:
                 continue
             obj['body'] = extract_body([obj['contents']])
