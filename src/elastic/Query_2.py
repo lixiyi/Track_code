@@ -71,11 +71,11 @@ def test_backgound_linking():
 					tmp.append(w)
 			qr = ''
 			if len(tmp) > 512:
-				qr = ' '.join(tmp[:512])
+				qr = ' '.join(tmp[:256]) + ' ' + ' '.join(tmp[-256:])
 			else:
-				qr = ' '.join(tmp) #+ ' ' + ' '.join(tmp[-256:])
+				qr = ' '.join(tmp)
 			dsl = {
-				"size": 100,
+				"size": 1000,
 				"timeout": "1m",
 				"query": {
 					'bool': {
