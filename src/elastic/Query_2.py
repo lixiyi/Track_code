@@ -75,8 +75,8 @@ def test_backgound_linking():
 					tmp.append(w)
 			qr = doc['title'] + ' '
 			print(len(tmp))
-			if len(tmp) > 1024:
-				qr += ' '.join(tmp[:512]) + ' ' + ' '.join(tmp[-512:])
+			if len(tmp) > 900:
+				qr += ' '.join(tmp[:900])# + ' ' + ' '.join(tmp[-512:])
 			else:
 				qr += ' '.join(tmp)
 			dsl = {
