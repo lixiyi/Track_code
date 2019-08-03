@@ -91,12 +91,14 @@ def test_backgound_linking():
 								'title_body': {
 									'query': doc['title'],
 									"boost": 3
-								},
+								}
+							},
+							'term': {
 								'kicker': {
 									'query': doc['kicker'],
 									'boost': 2
 								}
-							},
+							}
 						},
 						"must_not": {"match": {"title_author_date": doc['title_author_date']}},
 						'filter': {
