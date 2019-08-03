@@ -69,7 +69,7 @@ def test_backgound_linking():
 			for w in tmp1:
 				if w not in stop_words:
 					tmp.append(w)
-			qr = doc['title'] + ' '
+			qr = ''
 			if len(tmp) > 768:
 				qr += ' '.join(tmp[:512]) + ' ' + ' '.join(tmp[-256:])
 			else:
@@ -80,6 +80,9 @@ def test_backgound_linking():
 				"query": {
 					'bool': {
 						'must': {
+							'match': {'title_body': doc['title']}
+						},
+						'should': {
 							'match': {'title_body': qr}
 						},
 						"must_not": {"match": {"title_author_date": doc['title_author_date']}},
