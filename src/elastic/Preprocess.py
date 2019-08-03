@@ -6,6 +6,7 @@ import DataProcess.getCfg as cfg
 import os
 import json
 import re
+from tqdm import tqdm
 from elasticsearch import Elasticsearch
 
 # get file path conf
@@ -62,7 +63,7 @@ def filter_doc(doc, date, similar_doc):
 
 def process_washington_post(filename):
     with open(filename, 'r', encoding='utf-8') as f:
-        for line in f:
+        for line in tqdm(f):
             obj = json.loads(line)
             obj['kicker'] = filter_kicker(obj)
             if obj['kicker'] is False:
