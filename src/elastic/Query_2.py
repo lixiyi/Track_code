@@ -7,6 +7,7 @@ import os
 import jieba
 import re
 import numpy as np
+from tqdm import tqdm
 from elasticsearch import Elasticsearch
 from stanfordcorenlp import StanfordCoreNLP
 
@@ -17,6 +18,13 @@ nlp = StanfordCoreNLP('http://localhost', port=7000)
 
 
 def test_backgound_linking():
+	# read words_mp
+	idf = {}
+	with open(cfg.OUTPUT + 'words_index.txt', 'r', encoding='utf-8') as f:
+		for line in tqdm(f):
+			li = line[:-1].split(' ')
+			idf[li[0].lower()] = len(li[1:])
+	print('words idx loaded.')
 	# stop words
 	stop_words = {}
 	with open('stopwords.txt', 'r', encoding='utf-8') as f:
@@ -70,9 +78,14 @@ def test_backgound_linking():
 			# query the doc
 			tmp1 = cfg.word_cut(doc['title_body'])
 			tmp = []
+			tf = {}
 			for w in tmp1:
 				if w not in stop_words:
 					tmp.append(w)
+					if w in tf:
+						tf[w] += 1
+					else:
+						tf[w] = 1
 			qr = ' '
 			if len(tmp) > 768:
 				qr += ' '.join(tmp[:512]) + ' ' + ' '.join(tmp[-256:])
@@ -103,6 +116,13 @@ def test_backgound_linking():
 					},
 				}
 			}
+			# add words weight
+			tfidf = {}
+			for w in tmp:
+				tfidf[w] = tf[w] * np.log(cfg.DOCUMENT_COUNT * 1.0 / idf[w])
+			tfidf_mp = sorted(tfidf_mp.items(), key=lambda d: d[1], reverse=True)
+			print(tfidf_mp[:20])
+			# search
 			res = es.search(index='news', body=dsl)
 			res = res['hits']['hits']
 			# output result.test file
