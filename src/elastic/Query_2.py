@@ -82,7 +82,7 @@ def test_backgound_linking():
 						'must': {
 							'match': {'title_body': qr}
 						},
-						"must_not": {"match": {"title_author_date": doc['title_author_date']}},
+						# "must_not": {"match": {"title_author_date": doc['title_author_date']}},
 						'filter': {
 							"range": {"published_date": {"lte": dt}}
 						}
@@ -97,10 +97,10 @@ def test_backgound_linking():
 			rep_mp = {}
 			for ri in res:
 				rep_key = ri['_source']['title_author_date']
-				if rep_key in rep_mp:
-					continue
-				else:
-					rep_mp[rep_key] = 1
+				# if rep_key in rep_mp:
+				# 	continue
+				# else:
+				# 	rep_mp[rep_key] = 1
 				out = []
 				out.append(case_mp[doc_id])
 				out.append('Q0')
