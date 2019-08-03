@@ -131,7 +131,7 @@ def test_backgound_linking():
 					'match': {
 						'title_body': {
 							'query': w,
-							"boost": 1 + (sc - minsc)*1.0/(maxsc - minsc)
+							"boost": 4 + (sc - minsc)*1.0/(maxsc - minsc)
 						}
 					}
 				}
