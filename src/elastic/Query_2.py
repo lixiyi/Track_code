@@ -74,6 +74,7 @@ def test_backgound_linking():
 				if w not in stop_words:
 					tmp.append(w)
 			qr = doc['title'] + ' '
+			print(len(tmp))
 			if len(tmp) > 1024:
 				qr += ' '.join(tmp[:512]) + ' ' + ' '.join(tmp[-512:])
 			else:
