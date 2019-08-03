@@ -57,7 +57,7 @@ def test_backgound_linking():
 			# 		qr.append(w)
 			# qr = ' '.join(qr)
 			# query the doc
-			qr = doc['body']
+			qr = doc['title_body'][:512]
 			dsl = {
 				"size": 1000,
 				"timeout": "1m",
