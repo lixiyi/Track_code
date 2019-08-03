@@ -49,13 +49,13 @@ def process_washington_post(filename):
             if obj['kicker'] is False:
                 continue
             obj['body'] = extract_body([obj['contents']])
-            obj['body'] = obj['body'].lower()
+            obj['body'] = str(obj['body']).lower()
             del obj['contents']
             obj['title_body'] = str(obj['title']) + ' ' + str(obj['body'])
             obj['title_body'] = obj['title_body'].lower()
             obj['title_author_date'] = str(obj['title']) + ' ' + str(obj['author']) + ' ' + str(obj['published_date'])
             obj['title_author_date'] = obj['title_author_date'].lower()
-            obj['title'] = obj['title'].lower()
+            obj['title'] = str(obj['title']).lower()
             doc = json.dumps(obj)
             # insert data
             res = es.index(index='news', id=obj['id'], body=doc)
