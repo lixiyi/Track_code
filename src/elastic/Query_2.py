@@ -84,14 +84,10 @@ def test_backgound_linking():
 				"query": {
 					'bool': {
 						'must': {
-							'match': {'title_body': qr}
+							'match': {'title_body': key_word}
 						},
 						'should': {
 							'match': {
-								'title_body': {
-									'query': key_word,
-									"boost": 5
-								},
 								'title_body': {
 									'query': doc['title'],
 									"boost": 3
