@@ -69,7 +69,11 @@ def test_backgound_linking():
 			for w in tmp1:
 				if w not in stop_words:
 					tmp.append(w)
-			qr = ' '.join(tmp) #+ ' ' + ' '.join(tmp[-256:])
+			qr = ''
+			if len(tmp) > 512:
+				qr = ' '.join(tmp[:512])
+			else:
+				qr = ' '.join(tmp) #+ ' ' + ' '.join(tmp[-256:])
 			dsl = {
 				"size": 1000,
 				"timeout": "1m",
