@@ -59,6 +59,7 @@ def test_backgound_linking():
 				qr = ' '.join(qr)
 			else:
 				qr = doc['title']
+			print(qr)
 			# query the doc
 			dsl = {
 				"size": 1000,
