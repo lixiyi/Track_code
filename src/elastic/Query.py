@@ -2,12 +2,10 @@
 
 import os
 import jieba
-import json
 import re
-import random
 import numpy as np
 from elasticsearch import Elasticsearch
-import src.paper_code.htwsaar4.xmlhandler as xh
+import src.elastic.xmlhandler as xh
 
 # get file path conf
 path_mp = {}
