@@ -74,9 +74,8 @@ def test_backgound_linking():
 				if w not in stop_words:
 					tmp.append(w)
 			qr = doc['title'] + ' '
-			print(len(tmp))
-			if len(tmp) > 900:
-				qr += ' '.join(tmp[:500]) + ' ' + ' '.join(tmp[-400:])
+			if len(tmp) > 768:
+				qr += ' '.join(tmp[:512]) + ' ' + ' '.join(tmp[-256:])
 			else:
 				qr += ' '.join(tmp)
 			dsl = {
@@ -92,6 +91,10 @@ def test_backgound_linking():
 								'title_body': {
 									'query': doc['title'],
 									"boost": 3
+								},
+								'kicker': {
+									'query': doc['kicker'],
+									'boost': 2
 								}
 							}
 						},
