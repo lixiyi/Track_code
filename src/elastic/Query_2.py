@@ -90,7 +90,7 @@ def test_backgound_linking():
 							'match': {
 								'title_body': {
 									'query': key_word,
-									"boost": 5
+									"boost": 2
 								},
 								'title_body': {
 									'query': doc['title'],
