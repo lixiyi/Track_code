@@ -96,7 +96,7 @@ def test_backgound_linking():
 								}
 							},
 							{
-								'term': {
+								'match': {
 									'kicker': {
 										'query': doc['kicker'],
 										'boost': 2
