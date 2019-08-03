@@ -58,7 +58,7 @@ def test_backgound_linking():
 			# qr = ' '.join(qr)
 			# query the doc
 			tmp = cfg.word_cut(doc['title_body'])
-			qr = ' '.join(tmp[:256]) + ' ' + ' '.join(tmp[-256:])
+			qr = ' '.join(tmp[:256])# + ' ' + ' '.join(tmp[-256:])
 			dsl = {
 				"size": 1000,
 				"timeout": "1m",
