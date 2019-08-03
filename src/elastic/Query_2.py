@@ -17,6 +17,12 @@ nlp = StanfordCoreNLP('http://localhost', port=7000)
 
 
 def test_backgound_linking():
+	# stop words
+	stop_words = {}
+	with open('stopwords.txt', 'r', encoding='utf-8') as f:
+		for w in f:
+			w = w[:-1]
+			stop_words[w] = 1
 	# test case: doc_id, topic_id
 	case_mp = {}
 	with open(path_mp['DataPath'] + path_mp['topics'], 'r', encoding='utf-8') as f:
@@ -57,8 +63,12 @@ def test_backgound_linking():
 			# 		qr.append(w)
 			# qr = ' '.join(qr)
 			# query the doc
-			tmp = cfg.word_cut(doc['body'])
-			qr = ' '.join(tmp[:512]) #+ ' ' + ' '.join(tmp[-256:])
+			tmp1 = cfg.word_cut(doc['body'])
+			tmp = []
+			for w in tmp:
+				if w not in stop_words:
+					tmp.append(w)
+			qr = ' '.join(tmp) #+ ' ' + ' '.join(tmp[-256:])
 			dsl = {
 				"size": 1000,
 				"timeout": "1m",
