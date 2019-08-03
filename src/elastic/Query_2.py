@@ -14,25 +14,53 @@ import src.elastic.xmlhandler as xh
 path_mp = cfg.get_path_conf('../path.cfg')
 es = Elasticsearch()
 
-topics = xh.get_topics(path_mp['DataPath'] + path_mp['topics'])
-# get stop words list
-stwlist = [line.strip() for line in open('stopwords.txt', encoding='utf-8').readlines()]
-# doc length 595037
-D = 595037
+
+def filter_doc(doc, date, similar_doc):
+	# Filter by date
+	doc_title = doc['title']
+	doc_author = doc['author']
+	doc_date = doc['published_date']
+	if doc_date is not None and date is not None and int(doc_date) > int(date):
+		return False
+	# Filter by date + title + author
+	rep_key = ''
+	if doc_title is not None:
+		rep_key += doc_title
+	if doc_author is not None:
+		rep_key += '#' + doc_author
+	if doc_date is not None:
+		rep_key += '#' + str(doc_date)
+	if rep_key in similar_doc:
+		return False
+	similar_doc[rep_key] = 1
+	return True
 
 
 def test_backgound_linking():
+	# test case: doc_id, topic_id
+	case_mp = {}
+	with open(path_mp['DataPath'] + path_mp['topics'], 'r', encoding='utf-8') as f:
+		li = []
+		for line in f:
+			topic_id = re.search(r'<num>.*?</num>', line)
+			if topic_id is not None:
+				topic_id = topic_id.group(0)[5+9:-7]
+				li.append(topic_id)
+			doc_id = re.search(r'<docid>.*?</docid>', line)
+			if doc_id is not None:
+				doc_id = doc_id.group(0)[7:-8]
+				li.append(doc_id)
+			if len(li) == 2:
+				case_mp[li[1]] = li[0]
+				li = []
+	print('test case loaded.')
 	with open('bresults.test', 'w', encoding='utf-8') as f1:
-		num = 1
-		for mp in topics:
-			print(mp['num'].split(':')[1].strip())
-			print(num, mp['docid'])
-			num += 1
+		for doc_id in case_mp:
 			# search by docid to get the query
 			dsl = {
 				'query': {
 					'match': {
-						'id': mp['docid']
+						'id': doc_id
 					}
 				}
 			}
@@ -40,64 +68,14 @@ def test_backgound_linking():
 			# print(res)
 			doc = res['hits']['hits'][0]['_source']
 			dt = doc['published_date']
-			docid = doc['id']
-			# print(doc)
-			# remove stop words
-			text = re.sub('[’!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~]+', '', doc['text'])
-			words = "#".join(jieba.cut(text)).split('#')
-			q = {}
-			tf = {}
-			for w in words:
-				if w != "" and w != ' ' and w not in stwlist:
-					if w in tf:
-						tf[w] += 1.0
-					else:
-						tf[w] = 1.0
-					# calc idf
-					dsl = {
-						"size": 0,
-						'query': {
-							'match_phrase': {
-								'text': w
-							},
-						},
-						"aggs": {
-							"idf": {
-								"terms": {
-									"field": "source"
-								}
-							}
-						}
-
-					}
-					res = es.search(index='news', body=dsl)
-					res = res['aggregations']['idf']['buckets']
-					idf = 0.0
-					for dc in res:
-						idf += dc['doc_count']
-					if idf > 0.0:
-						q[w] = np.log(D / idf)
-					else:
-						q[w] = 0.0
-			for w in q.keys():
-				q[w] *= tf[w]
-			q = sorted(q.items(), key=lambda x: x[1], reverse=True)
-			query = ""
-			sz = min(20, len(q))
-			cnt = 0
-			for w in q:
-				if cnt >= sz:
-					break
-				query += ' ' + w[0]
-				cnt += 1
 			# query the doc
 			dsl = {
 				"query": {
 					'bool': {
 						'must': {
-							'match': {'text': query}
+							'match': {'title_body': doc['title_body']}
 						},
-						"must_not": {"match": {"id": docid}},
+						"must_not": {"match": {"id": doc_id}},
 						'filter': {
 							"range": {"published_date": {"lt": dt}}
 						}

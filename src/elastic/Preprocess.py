@@ -40,27 +40,6 @@ def filter_kicker(doc):
     return topic_name
 
 
-def filter_doc(doc, date, similar_doc):
-    # Filter by date
-    doc_title = doc['title']
-    doc_author = doc['author']
-    doc_date = doc['published_date']
-    if doc_date is not None and date is not None and int(doc_date) > int(date):
-        return False
-    # Filter by date + title + author
-    rep_key = ''
-    if doc_title is not None:
-        rep_key += doc_title
-    if doc_author is not None:
-        rep_key += '#' + doc_author
-    if doc_date is not None:
-        rep_key += '#' + str(doc_date)
-    if rep_key in similar_doc:
-        return False
-    similar_doc[rep_key] = 1
-    return True
-
-
 def process_washington_post(filename):
     with open(filename, 'r', encoding='utf-8') as f:
         for line in tqdm(f):
@@ -71,6 +50,7 @@ def process_washington_post(filename):
             obj['body'] = extract_body([obj['contents']])
             del obj['contents']
             obj['title_body'] = str(obj['title']) + ' ' + str(obj['body'])
+            obj['title_author_date'] = str(obj['title']) + ' ' + str(obj['author']) + ' ' + str(obj['published_date'])
             doc = json.dumps(obj)
             # insert data
             res = es.index(index='news', id=obj['id'], body=doc)
@@ -103,6 +83,9 @@ def init_es():
                 'type': 'text'
             },
             'kicker': {
+                'type': 'keyword'
+            },
+            'title_author_date': {
                 'type': 'keyword'
             },
             # 'contents': {
