@@ -57,16 +57,16 @@ def test_backgound_linking():
 			dt = doc['published_date']
 			# make query
 			# ner_filt = {'O': 1, 'MONEY': 1, 'NUMBER': 1}
-			ner_need = {
-				'PERSON': 1, 'LOCATION': 1, 'STATE_OR_PROVINCE': 1,
-				'ORGANIZATION': 1, 'CITY': 1
-			}
-			tmp1 = nlp.ner(doc['title_body'])
-			key_word = []
-			for w, nn in tmp1:
-				if nn in ner_need:
-					key_word.append(w)
-			key_word = ' '.join(key_word)
+			# ner_need = {
+			# 	'PERSON': 1, 'LOCATION': 1, 'STATE_OR_PROVINCE': 1,
+			# 	'ORGANIZATION': 1, 'CITY': 1
+			# }
+			# tmp1 = nlp.ner(doc['title_body'])
+			# key_word = []
+			# for w, nn in tmp1:
+			# 	if nn in ner_need:
+			# 		key_word.append(w)
+			# key_word = ' '.join(key_word)
 			# query the doc
 			tmp1 = cfg.word_cut(doc['body'])
 			tmp = []
@@ -74,17 +74,17 @@ def test_backgound_linking():
 				if w not in stop_words:
 					tmp.append(w)
 			qr = doc['title'] + ' '
-			if len(tmp) > 768:
-				qr += ' '.join(tmp[:512]) + ' ' + ' '.join(tmp[-256:])
-			else:
-				qr += ' '.join(tmp)
+			# if len(tmp) > 768:
+			qr += ' '.join(tmp[:256]) + ' ' + ' '.join(tmp[-256:])
+			# else:
+			# 	qr += ' '.join(tmp)
 			dsl = {
 				"size": 1000,
 				"timeout": "1m",
 				"query": {
 					'bool': {
 						'must': {
-							'match': {'title_body': key_word}
+							'match': {'title_body': qr}
 						},
 						'should': {
 							'match': {
