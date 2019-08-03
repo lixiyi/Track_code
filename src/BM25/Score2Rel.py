@@ -77,7 +77,6 @@ def get_mapping(args=None):
 		topic_id = case_mp[cur_id]
 		body = bm25.extract_body([obj['contents']])
 		# query (modify)
-		print(obj['title'] + ' ' + body)
 		tmp = nlp.ner(obj['title'] + ' ' + body)
 		query = []
 		for w, nn in tmp:
