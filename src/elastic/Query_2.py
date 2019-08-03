@@ -49,6 +49,7 @@ def test_backgound_linking():
 			# query the doc
 			dsl = {
 				"size": 1000,
+				"timeout": "1m",
 				"query": {
 					'bool': {
 						'must': {
