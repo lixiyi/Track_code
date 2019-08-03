@@ -69,6 +69,7 @@ def process_washington_post(filename):
             if obj['kicker'] is False:
                 continue
             obj['body'] = extract_body([obj['contents']])
+            del obj['contents']
             obj['title_body'] = obj['body'] + obj['title']
             doc = json.dumps(obj)
             # insert data
@@ -104,9 +105,9 @@ def init_es():
             'kicker': {
                 'type': 'keyword'
             },
-            'contents': {
-                'type': 'keyword'
-            },
+            # 'contents': {
+            #     'type': 'keyword'
+            # },
             'type': {
                 'type': 'keyword'
             },
