@@ -73,7 +73,7 @@ def return_doc(line):
 
 
 def calc_score(line, words_df, query, avgdl, flag=False):
-	k1 = 1.5
+	k1 = 1.2
 	b = 0.75
 	obj = line
 	if not flag:
