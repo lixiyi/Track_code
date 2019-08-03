@@ -1,17 +1,15 @@
-#!/usr/bin/env python3
+import sys
+sys.path.append("..")
 
+
+import DataProcess.getCfg as cfg
 import os
 import json
 import re
 from elasticsearch import Elasticsearch
 
 # get file path conf
-path_mp = {}
-with open(os.getcwd()+'/../../path.cfg', 'r', encoding='utf-8') as f:
-    for line in f:
-        li = line[:-1].split('=')
-        path_mp[li[0]] = li[1]
-
+path_mp = cfg.get_path_conf('../path.cfg')
 es = Elasticsearch()
 
 
