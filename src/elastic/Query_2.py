@@ -49,16 +49,16 @@ def test_backgound_linking():
 			doc = res['hits']['hits'][0]['_source']
 			dt = doc['published_date']
 			# make query
-			ner_filt = {'O':1, 'MONEY':1, 'NUMBER':1}
-			tmp = cfg.word_cut(doc['title_body'])
-			tmp = ' '.join(tmp[:256]) + ' ' + ' '.join(tmp[-256:])
-			tmp = nlp.ner(tmp)
-			qr = []
-			for w, nn in tmp:
-				if nn not in ner_filt:
-					qr.append(w)
-			qr = ' '.join(qr)
+			# ner_filt = {'O':1, 'MONEY':1, 'NUMBER':1}
+			# tmp = nlp.ner(doc['title_body'])
+			# qr = []
+			# for w, nn in tmp:
+			# 	if nn not in ner_filt:
+			# 		qr.append(w)
+			# qr = ' '.join(qr)
 			# query the doc
+			tmp = cfg.word_cut(doc['title_body'])
+			qr = ' '.join(tmp[:128]) + ' ' + ' '.join(tmp[-128:])
 			dsl = {
 				"size": 1000,
 				"timeout": "1m",
