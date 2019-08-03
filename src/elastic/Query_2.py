@@ -96,18 +96,18 @@ def test_backgound_linking():
 				"timeout": "1m",
 				"query": {
 					'bool': {
-						'must': {
-							'match': {'title_body': qr}
-						},
+						# 'must': {
+						# 	'match': {'title_body': qr}
+						# },
 						'should': [
-							{
-								'match': {
-									'title_body': {
-										'query': doc['title'],
-										"boost": 3
-									}
-								}
-							},
+							# {
+							# 	'match': {
+							# 		'title_body': {
+							# 			'query': doc['title'],
+							# 			"boost": 3
+							# 		}
+							# 	}
+							# },
 						],
 						"must_not": {"match": {"title_author_date": doc['title_author_date']}},
 						'filter': {
@@ -123,7 +123,7 @@ def test_backgound_linking():
 					idf[w] = 1
 				tfidf[w] = tf[w] * np.log(cfg.DOCUMENT_COUNT * 1.0 / idf[w])
 			tfidf = sorted(tfidf.items(), key=lambda d: d[1], reverse=True)
-			ed = min(20, len(tfidf))
+			ed = len(tfidf)
 			maxsc = tfidf[0][1]
 			minsc = tfidf[ed][1]
 			for w, sc in tfidf[:ed]:
