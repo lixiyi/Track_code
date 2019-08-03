@@ -70,8 +70,8 @@ def test_backgound_linking():
 				if w not in stop_words:
 					tmp.append(w)
 			qr = ''
-			if len(tmp) > 512:
-				qr = ' '.join(tmp[:256]) + ' ' + ' '.join(tmp[-256:])
+			if len(tmp) > 768:
+				qr = ' '.join(tmp[:512]) + ' ' + ' '.join(tmp[-256:])
 			else:
 				qr = ' '.join(tmp)
 			dsl = {
