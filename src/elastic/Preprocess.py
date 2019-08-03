@@ -30,6 +30,7 @@ def extract_body(args = None):
 def filter_kicker(doc):
     # Filter by kicker
     filter_kicker = {"Opinion": 1, "Letters to the Editor": 1, "The Post's View": 1}
+    topic_name = ''
     for li in doc['contents']:
         if type(li).__name__ == 'dict':
             if 'type' in li and li['type'] == 'kicker':
