@@ -8,10 +8,12 @@ import jieba
 import re
 import numpy as np
 from elasticsearch import Elasticsearch
+from stanfordcorenlp import StanfordCoreNLP
 
 # get file path conf
 path_mp = cfg.get_path_conf('../path.cfg')
 es = Elasticsearch()
+nlp = StanfordCoreNLP('http://localhost', port=7000)
 
 
 def test_backgound_linking():
@@ -46,6 +48,11 @@ def test_backgound_linking():
 			# print(res)
 			doc = res['hits']['hits'][0]['_source']
 			dt = doc['published_date']
+			tmp = nlp.ner(doc['title_body'])
+			qr = []
+			for w, nn in tmp:
+				if nn != 'O':
+					qr.append(w)
 			# query the doc
 			dsl = {
 				"size": 1000,
@@ -53,7 +60,7 @@ def test_backgound_linking():
 				"query": {
 					'bool': {
 						'must': {
-							'match': {'title_body': doc['title_body']}
+							'match': {'title_body': ' '.join(qr)}
 						},
 						"must_not": {"match": {"title_author_date": doc['title_author_date']}},
 						'filter': {
