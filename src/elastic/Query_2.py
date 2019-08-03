@@ -61,7 +61,7 @@ def test_backgound_linking():
 				'PERSON': 1, 'LOCATION': 1, 'STATE_OR_PROVINCE': 1,
 				'ORGANIZATION': 1, 'CITY': 1
 			}
-			tmp1 = nlp.ner(doc['title'])
+			tmp1 = nlp.ner(doc['title_body'])
 			key_word = []
 			for w, nn in tmp1:
 				if nn in ner_need:
