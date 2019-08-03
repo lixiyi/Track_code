@@ -56,13 +56,17 @@ def test_backgound_linking():
 			doc = res['hits']['hits'][0]['_source']
 			dt = doc['published_date']
 			# make query
-			# ner_filt = {'O':1, 'MONEY':1, 'NUMBER':1}
-			# tmp = nlp.ner(doc['title_body'])
-			# qr = []
-			# for w, nn in tmp:
-			# 	if nn not in ner_filt:
-			# 		qr.append(w)
-			# qr = ' '.join(qr)
+			# ner_filt = {'O': 1, 'MONEY': 1, 'NUMBER': 1}
+			ner_need = {
+				'PERSON': 1, 'LOCATION': 1, 'STATE_OR_PROVINCE': 1,
+				'ORGANIZATION': 1, 'CITY': 1
+			}
+			tmp1 = nlp.ner(doc['title_body'])
+			key_word = []
+			for w, nn in tmp1:
+				if nn in ner_need:
+					key_word.append(w)
+			key_word = ' '.join(key_word)
 			# query the doc
 			tmp1 = cfg.word_cut(doc['body'])
 			tmp = []
@@ -85,7 +89,7 @@ def test_backgound_linking():
 						'should': {
 							'match': {
 								'title_body': {
-									'query': doc['title'],
+									'query': key_word,
 									"boost": 2
 								}
 							}
