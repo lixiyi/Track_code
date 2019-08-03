@@ -23,6 +23,7 @@ def test_backgound_linking():
 		for w in f:
 			w = w[:-1]
 			stop_words[w] = 1
+	print('stop words loaded.')
 	# test case: doc_id, topic_id
 	case_mp = {}
 	with open(path_mp['DataPath'] + path_mp['topics'], 'r', encoding='utf-8') as f:
@@ -65,7 +66,7 @@ def test_backgound_linking():
 			# query the doc
 			tmp1 = cfg.word_cut(doc['body'])
 			tmp = []
-			for w in tmp:
+			for w in tmp1:
 				if w not in stop_words:
 					tmp.append(w)
 			qr = ' '.join(tmp) #+ ' ' + ' '.join(tmp[-256:])
