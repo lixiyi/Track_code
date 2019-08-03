@@ -94,7 +94,7 @@ def test_backgound_linking():
 								# },
 								'title_body': {
 									'query': doc['title'],
-									"boost": 3
+									"boost": 5
 								}
 							}
 						},
