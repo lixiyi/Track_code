@@ -50,11 +50,15 @@ def test_backgound_linking():
 			dt = doc['published_date']
 			# make query
 			ner_filt = {'O':1, 'MONEY':1, 'NUMBER':1}
-			tmp = nlp.ner(doc['title_body'])
+			tmp = nlp.ner(doc['title'])
 			qr = []
 			for w, nn in tmp:
 				if nn not in ner_filt:
 					qr.append(w)
+			if len(qr) > 0:
+				qr = ' '.join(qr)
+			else:
+				qr = doc['title']
 			# query the doc
 			dsl = {
 				"size": 1000,
@@ -62,7 +66,7 @@ def test_backgound_linking():
 				"query": {
 					'bool': {
 						'must': {
-							'match': {'title_body': ' '.join(qr)}
+							'match': {'title_body': qr}
 						},
 						"must_not": {"match": {"title_author_date": doc['title_author_date']}},
 						'filter': {
