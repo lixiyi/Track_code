@@ -88,13 +88,13 @@ def test_backgound_linking():
 						},
 						'should': {
 							'match': {
-								# 'title_body': {
-								# 	'query': key_word,
-								# 	"boost": 2
-								# },
+								'title_body': {
+									'query': key_word,
+									"boost": 3
+								},
 								'title_body': {
 									'query': doc['title'],
-									"boost": 5
+									"boost": 3
 								}
 							}
 						},
