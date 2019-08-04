@@ -49,15 +49,15 @@ def gen_sample(args=None):
 	max_length = args[0]
 	max_length = int(max_length)
 	# read all the doc, load as json, line count start from 1
-	WashingtonPost = {}
-	with open(path_mp['DataPath'] + path_mp['WashingtonPost'], 'r', encoding='utf-8') as f:
-		for line in tqdm(f):
-			obj = json.loads(line)
-			doc_id = obj['id']
-			WashingtonPost[doc_id] = obj
-	print('WashingtonPost dataset loaded.')
-	with open(cfg.OUTPUT + 'Dataset_BertCls.txt', 'w', encoding='utf-8') as out:
-			out.write(str(4) + '\t' + sen1 + '\t' + sen2 + '\n')
+	with open(cfg.OUTPUT + 'bertvector.txt', 'w', encoding='utf-8') as out:
+		with open(path_mp['DataPath'] + path_mp['WashingtonPost'], 'r', encoding='utf-8') as f:
+			for line in tqdm(f):
+				obj = json.loads(line)
+				body = extract_body(obj['contents'])
+				title_body = str(title) + ' ' + str(body)
+				title_body = title_body.lower()
+				title_body = split_body(title_body)
+				out.write(title_body + '\n')
 
 
 if __name__ == "__main__":
