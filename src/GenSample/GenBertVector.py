@@ -53,10 +53,10 @@ def gen_sample(args=None):
 		with open(path_mp['DataPath'] + path_mp['WashingtonPost'], 'r', encoding='utf-8') as f:
 			for line in tqdm(f):
 				obj = json.loads(line)
-				body = extract_body(obj['contents'])
+				body = extract_body([obj['contents']])
 				title_body = str(obj['title']) + ' ' + str(body)
 				title_body = title_body.lower()
-				title_body = split_body(title_body)
+				title_body = split_body([title_body, max_length])
 				out.write(title_body + '\n')
 
 
