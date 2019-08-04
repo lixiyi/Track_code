@@ -56,6 +56,7 @@ def gen_sample(args=None):
 				body = extract_body([obj['contents']])
 				title_body = str(obj['title']) + ' ' + str(body)
 				title_body = title_body.lower()
+				title_body = title_body.replace('\n', '')
 				title_body = split_body([title_body, max_length])
 				out.write(title_body + '\n')
 
