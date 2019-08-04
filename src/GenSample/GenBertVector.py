@@ -54,7 +54,7 @@ def gen_sample(args=None):
 			for line in tqdm(f):
 				obj = json.loads(line)
 				body = extract_body(obj['contents'])
-				title_body = str(title) + ' ' + str(body)
+				title_body = str(obj['title']) + ' ' + str(body)
 				title_body = title_body.lower()
 				title_body = split_body(title_body)
 				out.write(title_body + '\n')
