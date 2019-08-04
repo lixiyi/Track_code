@@ -121,6 +121,13 @@ def gen_res(args = None):
 		.set("spark.executor.cores", 10) \
 		.set("spark.default.parallelism", 20)
 	sc = SparkContext(conf=conf)
+	# stop words
+	stop_words = {}
+	with open('../elastic/stopwords.txt', 'r', encoding='utf-8') as f:
+		for w in f:
+			w = w[:-1]
+			stop_words[w] = 1
+	print('stop words loaded.')
 	# words df
 	words_df = sc.textFile(cfg.OUTPUT + 'words_index.txt') \
 		.filter(lambda line: line != '') \
@@ -162,9 +169,13 @@ def gen_res(args = None):
 			obj = WashingtonPost[cur_id]
 			body = extract_body([obj['contents']])
 			# query (modify)
-			tmp = cfg.word_cut(str(obj['title'] + ' ' + body).lower())
+			tmp1 = cfg.word_cut(str(obj['title'] + ' ' + body).lower())
+			tmp = []
+			for w in tmp1:
+				if w not in stop_words:
+					tmp.append(w)
 			query = tmp
-			if tmp > 768:
+			if len(tmp) > 768:
 				query = tmp[:512] + tmp[-256:]
 			res = bm25(sc, query, words_df, avgdl)
 			# filter
