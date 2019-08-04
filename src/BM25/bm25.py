@@ -13,7 +13,7 @@ from stanfordcorenlp import StanfordCoreNLP
 
 
 path_mp = cfg.get_path_conf('../path.cfg')
-nlp = StanfordCoreNLP('http://localhost', port=7000)
+#nlp = StanfordCoreNLP('http://localhost', port=7000)
 
 
 def extract_body(args = None):
@@ -162,11 +162,8 @@ def gen_res(args = None):
 			obj = WashingtonPost[cur_id]
 			body = extract_body([obj['contents']])
 			# query (modify)
-			tmp = nlp.ner(obj['title'] + ' ' + body)
-			query = []
-			for w, nn in tmp:
-				if nn != 'O':
-					query.append(w)
+			tmp = cfg.word_cut(obj['title'] + ' ' + body)
+			query = tmp
 			res = bm25(sc, query, words_df, avgdl)
 			# filter
 			title = obj['title']
