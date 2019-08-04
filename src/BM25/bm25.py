@@ -109,7 +109,7 @@ def bm25(sc, query, words_df, avgdl):
 	res = sc.textFile(path_mp['DataPath'] + path_mp['WashingtonPost']) \
 		.map(lambda line: calc_score(line, words_df, query, avgdl))\
 		.sortByKey(False).collect()
-	return res[:500]
+	return res[:1000]
 
 
 def gen_res(args = None):
@@ -124,7 +124,7 @@ def gen_res(args = None):
 	# words df
 	words_df = sc.textFile(cfg.OUTPUT + 'words_index.txt') \
 		.filter(lambda line: line != '') \
-		.map(lambda line: (line.split(' ')[0], len(line.split(' ')[1:]))) \
+		.map(lambda line: (str(line.split(' ')[0]).lower(), len(line.split(' ')[1:]))) \
 		.collectAsMap()
 	words_df = sc.broadcast(words_df)
 	print('words_df loaded.')
@@ -162,8 +162,10 @@ def gen_res(args = None):
 			obj = WashingtonPost[cur_id]
 			body = extract_body([obj['contents']])
 			# query (modify)
-			tmp = cfg.word_cut(obj['title'] + ' ' + body)
+			tmp = cfg.word_cut(str(obj['title'] + ' ' + body).lower())
 			query = tmp
+			if tmp > 768:
+				query = tmp[:512] + tmp[-256:]
 			res = bm25(sc, query, words_df, avgdl)
 			# filter
 			title = obj['title']
