@@ -143,7 +143,7 @@ def test_backgound_linking():
 					}
 					dsl['query']['bool']['should'].append(mpi)
 			# search
-			res = es.search(index='news', body=dsl)
+			res = es.search(index='news', body=dsl, request_timeout=30)
 			res = res['hits']['hits']
 			# output result.test file
 			print(doc_id, len(res))
