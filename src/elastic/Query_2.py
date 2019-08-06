@@ -14,7 +14,7 @@ from gensim.models import KeyedVectors
 
 # get file path conf
 path_mp = cfg.get_path_conf('../path.cfg')
-es = Elasticsearch()
+es = Elasticsearch(port=7200)
 nlp = StanfordCoreNLP('http://localhost', port=7000)
 
 
