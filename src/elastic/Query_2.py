@@ -131,11 +131,12 @@ def test_backgound_linking():
 			maxsc = tfidf[0][1]
 			minsc = tfidf[-1][1]
 			for w, sc in tfidf:
+				sw = glove_model.most_similar(w)
 				mpi = {
 					'match': {
 						'title_body': {
-							'query': w,
-							"boost": 4 + (sc - minsc)*1.0/(maxsc - minsc)
+							'query': sw,
+							"boost": 1#4 + (sc - minsc)*1.0/(maxsc - minsc)
 						}
 					}
 				}
