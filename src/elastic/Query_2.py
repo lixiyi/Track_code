@@ -93,10 +93,12 @@ def test_backgound_linking():
 			qr = ' '
 			if len(tmp) > 768:
 				qr += ' '.join(tmp[:512]) + ' ' + ' '.join(tmp[-256:])
+				tmp1 = tmp[:512] + tmp[-256:]
 			else:
 				qr += ' '.join(tmp)
+				tmp1 = tmp
 			tmp = []
-			for w in qr:
+			for w in tmp1:
 				if w in glove_model:
 					sw = glove_model.most_similar(w)[0][0]
 					tmp.append(sw)
