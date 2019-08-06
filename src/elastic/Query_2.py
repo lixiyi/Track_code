@@ -109,7 +109,12 @@ def test_backgound_linking():
 				"query": {
 					'bool': {
 						 'must': {
-						 	'match': {'title_body': qr}
+						 	'match': {
+								'title_body': {
+									'query':qr,
+									'boost':2
+								}
+							}
 						 },
 						'should': [
 							 {
