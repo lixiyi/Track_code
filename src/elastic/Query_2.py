@@ -95,6 +95,12 @@ def test_backgound_linking():
 				qr += ' '.join(tmp[:512]) + ' ' + ' '.join(tmp[-256:])
 			else:
 				qr += ' '.join(tmp)
+			tmp = []
+			for w in qr:
+				if w in glove_model:
+					sw = glove_model.most_similar(w)[0][0]
+					tmp.append[sw]
+			qr1 = ' '.join(tmp)
 			dsl = {
 				"size": 1000,
 				"timeout": "1m",
@@ -112,6 +118,14 @@ def test_backgound_linking():
 							 		}
 							 	}
 							 },
+							 {
+							 	'match': {
+							 		'title_body': {
+							 			'query': qr1,
+							 			"boost": 1
+							 		}
+							 	}
+							 },
 						],
 						"must_not": {"match": {"title_author_date": doc['title_author_date']}},
 						'filter': {
@@ -121,27 +135,27 @@ def test_backgound_linking():
 				}
 			}
 			# add words weight by tfidf
-			tfidf = {}
-			for w in tmp:
-				if w not in idf:
-					idf[w] = 1
-				tfidf[w] = tf[w] * np.log(cfg.DOCUMENT_COUNT * 1.0 / idf[w])
-			tfidf = sorted(tfidf.items(), key=lambda d: d[1], reverse=True)
-			ed = min(20, len(tfidf))
-			maxsc = tfidf[0][1]
-			minsc = tfidf[-1][1]
-			for w, sc in tfidf[:ed]:
-				if w in glove_model:
-					sw = glove_model.most_similar(w)[0][0]
-					mpi = {
-						'match': {
-							'title_body': {
-								'query': sw,
-								"boost": 1#4 + (sc - minsc)*1.0/(maxsc - minsc)
-							}
-						}
-					}
-					dsl['query']['bool']['should'].append(mpi)
+			#tfidf = {}
+			#for w in tmp:
+			#	if w not in idf:
+			#		idf[w] = 1
+			#	tfidf[w] = tf[w] * np.log(cfg.DOCUMENT_COUNT * 1.0 / idf[w])
+			#tfidf = sorted(tfidf.items(), key=lambda d: d[1], reverse=True)
+			#ed = min(20, len(tfidf))
+			#maxsc = tfidf[0][1]
+			#minsc = tfidf[-1][1]
+			#for w, sc in tfidf[:ed]:
+			#	if w in glove_model:
+			#		sw = glove_model.most_similar(w)[0][0]
+			#		mpi = {
+			#			'match': {
+			#				'title_body': {
+			#					'query': sw,
+			#					"boost": 1#4 + (sc - minsc)*1.0/(maxsc - minsc)
+			#				}
+			#			}
+			#		}
+			#		dsl['query']['bool']['should'].append(mpi)
 			# search
 			res = es.search(index='news', body=dsl, request_timeout=30)
 			res = res['hits']['hits']
