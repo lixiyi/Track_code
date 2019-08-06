@@ -131,7 +131,7 @@ def test_backgound_linking():
 			maxsc = tfidf[0][1]
 			minsc = tfidf[-1][1]
 			for w, sc in tfidf:
-				if w in glove_model.most_similar:
+				if w in glove_model:
 					sw = glove_model.most_similar(w)[0][0]
 					mpi = {
 						'match': {
