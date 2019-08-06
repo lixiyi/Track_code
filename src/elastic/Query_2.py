@@ -10,6 +10,7 @@ import numpy as np
 from tqdm import tqdm
 from elasticsearch import Elasticsearch
 from stanfordcorenlp import StanfordCoreNLP
+from gensim.models import KeyedVectors
 
 # get file path conf
 path_mp = cfg.get_path_conf('../path.cfg')
@@ -18,6 +19,9 @@ nlp = StanfordCoreNLP('http://localhost', port=7000)
 
 
 def test_backgound_linking():
+	# load glove
+	glove_model = KeyedVectors.load_word2vec_format('/home/trec7/lianxiaoying/data/glove.840B.300d.word2vec.txt', binary=False)
+	print('glove words vector loaded.')
 	# read words_mp
 	idf = {}
 	with open(cfg.OUTPUT + 'words_index.txt', 'r', encoding='utf-8') as f:
@@ -96,18 +100,18 @@ def test_backgound_linking():
 				"timeout": "1m",
 				"query": {
 					'bool': {
-						# 'must': {
-						# 	'match': {'title_body': qr}
-						# },
+						 'must': {
+						 	'match': {'title_body': qr}
+						 },
 						'should': [
-							# {
-							# 	'match': {
-							# 		'title_body': {
-							# 			'query': doc['title'],
-							# 			"boost": 3
-							# 		}
-							# 	}
-							# },
+							 {
+							 	'match': {
+							 		'title_body': {
+							 			'query': doc['title'],
+							 			"boost": 3
+							 		}
+							 	}
+							 },
 						],
 						"must_not": {"match": {"title_author_date": doc['title_author_date']}},
 						'filter': {
@@ -131,7 +135,7 @@ def test_backgound_linking():
 					'match': {
 						'title_body': {
 							'query': w,
-							"boost": sc #4 + (sc - minsc)*1.0/(maxsc - minsc)
+							"boost": 4 + (sc - minsc)*1.0/(maxsc - minsc)
 						}
 					}
 				}
