@@ -131,16 +131,17 @@ def test_backgound_linking():
 			maxsc = tfidf[0][1]
 			minsc = tfidf[-1][1]
 			for w, sc in tfidf:
-				sw = glove_model.most_similar(w)
-				mpi = {
-					'match': {
-						'title_body': {
-							'query': sw,
-							"boost": 1#4 + (sc - minsc)*1.0/(maxsc - minsc)
+				if w in glove_model.most_similar:
+					sw = glove_model.most_similar(w)[0][0]
+					mpi = {
+						'match': {
+							'title_body': {
+								'query': sw,
+								"boost": 1#4 + (sc - minsc)*1.0/(maxsc - minsc)
+							}
 						}
 					}
-				}
-				dsl['query']['bool']['should'].append(mpi)
+					dsl['query']['bool']['should'].append(mpi)
 			# search
 			res = es.search(index='news', body=dsl)
 			res = res['hits']['hits']
