@@ -65,6 +65,15 @@ def process_washington_post(filename):
 def init_es():
     # create index
     mapping = {
+        "settings": {
+            "similarity": {
+                "my_bm25": {
+                    "type": "BM25",
+                    "b": 0.75,
+                    "k1": 1.5
+                }
+            }
+        },
         'properties': {
             'id': {
                 'type': 'keyword'
@@ -74,7 +83,7 @@ def init_es():
             },
             'title': {
                 'type': 'text',
-                "similarity": "BM25"
+                "similarity": "my_bm25"
             },
             'author': {
                 'type': 'keyword'
@@ -84,11 +93,11 @@ def init_es():
             },
             'body': {
                 'type': 'text',
-                "similarity": "BM25"
+                "similarity": "my_bm25"
             },
             'title_body': {
                 'type': 'text',
-                "similarity": "BM25"
+                "similarity": "my_bm25"
             },
             'kicker': {
                 'type': 'keyword'
