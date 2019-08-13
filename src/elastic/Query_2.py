@@ -82,21 +82,21 @@ def test_backgound_linking():
 			# query the doc
 			tmp1 = cfg.word_cut(doc['title_body'])
 			tmp = []
-			tf = {}
+			# tf = {}
 			for w in tmp1:
 				if w not in stop_words:
 					tmp.append(w)
-					if w in tf:
-						tf[w] += 1
-					else:
-						tf[w] = 1
-			qr = ' '.join(tmp[:512]) + ' ' + ' '.join(tmp[-256:])
-			# if len(tmp) > 768:
-			# 	qr += ' '.join(tmp[:512]) + ' ' + ' '.join(tmp[-256:])
-			# 	tmp1 = tmp[:512] + tmp[-256:]
-			# else:
-			# 	qr += ' '.join(tmp)
-			# 	tmp1 = tmp
+					# if w in tf:
+					# 	tf[w] += 1
+					# else:
+					# 	tf[w] = 1
+			qr = ' '
+			if len(tmp) > 768:
+				qr += ' '.join(tmp[:512]) + ' ' + ' '.join(tmp[-256:])
+				# tmp1 = tmp[:512] + tmp[-256:]
+			else:
+				qr += ' '.join(tmp)
+				# tmp1 = tmp
 			# similar words
 			# tmp = []
 			# for w in tmp1:
@@ -109,23 +109,23 @@ def test_backgound_linking():
 				"timeout": "1m",
 				"query": {
 					'bool': {
-						 'must': {
-						 	'match': {
+						'must': {
+							'match': {
 								'title_body': {
-									'query':qr,
-									'boost':1
+									'query': qr,
+									'boost': 1
 								}
 							}
-						 },
+						},
 						'should': [
-							 {
-							 	'match': {
-							 		'title_body': {
-							 			'query': doc['title'],
-							 			"boost": 3
-							 		}
-							 	}
-							 },
+							{
+								'match': {
+									'title_body': {
+										'query': doc['title'],
+										"boost": 3
+									}
+								}
+							},
 						],
 						"must_not": {"match": {"title_author_date": doc['title_author_date']}},
 						'filter': {
