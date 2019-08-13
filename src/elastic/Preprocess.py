@@ -64,7 +64,7 @@ def process_washington_post(filename):
 # put all the news into elasticsearch
 def init_es():
     # create index
-    mapping = {
+    setting = {
         "settings": {
             "similarity": {
                 "my_bm25": {
@@ -73,7 +73,9 @@ def init_es():
                     "k1": 1.5
                 }
             }
-        },
+        }
+    }
+    mapping = {
         'properties': {
             'id': {
                 'type': 'keyword'
@@ -118,6 +120,7 @@ def init_es():
     }
     es.indices.delete(index='news', ignore=[400, 404])
     es.indices.create(index='news', ignore=400)
+    es.indices.put_settings(index='news', body=setting)
     result = es.indices.put_mapping(index='news', body=mapping)
     # add all the file into elasticsearch
     process_washington_post(path_mp['DataPath'] + path_mp['WashingtonPost'])
