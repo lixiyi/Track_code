@@ -23,12 +23,12 @@ def test_backgound_linking():
 	# glove_model = KeyedVectors.load_word2vec_format('/home/trec7/lianxiaoying/data/glove.840B.300d.word2vec.txt', binary=False)
 	# print('glove words vector loaded.')
 	# read words_mp
-	idf = {}
-	with open(cfg.OUTPUT + 'words_index.txt', 'r', encoding='utf-8') as f:
-		for line in tqdm(f):
-			li = line[:-1].split(' ')
-			idf[li[0].lower()] = len(li[1:])
-	print('words idx loaded.')
+	# idf = {}
+	# with open(cfg.OUTPUT + 'words_index.txt', 'r', encoding='utf-8') as f:
+	# 	for line in tqdm(f):
+	# 		li = line[:-1].split(' ')
+	# 		idf[li[0].lower()] = len(li[1:])
+	# print('words idx loaded.')
 	# stop words
 	stop_words = {}
 	with open('stopwords.txt', 'r', encoding='utf-8') as f:
@@ -122,7 +122,7 @@ def test_backgound_linking():
 								'match': {
 									'title_body': {
 										'query': doc['title'],
-										"boost": 5
+										"boost": 10
 									}
 								}
 							},
