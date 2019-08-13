@@ -90,13 +90,13 @@ def test_backgound_linking():
 						tf[w] += 1
 					else:
 						tf[w] = 1
-			qr = ''
-			if len(tmp) > 768:
-				qr += ' '.join(tmp[:512]) + ' ' + ' '.join(tmp[-256:])
-				# tmp1 = tmp[:512] + tmp[-256:]
-			else:
-				qr += ' '.join(tmp)
-				# tmp1 = tmp
+			qr = ' '.join(tmp[:512]) + ' ' + ' '.join(tmp[-256:])
+			# if len(tmp) > 768:
+			# 	qr += ' '.join(tmp[:512]) + ' ' + ' '.join(tmp[-256:])
+			# 	tmp1 = tmp[:512] + tmp[-256:]
+			# else:
+			# 	qr += ' '.join(tmp)
+			# 	tmp1 = tmp
 			# similar words
 			# tmp = []
 			# for w in tmp1:
