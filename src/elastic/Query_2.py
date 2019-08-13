@@ -113,7 +113,7 @@ def test_backgound_linking():
 							'match': {
 								'title_body': {
 									'query': qr,
-									'boost': 1
+									'boost': 2
 								}
 							}
 						},
@@ -122,7 +122,7 @@ def test_backgound_linking():
 								'match': {
 									'title_body': {
 										'query': doc['title'],
-										"boost": 4
+										"boost": 5
 									}
 								}
 							},
