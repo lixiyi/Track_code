@@ -20,8 +20,8 @@ nlp = StanfordCoreNLP('http://localhost', port=7000)
 
 def test_backgound_linking():
 	# load glove
-	glove_model = KeyedVectors.load_word2vec_format('/home/trec7/lianxiaoying/data/glove.840B.300d.word2vec.txt', binary=False)
-	print('glove words vector loaded.')
+	# glove_model = KeyedVectors.load_word2vec_format('/home/trec7/lianxiaoying/data/glove.840B.300d.word2vec.txt', binary=False)
+	# print('glove words vector loaded.')
 	# read words_mp
 	idf = {}
 	with open(cfg.OUTPUT + 'words_index.txt', 'r', encoding='utf-8') as f:
@@ -90,19 +90,20 @@ def test_backgound_linking():
 						tf[w] += 1
 					else:
 						tf[w] = 1
-			qr = ' '
+			qr = ''
 			if len(tmp) > 768:
 				qr += ' '.join(tmp[:512]) + ' ' + ' '.join(tmp[-256:])
-				tmp1 = tmp[:512] + tmp[-256:]
+				# tmp1 = tmp[:512] + tmp[-256:]
 			else:
 				qr += ' '.join(tmp)
-				tmp1 = tmp
-			tmp = []
-			for w in tmp1:
-				if w in glove_model:
-					sw = glove_model.most_similar(w)[0][0]
-					tmp.append(sw)
-			qr1 = ' '.join(tmp)
+				# tmp1 = tmp
+			# similar words
+			# tmp = []
+			# for w in tmp1:
+			# 	if w in glove_model:
+			# 		sw = glove_model.most_similar(w)[0][0]
+			# 		tmp.append(sw)
+			# qr1 = ' '.join(tmp)
 			dsl = {
 				"size": 1000,
 				"timeout": "1m",
@@ -112,7 +113,7 @@ def test_backgound_linking():
 						 	'match': {
 								'title_body': {
 									'query':qr,
-									'boost':1
+									'boost':2
 								}
 							}
 						 },
@@ -122,14 +123,6 @@ def test_backgound_linking():
 							 		'title_body': {
 							 			'query': doc['title'],
 							 			"boost": 3
-							 		}
-							 	}
-							 },
-							 {
-							 	'match': {
-							 		'title_body': {
-							 			'query': qr1,
-							 			"boost": 1
 							 		}
 							 	}
 							 },
