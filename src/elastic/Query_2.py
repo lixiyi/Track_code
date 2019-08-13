@@ -122,7 +122,7 @@ def test_backgound_linking():
 								'match': {
 									'title_body': {
 										'query': doc['title'],
-										"boost": 6
+										"boost": 7
 									}
 								}
 							},
