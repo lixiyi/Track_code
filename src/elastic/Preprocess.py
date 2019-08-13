@@ -73,7 +73,8 @@ def init_es():
                 'type': 'keyword'
             },
             'title': {
-                'type': 'text'
+                'type': 'text',
+                "similarity": "BM25"
             },
             'author': {
                 'type': 'keyword'
@@ -82,10 +83,12 @@ def init_es():
                 'type': 'keyword'
             },
             'body': {
-                'type': 'text'
+                'type': 'text',
+                "similarity": "BM25"
             },
             'title_body': {
-                'type': 'text'
+                'type': 'text',
+                "similarity": "BM25"
             },
             'kicker': {
                 'type': 'keyword'
