@@ -16,7 +16,11 @@ INDEX_NAME = "news_base"
 
 setting = {
 	"index": {
-		"max_terms_count": 20480,
+		"query": {
+			"bool": {
+				"max_clause_count": 20480
+			}
+		},
 		"similarity": {
 			"my_bm25": {
 				"type": "BM25",
