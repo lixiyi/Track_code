@@ -16,6 +16,7 @@ from gensim.models import KeyedVectors
 path_mp = cfg.get_path_conf('../path.cfg')
 es = Elasticsearch(port=7200)
 nlp = StanfordCoreNLP('http://localhost', port=7000)
+INDEX_NAME = "news"
 
 
 def test_backgound_linking():
@@ -63,7 +64,7 @@ def test_backgound_linking():
 					}
 				}
 			}
-			res = es.search(index='news', body=dsl)
+			res = es.search(index=INDEX_NAME, body=dsl)
 			# print(res)
 			doc = res['hits']['hits'][0]['_source']
 			dt = doc['published_date']
@@ -157,7 +158,7 @@ def test_backgound_linking():
 			#		}
 			#		dsl['query']['bool']['should'].append(mpi)
 			# search
-			res = es.search(index='news', body=dsl, request_timeout=30)
+			res = es.search(index=INDEX_NAME, body=dsl, request_timeout=30)
 			res = res['hits']['hits']
 			# output result.test file
 			print(doc_id, len(res))

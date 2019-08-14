@@ -14,6 +14,7 @@ from nltk.stem.porter import *
 path_mp = cfg.get_path_conf('../path.cfg')
 es = Elasticsearch(port=7200)
 stemmer = PorterStemmer()
+INDEX_NAME = "news"
 
 
 def extract_body(args = None):
@@ -71,7 +72,7 @@ def process_washington_post(filename):
             obj['title_author_date'] = (str(obj['title']) + ' ' + str(obj['author']) + ' ' + str(obj['published_date'])).lower()
             doc = json.dumps(obj)
             # insert data
-            res = es.index(index='news', id=obj['id'], body=doc)
+            res = es.index(index=INDEX_NAME, id=obj['id'], body=doc)
 
 
 # put all the news into elasticsearch
@@ -135,9 +136,8 @@ def init_es():
         "settings": setting,
         "mappings": mapping
     }
-    es.indices.delete(index='news', ignore=[400, 404])
-    es.indices.create(index='news', body=create_index_body, ignore=400)
-    # result = es.indices.put_mapping(index='news', body=mapping)
+    es.indices.delete(index=INDEX_NAME, ignore=[400, 404])
+    es.indices.create(index=INDEX_NAME, body=create_index_body, ignore=400)
     # add all the file into elasticsearch
     process_washington_post(path_mp['DataPath'] + path_mp['WashingtonPost'])
 
