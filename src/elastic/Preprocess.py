@@ -65,15 +65,17 @@ def process_washington_post(filename):
 def init_es():
     # create index
     setting = {
-        "settings": {
-            "similarity": {
-                "my_bm25": {
-                    "type": "BM25",
-                    "b": 0.75,
-                    "k1": 1.5
-                }
-            }
-        }
+		"news": {
+        	"settings": {
+        	    "similarity": {
+        	        "my_bm25": {
+        	            "type": "BM25",
+        	            "b": 0.75,
+        	            "k1": 1.5
+        	        }
+        	    }
+        	}
+		}
     }
     mapping = {
         'properties': {
