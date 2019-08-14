@@ -66,15 +66,13 @@ def init_es():
     # create index
     setting = {
 		"news": {
-        	"settings": {
-        	    "similarity": {
-        	        "my_bm25": {
-        	            "type": "BM25",
-        	            "b": 0.75,
-        	            "k1": 1.5
-        	        }
-        	    }
-        	}
+            "similarity": {
+                "my_bm25": {
+                    "type": "BM25",
+                    "b": 0.75,
+                    "k1": 1.5
+                }
+            }
 		}
     }
     mapping = {
