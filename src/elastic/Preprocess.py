@@ -49,7 +49,10 @@ def process_washington_post(filename):
             if obj['kicker'] is False:
                 continue
             obj['body'] = extract_body([obj['contents']])
+            # to lower case
+            obj['title'] = str(obj['title']).lower()
             obj['body'] = str(obj['body']).lower()
+            # stemming
             del obj['contents']
             obj['title_body'] = str(obj['title']) + ' ' + str(obj['body'])
             obj['title_body'] = obj['title_body'].lower()
@@ -70,7 +73,7 @@ def init_es():
                 "my_bm25": {
                     "type": "BM25",
                     "b": 0.75,
-                    "k1": 1.5
+                    "k1": 1.2
                 }
             }
         }
