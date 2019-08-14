@@ -12,6 +12,7 @@ from elasticsearch import Elasticsearch
 # get file path conf
 path_mp = cfg.get_path_conf('../path.cfg')
 es = Elasticsearch(port=7200)
+INDEX_NAME = "news_base"
 
 setting = {
 	"index": {
@@ -25,7 +26,7 @@ setting = {
 		}
 	}
 }
-es.indices.close(index="news")
-es.indices.put_settings(index='news', body=setting)
-es.indices.open(index="news")
+es.indices.close(index=INDEX_NAME)
+es.indices.put_settings(index=INDEX_NAME, body=setting)
+es.indices.open(index=INDEX_NAME)
 
