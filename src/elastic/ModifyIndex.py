@@ -24,5 +24,7 @@ setting = {
 		}
 	}
 }
+es.indices.close(index="news")
 es.indices.put_settings(index='news', body=setting)
+es.indices.open(index="news")
 
