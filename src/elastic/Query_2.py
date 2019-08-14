@@ -92,8 +92,8 @@ def test_backgound_linking():
 					# else:
 					# 	tf[w] = 1
 			qr = ' '
-			if len(tmp) > 768:
-				qr += ' '.join(tmp[:512]) + ' ' + ' '.join(tmp[-256:])
+			if len(tmp) > 1024:
+				qr += ' '.join(tmp[:512]) + ' ' + ' '.join(tmp[-512:])
 				# tmp1 = tmp[:512] + tmp[-256:]
 			else:
 				qr += ' '.join(tmp)
@@ -106,7 +106,7 @@ def test_backgound_linking():
 			# 		tmp.append(sw)
 			# qr1 = ' '.join(tmp)
 			dsl = {
-				"size": 1000,
+				"size": 100,
 				"timeout": "1m",
 				"query": {
 					'bool': {
