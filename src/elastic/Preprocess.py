@@ -124,7 +124,6 @@ def init_es():
     }
     es.indices.delete(index='news', ignore=[400, 404])
     es.indices.create(index='news', body=create_index_body, ignore=400)
-    # es.indices.put_settings(index='news', body=setting)
     # result = es.indices.put_mapping(index='news', body=mapping)
     # add all the file into elasticsearch
     process_washington_post(path_mp['DataPath'] + path_mp['WashingtonPost'])
