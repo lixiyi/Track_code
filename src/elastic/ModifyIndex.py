@@ -23,13 +23,6 @@ setting = {
 				"k1": 1.2
 			}
 		}
-	},
-	"indices": {
-		"query": {
-			"bool": {
-				"max_clause_count": 20480
-			}
-		}
 	}
 }
 es.indices.close(index=INDEX_NAME)
