@@ -65,7 +65,7 @@ def process_washington_post(filename):
 def init_es():
     # create index
     setting = {
-        "news": {
+        "index": {
             "similarity": {
                 "my_bm25": {
                     "type": "BM25",
