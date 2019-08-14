@@ -8,10 +8,12 @@ import json
 import re
 from tqdm import tqdm
 from elasticsearch import Elasticsearch
+from nltk.stem.porter import *
 
 # get file path conf
 path_mp = cfg.get_path_conf('../path.cfg')
 es = Elasticsearch(port=7200)
+stemmer = PorterStemmer()
 
 
 def extract_body(args = None):
@@ -49,16 +51,24 @@ def process_washington_post(filename):
             if obj['kicker'] is False:
                 continue
             obj['body'] = extract_body([obj['contents']])
+
             # to lower case
             obj['title'] = str(obj['title']).lower()
             obj['body'] = str(obj['body']).lower()
+
             # stemming
+            w_list = cfg.word_cut(obj['body'])
+            for i in range(len(w_list)):
+                w_list[i] = stemmer.stem(w_list[i])
+            obj['body'] = ' '.join(w_list)
+            w_list = cfg.word_cut(obj['title'])
+            for i in range(len(w_list)):
+                w_list[i] = stemmer.stem(w_list[i])
+            obj['title'] = ' '.join(w_list)
+
             del obj['contents']
-            obj['title_body'] = str(obj['title']) + ' ' + str(obj['body'])
-            obj['title_body'] = obj['title_body'].lower()
-            obj['title_author_date'] = str(obj['title']) + ' ' + str(obj['author']) + ' ' + str(obj['published_date'])
-            obj['title_author_date'] = obj['title_author_date'].lower()
-            obj['title'] = str(obj['title']).lower()
+            obj['title_body'] = (str(obj['title']) + ' ' + str(obj['body'])).lower()
+            obj['title_author_date'] = (str(obj['title']) + ' ' + str(obj['author']) + ' ' + str(obj['published_date'])).lower()
             doc = json.dumps(obj)
             # insert data
             res = es.index(index='news', id=obj['id'], body=doc)
