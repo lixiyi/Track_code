@@ -15,6 +15,7 @@ es = Elasticsearch(port=7200)
 
 setting = {
 	"index": {
+		"max_clause_count": 20480,
 		"similarity": {
 			"my_bm25": {
 				"type": "BM25",

@@ -16,7 +16,7 @@ from gensim.models import KeyedVectors
 path_mp = cfg.get_path_conf('../path.cfg')
 es = Elasticsearch(port=7200)
 nlp = StanfordCoreNLP('http://localhost', port=7000)
-INDEX_NAME = "news"
+INDEX_NAME = "news_base"
 
 
 def test_backgound_linking():
@@ -91,12 +91,12 @@ def test_backgound_linking():
 					# 	tf[w] += 1
 					# else:
 					# 	tf[w] = 1
-			qr = ' '
-			if len(tmp) > 1024:
-				qr += ' '.join(tmp[:512]) + ' ' + ' '.join(tmp[-512:])
-				# tmp1 = tmp[:512] + tmp[-256:]
-			else:
-				qr += ' '.join(tmp)
+			qr = ' '.join(tmp)
+			# if len(tmp) > 1024:
+			# 	qr += ' '.join(tmp[:512]) + ' ' + ' '.join(tmp[-512:])
+			# 	# tmp1 = tmp[:512] + tmp[-256:]
+			# else:
+			# 	qr += ' '.join(tmp)
 				# tmp1 = tmp
 			# similar words
 			# tmp = []
