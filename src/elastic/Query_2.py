@@ -15,7 +15,7 @@ from gensim.models import KeyedVectors
 # get file path conf
 path_mp = cfg.get_path_conf('../path.cfg')
 es = Elasticsearch(port=7200)
-nlp = StanfordCoreNLP('http://localhost', port=7000)
+nlp = StanfordCoreNLP('http://localhost', port=7100)
 INDEX_NAME = "news_stem"
 
 
@@ -70,16 +70,16 @@ def test_backgound_linking():
 			dt = doc['published_date']
 			# make query
 			# ner_filt = {'O': 1, 'MONEY': 1, 'NUMBER': 1}
-			# ner_need = {
-			# 	'PERSON': 1, 'LOCATION': 1, 'STATE_OR_PROVINCE': 1,
-			# 	'ORGANIZATION': 1, 'CITY': 1
-			# }
-			# tmp1 = nlp.ner(doc['title_body'])
-			# key_word = []
-			# for w, nn in tmp1:
-			# 	if nn in ner_need:
-			# 		key_word.append(w)
-			# key_word = ' '.join(key_word)
+			#ner_need = {
+			#	'PERSON': 1,
+			#	'ORGANIZATION': 1
+			#}
+			#tmp1 = nlp.ner(doc['title_body'])
+			#key_word = []
+			#for w, nn in tmp1:
+			#	if nn in ner_need:
+			#		key_word.append(w)
+			#key_word = ' '.join(key_word)
 			# query the doc
 			tmp1 = cfg.word_cut(doc['title_body'])
 			tmp = []
@@ -93,11 +93,11 @@ def test_backgound_linking():
 					# 	tf[w] = 1
 			print(len(tmp))
 			qr = ' '.join(tmp)
-			#if len(tmp) > 1024:
-			#	qr += ' '.join(tmp[:512]) + ' ' + ' '.join(tmp[-512:])
-			##	tmp1 = tmp[:512] + tmp[-512:]
-			#else:
-			#	qr += ' '.join(tmp)
+			# if len(tmp) > 2048:
+			# 	qr += ' '.join(tmp[:1024]) + ' ' + ' '.join(tmp[-1024:])
+			# #	tmp1 = tmp[:512] + tmp[-512:]
+			# else:
+			# 	qr += ' '.join(tmp)
 			#	tmp1 = tmp
 			# similar words
 			# tmp = []
@@ -128,14 +128,14 @@ def test_backgound_linking():
 									}
 								}
 							},
-							# {
-							# 	'match': {
-							# 		'title_body': {
-							# 			'query': qr1,
-							# 			"boost": 1
-							# 		}
-							# 	}
-							# }
+						#	{
+						#		'match': {
+						#			'title_body': {
+						#				'query': key_word,
+						#				"boost": 8
+						#			}
+						#		}
+						#	}
 						],
 						"must_not": {"match": {"title_author_date": doc['title_author_date']}},
 						'filter': {
@@ -190,6 +190,7 @@ def test_backgound_linking():
 				ans = "\t".join(out) + "\n"
 				f1.write(ans)
 				cnt += 1
+	nlp.close()
 
 
 test_backgound_linking()
