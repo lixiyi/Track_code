@@ -16,7 +16,7 @@ from gensim.models import KeyedVectors
 path_mp = cfg.get_path_conf('../path.cfg')
 es = Elasticsearch(port=7200)
 nlp = StanfordCoreNLP('http://localhost', port=7000)
-INDEX_NAME = "news_base"
+INDEX_NAME = "news_stem"
 
 
 def test_backgound_linking():
@@ -91,13 +91,14 @@ def test_backgound_linking():
 					# 	tf[w] += 1
 					# else:
 					# 	tf[w] = 1
+			print(len(tmp))
 			qr = ' '.join(tmp)
-			# if len(tmp) > 1024:
-			# 	qr += ' '.join(tmp[:512]) + ' ' + ' '.join(tmp[-512:])
-			# 	# tmp1 = tmp[:512] + tmp[-256:]
-			# else:
-			# 	qr += ' '.join(tmp)
-				# tmp1 = tmp
+			#if len(tmp) > 1024:
+			#	qr += ' '.join(tmp[:512]) + ' ' + ' '.join(tmp[-512:])
+			##	tmp1 = tmp[:512] + tmp[-512:]
+			#else:
+			#	qr += ' '.join(tmp)
+			#	tmp1 = tmp
 			# similar words
 			# tmp = []
 			# for w in tmp1:
@@ -123,10 +124,18 @@ def test_backgound_linking():
 								'match': {
 									'title_body': {
 										'query': doc['title'],
-										"boost": 5
+										"boost": 5.5
 									}
 								}
 							},
+							# {
+							# 	'match': {
+							# 		'title_body': {
+							# 			'query': qr1,
+							# 			"boost": 1
+							# 		}
+							# 	}
+							# }
 						],
 						"must_not": {"match": {"title_author_date": doc['title_author_date']}},
 						'filter': {
