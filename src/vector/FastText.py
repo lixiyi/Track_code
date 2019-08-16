@@ -96,7 +96,8 @@ def rerank():
 				ri = es.search(index=INDEX_NAME, body=dsl)
 				doc_sen = ri['hits']['hits'][0]['_source']['title_body']
 				doc_vec = model.get_sentence_vector(doc_sen)
-				sc = (1-LAMBDA) * sc_map[topic_id][doc_id] + LAMBDA * cos_sim(obj_vec, doc_vec)
+				sc = (1-LAMBDA) * (sc_map[topic_id][doc_id] - min_sc) / (max_sc - min_sc)\
+					+ LAMBDA * cos_sim(obj_vec, doc_vec)
 
 				out = []
 				out.append(topic_id)
