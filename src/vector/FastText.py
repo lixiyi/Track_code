@@ -61,6 +61,7 @@ def rerank():
 	with open('/home/trec7/lianxiaoying/trec_eval.9.0/test/vec_bresult.test', 'w', encoding='utf-8') as f1:
 		for obj_id in case_mp:
 			topic_id = case_mp[obj_id]
+			print(topic_id)
 			dsl = {
 				'query': {
 					'match': {
@@ -86,4 +87,7 @@ def rerank():
 				ans = "\t".join(out) + "\n"
 				f1.write(ans)
 				cnt += 1
+
+
+rerank()
 
