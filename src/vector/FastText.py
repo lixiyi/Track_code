@@ -91,7 +91,7 @@ def rerank():
 				out.append('Q0')
 				out.append(ri['hits']['hits'][0]['_source']['id'])
 				out.append(str(cnt))
-				out.append(sc)
+				out.append(str(sc))
 				out.append('ICTNET')
 				ans = "\t".join(out) + "\n"
 				f1.write(ans)
