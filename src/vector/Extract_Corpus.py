@@ -33,7 +33,7 @@ def gen_train_corpus():
 			# Update the scroll ID
 			sid = page['_scroll_id']
 			# Get the number of results that we returned in the last scroll
-			scroll_size = int(page['_shards']['total'])
+			scroll_size = len(['hits']['hits'])
 			tot += scroll_size
 			# generate corpus
 			for doc in page['hits']['hits']:
