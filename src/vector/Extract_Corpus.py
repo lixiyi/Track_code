@@ -18,7 +18,7 @@ INDEX_NAME = "news_stem"
 def gen_train_corpus():
     dsl = {
         'query': {
-            'match': {}
+            'match_all': {}
         }
     }
     page = es.search(index=INDEX_NAME, size=1000, scroll='2m', search_type='scan', body=dsl)
