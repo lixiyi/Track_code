@@ -65,24 +65,31 @@ def rerank():
 			dsl = {
 				'query': {
 					'match': {
-						'id': obj_id + ' '+' '.join(res_in[topic_id]),
-						"operator": "or"
+						'id': obj_id
 					}
 				}
 			}
 			res = es.search(index=INDEX_NAME, body=dsl)
-			print(1+len(res_in[topic_id]), len(res['hits']['hits']))
 			obj_sen = res['hits']['hits'][0]['_source']['title_body']
 			obj_vec = model.get_sentence_vector(obj_sen)
 			cnt = 0
-			for doc in res['hits']['hits'][1:]:
-				doc_sen = doc['_source']['title_body']
+			for doc_id in res_in[topic_id]:
+				dsl = {
+					'query': {
+						'match': {
+							'id': doc_id
+						}
+					}
+				}
+				ri = es.search(index=INDEX_NAME, body=dsl)
+				doc_sen = ri['hits']['hits'][0]['_source']['title_body']
 				doc_vec = model.get_sentence_vector(doc_sen)
 				sc = cos_sim(obj_vec, doc_vec)
+
 				out = []
 				out.append(topic_id)
 				out.append('Q0')
-				out.append(doc['_source']['id'])
+				out.append(ri['hits']['hits'][0]['_source']['id'])
 				out.append(str(cnt))
 				out.append(sc)
 				out.append('ICTNET')
