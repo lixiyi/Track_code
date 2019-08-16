@@ -23,7 +23,7 @@ def gen_train_corpus():
 	}
 	page = es.search(index=INDEX_NAME, size=10000, scroll='2m', body=dsl)
 	sid = page['_scroll_id']
-	scroll_size = page['_shards']['total']
+	scroll_size = int(page['_shards']['total'])
 	tot = 10000
 	# Start scrolling
 	with open('/home/trec7/lianxiaoying/data/vector_corpus.txt', 'w', encoding='utf-8') as out:
@@ -33,7 +33,7 @@ def gen_train_corpus():
 			# Update the scroll ID
 			sid = page['_scroll_id']
 			# Get the number of results that we returned in the last scroll
-			scroll_size = ['_shards']['total']
+			scroll_size = int(page['_shards']['total'])
 			tot += scroll_size
 			# generate corpus
 			for doc in page['hits']['hits']:
