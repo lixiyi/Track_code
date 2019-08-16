@@ -19,7 +19,7 @@ def gen_train_corpus():
     dsl = {
         'query': {
             'match': {
-                'id': '*'
+                'id': '?*'
             }
         }
     }
