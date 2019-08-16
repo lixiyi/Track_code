@@ -21,9 +21,19 @@ def gen_train_corpus():
             'match': {}
         }
     }
-    res = es.search(index=INDEX_NAME, body=dsl)
-    nums = len(res['hits']['hits'])
-    print(nums)
+    page = es.search(index=INDEX_NAME, size=1000, scroll='2m', search_type='scan', body=dsl)
+    sid = page['_scroll_id']
+    scroll_size = page['hits']['total']
+    tot = 0
+    # Start scrolling
+    while scroll_size >0:
+        page = es.scroll(scroll_id=sid, scroll='2m')
+        # Update the scroll ID
+        sid = page['_scroll_id']
+        # Get the number of results that we returned in the last scroll
+        scroll_size = len(page['hits']['hits'])
+        tot += scroll_size
+    print(tot)
 
 
 gen_train_corpus()
