@@ -81,7 +81,8 @@ def rerank():
 			# calculate max and min sc for this topic_id
 			max_sc = 0
 			min_sc = 1000000
-			for doc_id, sc in sc_map[topic_id]:
+			for doc_id in sc_map[topic_id].keys():
+				sc = sc_map[topic_id][doc_id]
 				max_sc = max(max_sc, sc)
 				min_sc = min(min_sc, sc)
 			cnt = 0
