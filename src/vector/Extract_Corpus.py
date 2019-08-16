@@ -23,10 +23,10 @@ def gen_train_corpus():
 	}
 	page = es.search(index=INDEX_NAME, size=1000, scroll='2m', body=dsl)
 	sid = page['_scroll_id']
-	scroll_size = page['hits']['total']
+	scroll_size = page['_shards']['total']
 	tot = 0
 	# Start scrolling
-	while scroll_size >0:
+	while scroll_size > 0:
 		page = es.scroll(scroll_id=sid, scroll='2m')
 		# Update the scroll ID
 		sid = page['_scroll_id']
