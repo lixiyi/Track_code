@@ -18,9 +18,7 @@ INDEX_NAME = "news_stem"
 def gen_train_corpus():
     dsl = {
         'query': {
-            'match': {
-                'id': '?*'
-            }
+            'match': {}
         }
     }
     res = es.search(index=INDEX_NAME, body=dsl)
