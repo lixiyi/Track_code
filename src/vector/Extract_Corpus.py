@@ -21,7 +21,7 @@ def gen_train_corpus():
             'match_all': {}
         }
     }
-    page = es.search(index=INDEX_NAME, size=1000, scroll='2m', search_type='scan', body=dsl)
+    page = es.search(index=INDEX_NAME, size=1000, scroll='2m', body=dsl)
     sid = page['_scroll_id']
     scroll_size = page['hits']['total']
     tot = 0
