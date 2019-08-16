@@ -65,11 +65,13 @@ def rerank():
 			dsl = {
 				'query': {
 					'match': {
-						'id': obj_id + ','+','.join(res_in[topic_id])
+						'id': obj_id + ' '+' '.join(res_in[topic_id]),
+						"operator": "or"
 					}
 				}
 			}
 			res = es.search(index=INDEX_NAME, body=dsl)
+			print(1+len(res_in[topic_id]), len(res['hits']['hits']))
 			obj_sen = res['hits']['hits'][0]['_source']['title_body']
 			obj_vec = model.get_sentence_vector(obj_sen)
 			cnt = 0
