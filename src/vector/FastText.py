@@ -61,7 +61,7 @@ def rerank():
 				sc_map[topic_id] = {}
 			sc_map[topic_id][doc_id] = sc
 	print('result input loaded.')
-	model = fasttext.load_model("/home/trec7/lianxiaoying/test/out/fasttext_model.bin")
+	model = fasttext.load_model("/home/trec7/lianxiaoying/data/fasttext/wiki-news-300d-1M.vec")
 	print('model loaded.')
 
 	with open('/home/trec7/lianxiaoying/trec_eval.9.0/test/vec_bresult.test', 'w', encoding='utf-8') as f1:
