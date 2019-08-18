@@ -29,10 +29,11 @@ print('model loaded.')
 
 with open('synonyms.txt', 'w', encoding='utf-8') as out:
 	for w in tqdm(keywords):
-		if w in model.vocab:
+		if w in model.vocab and w.isalpha():
 			w_list = model.most_similar(positive=w, topn=10)
-			res = w_list[0][0]
-			for wi, sim in w_list[1:]:
-				res += ',' + wi
+			res = w
+			for wi, sim in w_list:
+				if wi.isalpha():
+					res += ',' + wi
 			out.write(res + '\n')
 
