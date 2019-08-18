@@ -14,6 +14,7 @@ from gensim.models import KeyedVectors
 # get file path conf
 path_mp = cfg.get_path_conf('../path.cfg')
 
+
 keywords = {}
 with open('keywords.txt', 'r', encoding='utf-8') as f:
 	for w in f:
