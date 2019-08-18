@@ -11,6 +11,9 @@ from tqdm import tqdm
 from gensim.models import KeyedVectors
 
 
+# get file path conf
+path_mp = cfg.get_path_conf('../path.cfg')
+
 keywords = {}
 with open('keywords.txt', 'r', encoding='utf-8') as f:
 	for w in f:
@@ -19,9 +22,15 @@ with open('keywords.txt', 'r', encoding='utf-8') as f:
 print('keywords loaded.')
 
 
-# get file path conf
-path_mp = cfg.get_path_conf('../path.cfg')
 model = KeyedVectors.load_word2vec_format('~/lianxiaoying/data/word2vec/GoogleNews-vectors-negative300.bin', binary=True)
-for w in tqdm(keywords):
-	w_list = model.most_similar(w, 10)
+print('model loaded.')
+
+
+with open('synonyms.txt', 'w', encoding='utf-8') as out:
+	for w in tqdm(keywords):
+		w_list = model.most_similar(w, 10)
+		res = w_list[0][0]
+		for wi, sim in w_list[1:]:
+			res += ', ' + wi
+		out.write()
 
