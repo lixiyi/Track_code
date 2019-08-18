@@ -15,6 +15,14 @@ MIN_FREQ = 5
 MAX_IDF = 0.6
 
 
+stop_words = {}
+with open('stopwords.txt', 'r', encoding='utf-8') as f:
+	for w in f:
+		w = w[:-1]
+		stop_words[w] = 1
+print('stop words loaded.')
+
+
 idf = {}
 N = 0
 with open('/home/trec7/lianxiaoying/data/vector_corpus.txt', 'r', encoding='utf-8') as f:
@@ -23,7 +31,7 @@ with open('/home/trec7/lianxiaoying/data/vector_corpus.txt', 'r', encoding='utf-
 		tf = {}
 		for w in w_list:
 			w = w.strip()
-			if len(w) > 2:
+			if w not in stop_words and len(w) > 2:
 				if w in tf:
 					tf[w] += 1
 				else:
