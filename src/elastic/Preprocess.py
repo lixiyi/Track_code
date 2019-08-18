@@ -14,7 +14,7 @@ from nltk.stem.porter import *
 path_mp = cfg.get_path_conf('../path.cfg')
 es = Elasticsearch(port=7200)
 stemmer = PorterStemmer()
-INDEX_NAME = "news"
+INDEX_NAME = "news_alpha"
 
 
 def extract_body(args = None):
@@ -60,11 +60,13 @@ def process_washington_post(filename):
             # stemming
             w_list = cfg.word_cut(obj['body'])
             for i in range(len(w_list)):
-                w_list[i] = stemmer.stem(w_list[i])
+                if w_list.isalpha():
+                    w_list[i] = stemmer.stem(w_list[i])
             obj['body'] = ' '.join(w_list)
             w_list = cfg.word_cut(obj['title'])
             for i in range(len(w_list)):
-                w_list[i] = stemmer.stem(w_list[i])
+                if w_list.isalpha():
+                    w_list[i] = stemmer.stem(w_list[i])
             obj['title'] = ' '.join(w_list)
 
             del obj['contents']
@@ -87,6 +89,20 @@ def init_es():
                     "k1": 1.2
                 }
             }
+        },
+        "analysis" : {
+            "analyzer" : {
+                "synonym" : {
+                    "tokenizer" : "whitespace",
+                    "filter" : ["synonym"]
+                }
+            },
+            "filter" : {
+                "synonym" : {
+                    "type" : "synonym",
+                    "synonyms_path" : "synonyms.txt"
+                }
+            }
         }
     }
     mapping = {
@@ -99,7 +115,8 @@ def init_es():
             },
             'title': {
                 'type': 'text',
-                "similarity": "my_bm25"
+                "similarity": "my_bm25",
+                "analyzer": "whitespace"
             },
             'author': {
                 'type': 'keyword'
@@ -109,11 +126,13 @@ def init_es():
             },
             'body': {
                 'type': 'text',
-                "similarity": "my_bm25"
+                "similarity": "my_bm25",
+                "analyzer": "whitespace"
             },
             'title_body': {
                 'type': 'text',
-                "similarity": "my_bm25"
+                "similarity": "my_bm25",
+                "analyzer": "whitespace"
             },
             'kicker': {
                 'type': 'keyword'
