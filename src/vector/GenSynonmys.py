@@ -33,6 +33,6 @@ with open('synonyms.txt', 'w', encoding='utf-8') as out:
 			w_list = model.most_similar(positive=w, topn=10)
 			res = w_list[0][0]
 			for wi, sim in w_list[1:]:
-				res += ', ' + wi
+				res += ',' + wi
 			out.write(res + '\n')
 
