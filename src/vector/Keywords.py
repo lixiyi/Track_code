@@ -16,7 +16,7 @@ MAX_IDF = 0.6
 
 
 stop_words = {}
-with open('stopwords.txt', 'r', encoding='utf-8') as f:
+with open('../elastic/stopwords.txt', 'r', encoding='utf-8') as f:
 	for w in f:
 		w = w[:-1]
 		stop_words[w] = 1
