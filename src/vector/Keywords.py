@@ -22,10 +22,12 @@ with open('/home/trec7/lianxiaoying/data/vector_corpus.txt', 'r', encoding='utf-
 		w_list = cfg.word_cut(line[:-1])
 		tf = {}
 		for w in w_list:
-			if w in tf:
-				tf[w] += 1
-			else:
-				tf[w] = 1
+			w = w.strip()
+			if len(w) > 2:
+				if w in tf:
+					tf[w] += 1
+				else:
+					tf[w] = 1
 		for w in tf.keys():
 			# appear in one doc more than MIN_FREQ
 			if tf[w] >= MIN_FREQ:
