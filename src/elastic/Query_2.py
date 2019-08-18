@@ -39,7 +39,7 @@ def test_backgound_linking():
 	print('stop words loaded.')
 	# test case: doc_id, topic_id
 	case_mp = {}
-	with open(path_mp['DataPath'] + path_mp['topics'], 'r', encoding='utf-8') as f:
+	with open(path_mp['DataPath'] + path_mp['topics19'], 'r', encoding='utf-8') as f:
 		li = []
 		for line in f:
 			topic_id = re.search(r'<num>.*?</num>', line)
@@ -92,7 +92,7 @@ def test_backgound_linking():
 					# 	tf[w] += 1
 					# else:
 					# 	tf[w] = 1
-			print(len(tmp))
+			print(doc_id, len(tmp))
 			qr = ' '.join(tmp)
 			# if len(tmp) > 2048:
 			# 	qr += ' '.join(tmp[:1024]) + ' ' + ' '.join(tmp[-1024:])
