@@ -55,8 +55,11 @@ def test_backgound_linking():
 				li = []
 	print('test case loaded.')
 	# with open('/home/trec7/lianxiaoying/trec_eval.9.0/test/elastic_bresult.test', 'w', encoding='utf-8') as f1:
+	caseid = 1
 	with open('bresult4541.test', 'w', encoding='utf-8') as f1:
 		for doc_id in case_mp:
+			print(caseid, doc_id)
+			caseid += 1
 			# search by docid to get the query
 			dsl = {
 				'query': {
@@ -92,7 +95,7 @@ def test_backgound_linking():
 					# 	tf[w] += 1
 					# else:
 					# 	tf[w] = 1
-			print(doc_id, len(tmp))
+			print(len(tmp))
 			qr = ' '.join(tmp)
 			# if len(tmp) > 2048:
 			# 	qr += ' '.join(tmp[:1024]) + ' ' + ' '.join(tmp[-1024:])
