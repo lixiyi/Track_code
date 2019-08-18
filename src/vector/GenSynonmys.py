@@ -32,5 +32,5 @@ with open('synonyms.txt', 'w', encoding='utf-8') as out:
 		res = w_list[0][0]
 		for wi, sim in w_list[1:]:
 			res += ', ' + wi
-		out.write()
+		out.write(res + '\n')
 
