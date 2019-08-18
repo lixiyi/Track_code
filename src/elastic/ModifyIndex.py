@@ -23,20 +23,20 @@ setting = {
 				"k1": 2.0
 			}
 		},
-		# "analysis" : {
-		# 	"analyzer" : {
-		# 		"synonym" : {
-		# 			"tokenizer" : "standard",
-		# 			"filter" : ["synonym"]
-		# 		}
-		# 	},
-		# 	"filter" : {
-		# 		"synonym" : {
-		# 			"type" : "synonym",
-		# 			"synonyms_path" : "news-synonyms.txt"
-		# 		}
-		# 	}
-		# }
+		"analysis" : {
+			"analyzer" : {
+				"synonym" : {
+					"tokenizer" : "standard",
+					"filter" : ["synonym"]
+				}
+			},
+			"filter" : {
+				"synonym" : {
+					"type" : "synonym",
+					"synonyms_path" : "../vector/synonyms.txt"
+				}
+			}
+		}
 	}
 }
 try:
