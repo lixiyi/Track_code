@@ -28,7 +28,7 @@ with open('/home/trec7/lianxiaoying/data/vector_corpus.txt', 'r', encoding='utf-
 				tf[w] = 1
 		for w in tf.keys():
 			# appear in one doc more than MIN_FREQ
-			if w >= MIN_FREQ:
+			if tf[w] >= MIN_FREQ:
 				if w not in idf:
 					idf[w] = 1
 				else:
