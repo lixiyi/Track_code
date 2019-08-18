@@ -9,7 +9,7 @@ import re
 import numpy as np
 from tqdm import tqdm
 from elasticsearch import Elasticsearch
-import fasttext
+import gensim
 
 
 # get file path conf
