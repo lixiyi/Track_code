@@ -10,6 +10,7 @@ import numpy as np
 from tqdm import tqdm
 from elasticsearch import Elasticsearch
 from stanfordcorenlp import StanfordCoreNLP
+import json
 from gensim.models import KeyedVectors
 
 # get file path conf
@@ -61,16 +62,23 @@ def test_backgound_linking():
 			print(caseid, doc_id)
 			caseid += 1
 			# search by docid to get the query
-			dsl = {
-				'query': {
-					'match': {
-						'id': doc_id
+			out_doc_id = {'97b489e2-0a38-11e5-9e39-0db921c47b93':1}
+			doc = ''
+			if doc_id not in out_doc_id:
+				dsl = {
+					'query': {
+						'match': {
+							'id': doc_id
+						}
 					}
 				}
-			}
-			res = es.search(index=INDEX_NAME, body=dsl)
-			# print(res)
-			doc = res['hits']['hits'][0]['_source']
+				res = es.search(index=INDEX_NAME, body=dsl)
+				# print(res)
+				doc = res['hits']['hits'][0]['_source']
+			else:
+				with open(doc_id + '.txt', 'r', encoding='utf-8') as rin:
+					for line in rin:
+						doc = json.loads(line)
 			dt = doc['published_date']
 			# make query
 			# ner_filt = {'O': 1, 'MONEY': 1, 'NUMBER': 1}
