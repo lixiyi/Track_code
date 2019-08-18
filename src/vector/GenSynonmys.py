@@ -28,7 +28,7 @@ print('model loaded.')
 
 with open('synonyms.txt', 'w', encoding='utf-8') as out:
 	for w in tqdm(keywords):
-		w_list = model.most_similar(w, 10)
+		w_list = model.most_similar(positive=w, topn=10)
 		res = w_list[0][0]
 		for wi, sim in w_list[1:]:
 			res += ', ' + wi
