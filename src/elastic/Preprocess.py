@@ -60,12 +60,12 @@ def process_washington_post(filename):
             # stemming
             w_list = cfg.word_cut(obj['body'])
             for i in range(len(w_list)):
-                if w_list.isalpha():
+                if w_list[i].isalpha():
                     w_list[i] = stemmer.stem(w_list[i])
             obj['body'] = ' '.join(w_list)
             w_list = cfg.word_cut(obj['title'])
             for i in range(len(w_list)):
-                if w_list.isalpha():
+                if w_list[i].isalpha():
                     w_list[i] = stemmer.stem(w_list[i])
             obj['title'] = ' '.join(w_list)
 

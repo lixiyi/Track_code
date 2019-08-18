@@ -85,7 +85,7 @@ def test_backgound_linking():
 			tmp = []
 			# tf = {}
 			for w in tmp1:
-				if w not in stop_words and w.isalpha():
+				if w not in stop_words:# and w.isalpha():
 					tmp.append(w)
 					# if w in tf:
 					# 	tf[w] += 1
