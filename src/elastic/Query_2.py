@@ -11,7 +11,8 @@ from tqdm import tqdm
 from elasticsearch import Elasticsearch
 from stanfordcorenlp import StanfordCoreNLP
 import json
-from gensim.models import KeyedVectors
+from nltk.stem.porter import *
+
 
 # get file path conf
 path_mp = cfg.get_path_conf('../path.cfg')
@@ -19,6 +20,43 @@ es = Elasticsearch(port=7200)
 nlp = StanfordCoreNLP('http://localhost', port=7100)
 INDEX_NAME = "news_stem"
 
+
+def extract_body(args = None):
+	contents = args[0]
+	body = ''
+	for p in contents:
+		if type(p).__name__ == 'dict':
+			if 'subtype' in p and p['subtype'] == 'paragraph':
+				paragraph = p['content'].strip()
+				# Replace <.*?> with ""
+				paragraph = re.sub(r'<.*?>', '', paragraph)
+				body += ' ' + paragraph
+	return body
+
+
+def process(obj):
+	obj['body'] = extract_body([obj['contents']])
+
+	# to lower case
+	obj['title'] = str(obj['title']).lower()
+	obj['body'] = str(obj['body']).lower()
+
+	# stemming
+	w_list = cfg.word_cut(obj['body'])
+	for i in range(len(w_list)):
+		if w_list[i].isalpha():
+			w_list[i] = stemmer.stem(w_list[i])
+	obj['body'] = ' '.join(w_list)
+	w_list = cfg.word_cut(obj['title'])
+	for i in range(len(w_list)):
+		if w_list[i].isalpha():
+			w_list[i] = stemmer.stem(w_list[i])
+	obj['title'] = ' '.join(w_list)
+
+	del obj['contents']
+	obj['title_body'] = (str(obj['title']) + ' ' + str(obj['body'])).lower()
+	obj['title_author_date'] = (str(obj['title']) + ' ' + str(obj['author']) + ' ' + str(obj['published_date'])).lower()
+	return obj
 
 def test_backgound_linking():
 	# load glove
@@ -79,6 +117,7 @@ def test_backgound_linking():
 				with open(doc_id + '.txt', 'r', encoding='utf-8') as rin:
 					for line in rin:
 						doc = json.loads(line)
+				doc = process(doc)
 			dt = doc['published_date']
 			# make query
 			# ner_filt = {'O': 1, 'MONEY': 1, 'NUMBER': 1}
