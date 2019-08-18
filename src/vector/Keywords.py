@@ -17,7 +17,7 @@ MAX_IDF = 0.6
 
 idf = {}
 N = 0
-with open('/home/trec7/lianxiaoying/data/vector_corpus.txt', 'w', encoding='utf-8') as f:
+with open('/home/trec7/lianxiaoying/data/vector_corpus.txt', 'r', encoding='utf-8') as f:
 	for line in tqdm(f):
 		w_list = cfg.word_cut(line[:-1])
 		tf = {}
