@@ -33,7 +33,7 @@ setting = {
 			"filter" : {
 				"synonym" : {
 					"type" : "synonym",
-					"synonyms_path" : "../vector/synonyms.txt"
+					"synonyms_path" : "synonyms.txt"
 				}
 			}
 		}
