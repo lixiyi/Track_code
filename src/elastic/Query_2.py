@@ -54,7 +54,8 @@ def test_backgound_linking():
 				case_mp[li[1]] = li[0]
 				li = []
 	print('test case loaded.')
-	with open('/home/trec7/lianxiaoying/trec_eval.9.0/test/elastic_bresult.test', 'w', encoding='utf-8') as f1:
+	# with open('/home/trec7/lianxiaoying/trec_eval.9.0/test/elastic_bresult.test', 'w', encoding='utf-8') as f1:
+	with open('bresult4541.test', 'w', encoding='utf-8') as f1:
 		for doc_id in case_mp:
 			# search by docid to get the query
 			dsl = {
