@@ -17,8 +17,8 @@ stemmer = PorterStemmer()
 INDEX_NAME = "news_wiki"
 
 
-def process_wiki():
-    for p in tqdm(iter_pages(open(args, 'rb'))):
+def process_wiki(filepath):
+    for p in tqdm(iter_pages(open(filepath, 'rb'))):
         obj = {}
         obj['page_name'] = str(p.page_name).lower()
         skeleton = p.skeleton
