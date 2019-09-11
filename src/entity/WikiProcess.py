@@ -9,6 +9,7 @@ import re
 from tqdm import tqdm
 from elasticsearch import Elasticsearch
 from nltk.stem.porter import *
+from trec_car.read_data import *
 
 # get file path conf
 path_mp = cfg.get_path_conf('../path.cfg')
