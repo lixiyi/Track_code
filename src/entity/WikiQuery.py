@@ -170,7 +170,7 @@ def test_entity_ranking():
                 if len(res) > 0:
                     page_name = res[0]['_source']['page_name']
                     score = 0
-                    for idx in range(10):
+                    for idx in range(min(10, len(res))):
                         score += res[idx]['_score']
                     out.append(str(score))
                 else:
