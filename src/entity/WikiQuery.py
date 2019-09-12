@@ -161,8 +161,8 @@ def test_entity_ranking():
                 out.append(entity['id'])
                 out.append(str(cnt))
                 if len(res) > 0:
-                    page_name = ri['_source']['page_name']
-                    score = str(ri['_score'])
+                    page_name = res[0]['_source']['page_name']
+                    score = str(res[0]['_score'])
                     out.append(score)
                 else:
                     out.append(str(0))
