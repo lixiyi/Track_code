@@ -124,7 +124,13 @@ def test_entity_ranking():
                     for line in rin:
                         doc = json.loads(line)
                 doc = process(doc)
-            qr = doc['title_body']
+
+            tmp1 = cfg.word_cut(doc['title_body'])
+            tmp = []
+            for w in tmp1:
+                if w not in stop_words:
+                    tmp.append(w)
+            qr = ' '.join(tmp)
             cnt = 1
             for entity in li[1:]:
                 dsl = {
