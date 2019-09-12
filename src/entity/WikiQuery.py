@@ -104,6 +104,7 @@ def test_entity_ranking():
     print('test case loaded.')
     with open('/home/trec7/lianxiaoying/trec_eval.9.0/test/eresult.test', 'w', encoding='utf-8') as f:
         for topic_id in case_mp.keys():
+            print(topic_id)
             li = case_mp[topic_id]
             doc_id = li[0]
             out_doc_id = {'97b489e2-0a38-11e5-9e39-0db921c47b93':1}
@@ -141,7 +142,7 @@ def test_entity_ranking():
                     }
                 }
             }
-            res = es.search(index=INDEX_NAME, body=dsl, request_timeout=30)
+            res = es.search(index=WIKI_INDEX, body=dsl, request_timeout=30)
             res = res['hits']['hits']
             psc = {}
             for ri in res:
