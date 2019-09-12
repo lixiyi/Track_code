@@ -180,7 +180,7 @@ def test_entity_ranking():
                 out.append(entity['id'])
                 out.append(str(cnt))
                 if entity['id'] in entity_top:
-                    out.append(wiki_mp[entity_top[entity['id']]])
+                    out.append(str(wiki_mp[entity_top[entity['id']]]))
                 else:
                     out.append(str(0))
                 out.append('ICTNET')
