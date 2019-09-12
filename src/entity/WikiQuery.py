@@ -26,7 +26,7 @@ WIKI_INDEX = "news_wiki"
 def test_entity_ranking():
     # stop words
     stop_words = {}
-    with open('stopwords.txt', 'r', encoding='utf-8') as f:
+    with open('../elastic/stopwords.txt', 'r', encoding='utf-8') as f:
         for w in f:
             w = w[:-1]
             stop_words[w] = 1
@@ -45,6 +45,11 @@ def test_entity_ranking():
                     li = []
                 topic_id = topic_id_tmp
                 topic_id = topic_id.group(0)[5+9:-7]
+            doc_id = re.search(r'<docid>.*?</docid>', line)
+            if doc_id is not None:
+                doc_id = doc_id.group(0)[7:-8]
+                li.append(doc_id)
+
             entity_id = re.search(r'<id>.*?</id>', line)
             if entity_id is not None:
                 entity_id = entity_id.group(0)[5:-6]
@@ -64,3 +69,4 @@ def test_entity_ranking():
         for entity in case_mp[topic_id]:
             print(entity)
 
+test_entity_ranking()
