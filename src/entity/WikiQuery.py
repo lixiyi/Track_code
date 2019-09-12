@@ -94,11 +94,11 @@ def test_entity_ranking():
             mention = re.search(r'<mention>.*?</mention>', line)
             if mention is not None:
                 mention = mention.group(0)[9:-10]
-                mp['mention'] = mention
+                mp['mention'] = mention.lower()
             link = re.search(r'<link>.*?</link>', line)
             if link is not None:
                 link = link.group(0)[6:-7]
-                mp['link'] = link
+                mp['link'] = link.lower()
                 li.append(mp)
                 mp = {}
     print('test case loaded.')
@@ -125,39 +125,45 @@ def test_entity_ranking():
                         doc = json.loads(line)
                 doc = process(doc)
             qr = doc['title_body']
-            dsl = {
-                "size": 100,
-                "timeout": "1m",
-                "query": {
-                    'bool': {
-                        'must': {
-                            'match': {
-                                'body': {
-                                    'query': qr,
-                                    'boost': 1
+            cnt = 1
+            for entity in li[1:]:
+                dsl = {
+                    "size": 100,
+                    "timeout": "1m",
+                    "query": {
+                        'bool': {
+                            'must': {
+                                'match': {
+                                    'body': {
+                                        'query': qr,
+                                        'boost': 1
+                                    }
+                                }
+                            },
+                            'must': {
+                                'match': {
+                                    'body': {
+                                        'query': entity['mention'],
+                                        'boost': 1
+                                    }
                                 }
                             }
                         }
                     }
                 }
-            }
-            res = es.search(index=WIKI_INDEX, body=dsl, request_timeout=30)
-            res = res['hits']['hits']
-            print(topic_id, len(li[1:]))
-            psc = {}
-            for ri in res:
-                page_name = ri['_source']['page_name']
-                score = str(ri['_score'])
-                psc[page_name] = score
-            cnt = 1
-            for entity in li[1:]:
+                res = es.search(index=WIKI_INDEX, body=dsl, request_timeout=30)
+                res = res['hits']['hits']
+
+                print(entity['id'], len(res))
                 out = []
                 out.append(topic_id)
                 out.append('Q0')
                 out.append(entity['id'])
                 out.append(str(cnt))
-                if entity['mention'] in psc:
-                    out.append(psc[entity['mention']])
+                if len(res) > 0:
+                    page_name = ri['_source']['page_name']
+                    score = str(ri['_score'])
+                    out.append(score)
                 else:
                     out.append(str(0))
                 out.append('ICTNET')
