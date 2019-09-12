@@ -19,7 +19,7 @@ setting = {
 		"similarity": {
 			"my_bm25": {
 				"type": "BM25",
-				"b": 0.85,
+				"b": 0.75,
 				"k1": 1.2
 			}
 		}

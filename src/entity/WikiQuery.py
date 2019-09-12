@@ -169,8 +169,10 @@ def test_entity_ranking():
                 out.append(str(cnt))
                 if len(res) > 0:
                     page_name = res[0]['_source']['page_name']
-                    score = str(res[0]['_score'])
-                    out.append(score)
+                    score = 0
+                    for idx in range(10):
+                        score += res[i]['_score']
+                    out.append(str(score))
                 else:
                     out.append(str(0))
                 out.append('ICTNET')
