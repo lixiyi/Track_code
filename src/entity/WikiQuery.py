@@ -132,7 +132,8 @@ def test_entity_ranking():
             #         tmp.append(w)
             # qr = ' '.join(tmp)
             qr = doc['title_body']
-            cnt = 1
+            entity_top = {} # entity_id : top page_name
+            wiki_mp = {} # page_name : score
             for entity in li[1:]:
                 dsl = {
                     "size": 100,
@@ -162,17 +163,24 @@ def test_entity_ranking():
                 res = res['hits']['hits']
 
                 print(entity['id'], len(res))
+                if len(res) > 0:
+                    page_name = res[0]['_source']['page_name']
+                    entity_top[entity['id']] = page_name
+                for idx in range(min(10, len(res))):
+                    page_name = res[idx]['_source']['page_name']
+                    if page_name in wiki_mp:
+                        wiki_mp[page_name] += res[idx]['_score']
+                    else:
+                        wiki_mp[page_name] = res[idx]['_score']
+            cnt = 1
+            for entity in li[1:]:
                 out = []
                 out.append(topic_id)
                 out.append('Q0')
                 out.append(entity['id'])
                 out.append(str(cnt))
-                if len(res) > 0:
-                    page_name = res[0]['_source']['page_name']
-                    score = 0
-                    for idx in range(min(10, len(res))):
-                        score += res[idx]['_score']
-                    out.append(str(score))
+                if entity['id'] in entity_top:
+                    out.append(wiki_mp[entity_top[entity['id']]])
                 else:
                     out.append(str(0))
                 out.append('ICTNET')
