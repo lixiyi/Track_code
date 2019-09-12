@@ -15,7 +15,7 @@ from trec_car.read_data import *
 path_mp = cfg.get_path_conf('../path.cfg')
 es = Elasticsearch(port=7200)
 stemmer = PorterStemmer()
-INDEX_NAME = "news_wiki"
+INDEX_NAME = "news_wiki_stem"
 
 
 def process_wiki(filepath):
@@ -27,6 +27,12 @@ def process_wiki(filepath):
         for para in skeleton:
             out += para.get_text().strip()
         obj['body'] = out.lower()
+        # stemming
+        w_list = cfg.word_cut(obj['body'])
+        for i in range(len(w_list)):
+            if w_list[i].isalpha():
+                w_list[i] = stemmer.stem(w_list[i])
+        obj['body'] = ' '.join(w_list)
         doc = json.dumps(obj)
         # insert data
         res = es.index(index=INDEX_NAME, body=doc)
