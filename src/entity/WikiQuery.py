@@ -19,8 +19,8 @@ path_mp = cfg.get_path_conf('../path.cfg')
 es = Elasticsearch(port=7200)
 nlp = StanfordCoreNLP('http://localhost', port=7100)
 stemmer = PorterStemmer()
-INDEX_NAME = "news_alpha"
-WIKI_INDEX = "news_wiki"
+INDEX_NAME = "news_stem"
+WIKI_INDEX = "news_wiki_stem"
 
 
 def extract_body(args = None):
@@ -130,7 +130,7 @@ def test_entity_ranking():
             for w in tmp1:
                 if w not in stop_words:
                     tmp.append(w)
-            qr = ' '.join(tmp[:512]) + ' ' + ' '.join(tmp[512:])
+            qr = ' '.join(tmp)
             # qr = doc['title_body']
             cnt = 1
             for entity in li[1:]:
