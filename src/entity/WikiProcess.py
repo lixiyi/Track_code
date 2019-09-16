@@ -15,7 +15,7 @@ from trec_car.read_data import *
 path_mp = cfg.get_path_conf('../path.cfg')
 es = Elasticsearch(port=7200)
 stemmer = PorterStemmer()
-INDEX_NAME = "news_wiki_para"
+INDEX_NAME = "news_wiki_meta"
 
 
 def process_wiki(filepath):
@@ -33,6 +33,7 @@ def process_wiki(filepath):
         #     if w_list[i].isalpha():
         #         w_list[i] = stemmer.stem(w_list[i])
         # obj['body'] = ' '.join(w_list)
+        obj['inlink'] = p.page_meta.inlinkIds
         doc = json.dumps(obj)
         # insert data
         res = es.index(index=INDEX_NAME, body=doc)
@@ -74,6 +75,10 @@ def init_es():
             'body': {
                 'type': 'text',
                 "similarity": "my_bm25",
+            },
+            'inlink': {
+                'type': 'text',
+                "similarity": "my_bm25",
             }
         }
     }
@@ -84,7 +89,7 @@ def init_es():
     es.indices.delete(index=INDEX_NAME, ignore=[400, 404])
     es.indices.create(index=INDEX_NAME, body=create_index_body, ignore=400)
     # add all the file into elasticsearch
-    para_wiki(cfg.WIKIDUMP)
+    process_wiki(cfg.WIKIDUMP)
 
 
 init_es()
