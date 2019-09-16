@@ -19,8 +19,8 @@ path_mp = cfg.get_path_conf('../path.cfg')
 es = Elasticsearch(port=7200)
 nlp = StanfordCoreNLP('http://localhost', port=7100)
 stemmer = PorterStemmer()
-INDEX_NAME = "news_stem"
-WIKI_INDEX = "news_wiki_stem"
+INDEX_NAME = "news_alpha"
+WIKI_INDEX = "news_wiki_para"
 
 
 def extract_body(args = None):
