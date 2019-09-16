@@ -15,7 +15,7 @@ from trec_car.read_data import *
 path_mp = cfg.get_path_conf('../path.cfg')
 es = Elasticsearch(port=7200)
 stemmer = PorterStemmer()
-INDEX_NAME = "news_wiki_stem"
+INDEX_NAME = "news_wiki_para"
 
 
 def process_wiki(filepath):
@@ -28,14 +28,27 @@ def process_wiki(filepath):
             out += para.get_text().strip()
         obj['body'] = out.lower()
         # stemming
-        w_list = cfg.word_cut(obj['body'])
-        for i in range(len(w_list)):
-            if w_list[i].isalpha():
-                w_list[i] = stemmer.stem(w_list[i])
-        obj['body'] = ' '.join(w_list)
+        # w_list = cfg.word_cut(obj['body'])
+        # for i in range(len(w_list)):
+        #     if w_list[i].isalpha():
+        #         w_list[i] = stemmer.stem(w_list[i])
+        # obj['body'] = ' '.join(w_list)
         doc = json.dumps(obj)
         # insert data
         res = es.index(index=INDEX_NAME, body=doc)
+
+
+def para_wiki(filepath):
+    for p in tqdm(iter_pages(open(filepath, 'rb'))):
+        skeleton = p.skeleton
+        for para in skeleton:
+            obj = {}
+            obj['page_name'] = str(p.page_name).lower()
+            out = para.get_text().strip()
+            if out != "":
+                obj['body'] = out.lower()
+                doc = json.dumps(obj)
+                res = es.index(index=INDEX_NAME, body=doc)
 
 
 # put all the news into elasticsearch
@@ -71,7 +84,7 @@ def init_es():
     es.indices.delete(index=INDEX_NAME, ignore=[400, 404])
     es.indices.create(index=INDEX_NAME, body=create_index_body, ignore=400)
     # add all the file into elasticsearch
-    process_wiki(cfg.WIKIDUMP)
+    para_wiki(cfg.WIKIDUMP)
 
 
 init_es()

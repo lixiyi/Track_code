@@ -44,16 +44,16 @@ def process(obj):
     obj['body'] = str(obj['body']).lower()
 
     # stemming
-    w_list = cfg.word_cut(obj['body'])
-    for i in range(len(w_list)):
-        if w_list[i].isalpha():
-            w_list[i] = stemmer.stem(w_list[i])
-    obj['body'] = ' '.join(w_list)
-    w_list = cfg.word_cut(obj['title'])
-    for i in range(len(w_list)):
-        if w_list[i].isalpha():
-            w_list[i] = stemmer.stem(w_list[i])
-    obj['title'] = ' '.join(w_list)
+    # w_list = cfg.word_cut(obj['body'])
+    # for i in range(len(w_list)):
+    #     if w_list[i].isalpha():
+    #         w_list[i] = stemmer.stem(w_list[i])
+    # obj['body'] = ' '.join(w_list)
+    # w_list = cfg.word_cut(obj['title'])
+    # for i in range(len(w_list)):
+    #     if w_list[i].isalpha():
+    #         w_list[i] = stemmer.stem(w_list[i])
+    # obj['title'] = ' '.join(w_list)
 
     del obj['contents']
     obj['title_body'] = (str(obj['title']) + ' ' + str(obj['body'])).lower()
@@ -125,13 +125,13 @@ def test_entity_ranking():
                         doc = json.loads(line)
                 doc = process(doc)
 
-            tmp1 = cfg.word_cut(doc['title_body'])
-            tmp = []
-            for w in tmp1:
-                if w not in stop_words:
-                    tmp.append(w)
-            qr = ' '.join(tmp[:512]) + ' ' + ' '.join(tmp[512:])
-            # qr = doc['title_body']
+            # tmp1 = cfg.word_cut(doc['title_body'])
+            # tmp = []
+            # for w in tmp1:
+            #     if w not in stop_words:
+            #         tmp.append(w)
+            # qr = ' '.join(tmp[:512]) + ' ' + ' '.join(tmp[512:])
+            qr = doc['title_body']
             cnt = 1
             for entity in li[1:]:
                 dsl = {
