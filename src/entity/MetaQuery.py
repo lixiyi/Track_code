@@ -152,7 +152,8 @@ def test_entity_ranking():
             rank = 1
             for ri in res:
                 inlink = ri['_source']['inlink']
-                inlink_to_rank[inlink] = rank
+                if inlink not in inlink_to_rank:
+                    inlink_to_rank[inlink] = rank
                 rank += 1
             cnt = 1
             for entity in li[1:]:
