@@ -101,7 +101,7 @@ def test_entity_ranking():
                 li.append(mp)
                 mp = {}
     print('test case loaded.')
-    with open('/home/trec7/lianxiaoying/trec_eval.9.0/test/eresult_7284.test', 'w', encoding='utf-8') as f:
+    with open('eresult_7284.test', 'w', encoding='utf-8') as f:
     # with open('/home/trec7/lianxiaoying/trec_eval.9.0/test/eresult.test', 'w', encoding='utf-8') as f:
         for topic_id in case_mp.keys():
             li = case_mp[topic_id]
