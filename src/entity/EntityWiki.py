@@ -65,6 +65,7 @@ def process_wiki(filepath):
             res = es.search(index=SEARCH_NAME, body=dsl)
             print(entity['id'], len(res['hits']['hits']))
             obj = res['hits']['hits'][0]['_source']
+            obj['inlink'] = entity['link']
             doc = json.dumps(obj)
             # insert data
             res = es.index(index=INDEX_NAME, body=doc)
