@@ -16,7 +16,7 @@ path_mp = cfg.get_path_conf('../path.cfg')
 es = Elasticsearch(port=7200)
 stemmer = PorterStemmer()
 SEARCH_NAME = "news_wiki_meta"
-INDEX_NAME = "news_wiki_entity"
+INDEX_NAME = "news_wiki_entity_stem"
 
 
 def process_wiki(filepath):
@@ -56,7 +56,7 @@ def process_wiki(filepath):
     for topic_id in case_mp:
         for entity in case_mp[topic_id][1:]:
             dsl = {
-                "size": 10,
+                "size": 100,
                 'query': {
                     'match': {
                         'inlink': entity['link']
@@ -68,6 +68,12 @@ def process_wiki(filepath):
             for ri in res['hits']['hits']:
                 obj = ri['_source']
                 obj['inlink'] = entity['link']
+                # stemming
+                w_list = cfg.word_cut(obj['body'])
+                for i in range(len(w_list)):
+                    if w_list[i].isalpha():
+                        w_list[i] = stemmer.stem(w_list[i])
+                obj['body'] = ' '.join(w_list)
                 doc = json.dumps(obj)
                 # insert data
                 res = es.index(index=INDEX_NAME, body=doc)
