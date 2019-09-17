@@ -56,6 +56,7 @@ def process_wiki(filepath):
     for topic_id in case_mp:
         for entity in case_mp[topic_id][1:]:
             dsl = {
+                "size": 10,
                 'query': {
                     'match': {
                         'inlink': entity['link']
@@ -64,11 +65,12 @@ def process_wiki(filepath):
             }
             res = es.search(index=SEARCH_NAME, body=dsl)
             print(entity['id'], len(res['hits']['hits']))
-            obj = res['hits']['hits'][0]['_source']
-            obj['inlink'] = entity['link']
-            doc = json.dumps(obj)
-            # insert data
-            res = es.index(index=INDEX_NAME, body=doc)
+            for ri in res['hits']['hits']:
+                obj = ri['_source']
+                obj['inlink'] = entity['link']
+                doc = json.dumps(obj)
+                # insert data
+                res = es.index(index=INDEX_NAME, body=doc)
 
 
 # put all the news into elasticsearch
