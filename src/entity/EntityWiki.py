@@ -15,6 +15,7 @@ from trec_car.read_data import *
 path_mp = cfg.get_path_conf('../path.cfg')
 es = Elasticsearch(port=7200)
 stemmer = PorterStemmer()
+SEARCH_NAME = "news_wiki_meta"
 INDEX_NAME = "news_wiki_entity"
 
 
@@ -61,7 +62,7 @@ def process_wiki(filepath):
                     }
                 }
             }
-            res = es.search(index=INDEX_NAME, body=dsl)
+            res = es.search(index=SEARCH_NAME, body=dsl)
             print(entity['id'], len(res['hits']['hits']))
             obj = res['hits']['hits'][0]['_source']
             doc = json.dumps(obj)
