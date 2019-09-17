@@ -62,12 +62,12 @@ def process(obj):
 
 def test_entity_ranking():
     # stop words
-    # stop_words = {}
-    # with open('../elastic/stopwords.txt', 'r', encoding='utf-8') as f:
-    #     for w in f:
-    #         w = w[:-1]
-    #         stop_words[w] = 1
-    # print('stop words loaded.')
+    stop_words = {}
+    with open('../elastic/stopwords.txt', 'r', encoding='utf-8') as f:
+        for w in f:
+            w = w[:-1]
+            stop_words[w] = 1
+    print('stop words loaded.')
     # test case: topic_id, list:[docid, entity_id]
     case_mp = {}
     with open(path_mp['DataPath'] + path_mp['entities'], 'r', encoding='utf-8') as f:
@@ -123,15 +123,15 @@ def test_entity_ranking():
                     for line in rin:
                         doc = json.loads(line)
                 doc = process(doc)
-            # tmp1 = cfg.word_cut(doc['title_body'])
-            # tmp = []
-            # for w in tmp1:
-            #     if w not in stop_words:
-            #         tmp.append(w)
-            # qr = ' '.join(tmp)
-            qr = doc['title_body']
+            tmp1 = cfg.word_cut(doc['title_body'])
+            tmp = []
+            for w in tmp1:
+                if w not in stop_words:
+                    tmp.append(w)
+            qr = ' '.join(tmp)
+            # qr = doc['title_body']
             dsl = {
-                "size": 100,
+                "size": 1000,
                 "timeout": "1m",
                 "query": {
                     'bool': {
@@ -165,7 +165,7 @@ def test_entity_ranking():
                 out.append(str(cnt))
                 sc = 0
                 if entity['link'] in inlink_to_rank:
-                    sc = 100 - inlink_to_rank[entity['link']]
+                    sc = 1000 - inlink_to_rank[entity['link']]
                 out.append(str(sc))
                 out.append('ICTNET')
                 ans = "\t".join(out) + "\n"
