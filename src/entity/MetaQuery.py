@@ -171,7 +171,7 @@ def test_entity_ranking():
                 if entity['link'] in inlink_to_rank:
                     sc = 1000 - inlink_to_rank[entity['link']]
                 out.append(str(sc))
-                out.append('ICTNET')
+                out.append('ICTNET_estem')
                 ans = "\t".join(out) + "\n"
                 f.write(ans)
                 cnt += 1
