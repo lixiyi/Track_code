@@ -19,7 +19,7 @@ path_mp = cfg.get_path_conf('../path.cfg')
 es = Elasticsearch(port=7200)
 stemmer = PorterStemmer()
 INDEX_NAME = "news_stem"
-WIKI_INDEX = "news_wiki_entity_stem"
+WIKI_INDEX = "news_wiki_entity19_stem"
 
 
 def extract_body(args = None):

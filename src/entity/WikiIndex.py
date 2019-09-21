@@ -12,7 +12,7 @@ from elasticsearch import Elasticsearch
 # get file path conf
 path_mp = cfg.get_path_conf('../path.cfg')
 es = Elasticsearch(port=7200)
-INDEX_NAME = "news_wiki_entity_stem"
+INDEX_NAME = "news_wiki_entity19_stem"
 
 setting = {
 	"index": {
@@ -20,7 +20,7 @@ setting = {
 			"my_bm25": {
 				"type": "BM25",
 				"b": 0.95,
-				"k1": 2.0
+				"k1": 2.1
 			}
 		}
 	}
