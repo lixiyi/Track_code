@@ -52,6 +52,9 @@ def process_wiki(filepath):
                 mp['link'] = link.lower()
                 li.append(mp)
                 mp = {}
+        if len(mp) != 0:
+            li.append(mp)
+            mp = {}
     # find entity wiki page
     for topic_id in case_mp:
         for entity in case_mp[topic_id][1:]:
