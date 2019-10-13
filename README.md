@@ -1,5 +1,5 @@
 # Track_code
-ICTNET News Track 2018 Code
+ICTNET@ TREC 2018 News Track
 
 This is the code I tried on the News Track 2018 Task.
 
