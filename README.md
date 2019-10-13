@@ -15,6 +15,7 @@ This is the code I tried on the News Track 2018 Task.
   * Build index : title + body
   * Query: title + body (Other query extension method: name entity, TFIDF, are no better than this)
   * [results here](./ICTNET_stem.trec_eval)
+
 | Dataset | 2018 | 2019 |
 |-----|-----|-----|
 | ndcg@5 | 0.4541 | 0.6208 |
@@ -24,6 +25,7 @@ This is the code I tried on the News Track 2018 Task.
   * Query: news title + body
   * Ranking entities by wiki page bm25 score 
   * [results here](./ICTNET_estem.trec_eval)
+
 | Dataset | 2018 | 2019 |
 |-----|-----|-----|
 | ndcg@5 | 0.7191 | 0.7315 |
@@ -42,3 +44,5 @@ This is the code I tried on the News Track 2018 Task.
      * This didn't work either
 * Unfinished Methods
   * Lucene: Since there is no time to try Lucene, I just list the example [code here](./src/lucene).
+
+### [Paper Notes](https://github.com/lixiyi/Track_Report)
