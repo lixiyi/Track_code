@@ -18,7 +18,7 @@ This is the code I tried on the News Track 2018 Task.
 
 | Dataset | 2018 | 2019 |
 |-----|-----|-----|
-| ndcg@5 | 0.4541 | 0.6208 |
+| ndcg@5 | 0.4541 | 0.5801 |
 
 * Elasticsearch BM25  + Wiki Dump (`Entity ranking`) [code here](./src/entity)
   * Build index : Wiki page with enlink refer to exact one entity, extract 100 wiki page per entity
